@@ -1,0 +1,151 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Delete News
+{% endblock %}
+
+{% block page_title %}
+    Delete News Article
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-auto max-w-2xl">
+
+    <div
+        class="
+            overflow-hidden
+            rounded-2xl
+            border
+            border-red-200
+            bg-white
+            shadow-sm
+        "
+    >
+
+        <div class="p-6 sm:p-8">
+
+            <div
+                class="
+                    flex
+                    h-14
+                    w-14
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-50
+                    text-red-600
+                "
+            >
+                <i class="fa-solid fa-trash text-lg"></i>
+            </div>
+
+
+            <h2
+                class="
+                    mt-5
+                    text-xl
+                    font-black
+                    text-slate-900
+                "
+            >
+                Delete this article?
+            </h2>
+
+
+            <p class="mt-2 text-sm leading-6 text-slate-500">
+                You are about to permanently delete:
+            </p>
+
+
+            <div
+                class="
+                    mt-4
+                    rounded-xl
+                    bg-slate-50
+                    p-4
+                "
+            >
+
+                <p class="text-sm font-bold text-slate-800">
+                    {{ object.title }}
+                </p>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Article #{{ object.pk }}
+                </p>
+
+            </div>
+
+
+            <p class="mt-4 text-xs leading-5 text-red-600">
+                This action cannot be undone.
+            </p>
+
+
+            <form
+                method="post"
+                class="
+                    mt-6
+                    flex
+                    flex-col-reverse
+                    gap-3
+                    sm:flex-row
+                    sm:justify-end
+                "
+            >
+
+                {% csrf_token %}
+
+                <a
+                    href="{% url 'dashboard:news_list' %}"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-slate-200
+                        px-5
+                        py-3
+                        text-xs
+                        font-bold
+                        text-slate-600
+                        hover:bg-slate-50
+                    "
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        bg-red-600
+                        px-5
+                        py-3
+                        text-xs
+                        font-black
+                        text-white
+                        hover:bg-red-700
+                    "
+                >
+                    <i class="fa-solid fa-trash"></i>
+                    Delete Article
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,750 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Empowerment Dashboard | UDUAK-ABASI 2027
+{% endblock %}
+
+{% block page_title %}
+Empowerment Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="px-4 py-6 sm:px-6 lg:px-8">
+
+<div class="mx-auto max-w-7xl">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="mb-8">
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <p class="text-sm font-bold uppercase tracking-wider text-blue-700">
+                    Campaign Programmes
+                </p>
+
+                <h2 class="mt-1 text-2xl font-black text-slate-900">
+                    Empowerment Dashboard
+                </h2>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Monitor empowerment applications, programmes and beneficiaries.
+                </p>
+
+            </div>
+
+            <div>
+
+                <a
+                    href="{% url 'empowerment:application_list' %}"
+                    class="inline-flex items-center gap-2 rounded-xl
+                           bg-campaign-blue px-5 py-3
+                           text-sm font-bold text-white
+                           shadow-sm transition
+                           hover:bg-campaign-navy"
+                >
+                    <i class="fa-solid fa-file-lines"></i>
+                    Manage Applications
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         APPLICATION STATISTICS
+    ====================================================== -->
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+        <!-- TOTAL -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Total Applications
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ total_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-blue-50 text-blue-700">
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBMITTED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Submitted
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ submitted_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-amber-50 text-amber-600">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNDER REVIEW -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Under Review
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ under_review_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-purple-50 text-purple-700">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SHORTLISTED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Shortlisted
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ shortlisted_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-indigo-50 text-indigo-600">
+
+                    <i class="fa-solid fa-list-check"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- APPROVED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Approved
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ approved_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-emerald-50 text-emerald-600">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WAITLISTED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Waitlisted
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ waitlisted_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-orange-50 text-orange-600">
+
+                    <i class="fa-solid fa-hourglass-half"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOT SELECTED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Not Selected
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ not_selected_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-red-50 text-red-600">
+
+                    <i class="fa-solid fa-user-xmark"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Completed
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ completed_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-teal-50 text-teal-600">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WITHDRAWN -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-500">
+                        Withdrawn
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ withdrawn_applications }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center
+                            rounded-xl bg-slate-100 text-slate-600">
+
+                    <i class="fa-solid fa-user-minus"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT APPLICATIONS
+    ====================================================== -->
+
+    <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-5
+                    sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <h3 class="text-lg font-black text-slate-900">
+                    Recent Applications
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    The latest empowerment applications received.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'empowerment:application_list' %}"
+                class="inline-flex items-center gap-2 rounded-xl
+                       bg-campaign-blue px-4 py-2.5
+                       text-sm font-semibold text-white
+                       transition hover:bg-campaign-navy"
+            >
+                <i class="fa-solid fa-file-lines"></i>
+                View Applications
+            </a>
+
+        </div>
+
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full divide-y divide-slate-200">
+
+                <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="px-5 py-3 text-left text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            Application
+                        </th>
+
+                        <th class="px-5 py-3 text-left text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            Applicant
+                        </th>
+
+                        <th class="px-5 py-3 text-left text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            Programme
+                        </th>
+
+                        <th class="px-5 py-3 text-left text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            LGA
+                        </th>
+
+                        <th class="px-5 py-3 text-left text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            Status
+                        </th>
+
+                        <th class="px-5 py-3 text-right text-xs font-black
+                                   uppercase tracking-wider text-slate-500">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100 bg-white">
+
+                    {% for application in recent_applications %}
+
+                    <tr class="transition hover:bg-slate-50">
+
+                        <!-- APPLICATION -->
+
+                        <td class="whitespace-nowrap px-5 py-4">
+
+                            <span class="text-sm font-bold text-slate-900">
+                                {{ application.application_number }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- APPLICANT -->
+
+                        <td class="whitespace-nowrap px-5 py-4">
+
+                            <div>
+
+                                <p class="text-sm font-bold text-slate-900">
+                                    {{ application.first_name }}
+                                    {{ application.last_name }}
+                                </p>
+
+                                {% if application.phone %}
+
+                                <p class="mt-0.5 text-xs text-slate-500">
+                                    {{ application.phone }}
+                                </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- PROGRAMME -->
+
+                        <td class="whitespace-nowrap px-5 py-4">
+
+                            <span class="text-sm text-slate-600">
+                                {{ application.programme.title }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- LGA -->
+
+                        <td class="whitespace-nowrap px-5 py-4">
+
+                            <span class="text-sm text-slate-600">
+                                {{ application.local_government.name }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td class="whitespace-nowrap px-5 py-4">
+
+                            {% if application.status == "approved" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-emerald-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-emerald-700">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Approved
+                                </span>
+
+                            {% elif application.status == "under_review" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-purple-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-purple-700">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    Under Review
+                                </span>
+
+                            {% elif application.status == "submitted" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-blue-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-blue-700">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                    Submitted
+                                </span>
+
+                            {% elif application.status == "shortlisted" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-indigo-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-indigo-700">
+                                    <i class="fa-solid fa-list-check"></i>
+                                    Shortlisted
+                                </span>
+
+                            {% elif application.status == "waitlisted" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-orange-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-orange-700">
+                                    <i class="fa-solid fa-hourglass-half"></i>
+                                    Waitlisted
+                                </span>
+
+                            {% elif application.status == "not_selected" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-red-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-red-700">
+                                    <i class="fa-solid fa-user-xmark"></i>
+                                    Not Selected
+                                </span>
+
+                            {% elif application.status == "completed" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-teal-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-teal-700">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Completed
+                                </span>
+
+                            {% elif application.status == "withdrawn" %}
+
+                                <span class="inline-flex items-center gap-1.5
+                                             rounded-full bg-slate-100
+                                             px-3 py-1 text-xs font-bold
+                                             text-slate-600">
+                                    <i class="fa-solid fa-user-minus"></i>
+                                    Withdrawn
+                                </span>
+
+                            {% else %}
+
+                                <span class="inline-flex rounded-full
+                                             bg-slate-100 px-3 py-1
+                                             text-xs font-bold text-slate-600">
+                                    {{ application.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td class="whitespace-nowrap px-5 py-4 text-right">
+
+                            <a
+                                href="{% url 'empowerment:application_detail' application.pk %}"
+                                class="inline-flex items-center gap-2 rounded-lg
+                                       border border-slate-200 bg-white
+                                       px-3 py-2 text-xs font-bold
+                                       text-slate-700 transition
+                                       hover:border-blue-200
+                                       hover:bg-blue-50
+                                       hover:text-blue-700"
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="px-5 py-12 text-center"
+                        >
+
+                            <div class="flex flex-col items-center">
+
+                                <div class="flex h-14 w-14 items-center
+                                            justify-center rounded-full
+                                            bg-slate-100 text-slate-400">
+
+                                    <i class="fa-solid fa-folder-open text-xl"></i>
+
+                                </div>
+
+                                <p class="mt-4 text-sm font-bold text-slate-700">
+                                    No applications yet
+                                </p>
+
+                                <p class="mt-1 text-sm text-slate-500">
+                                    Empowerment applications will appear here.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         APPLICATION DISTRIBUTION
+    ====================================================== -->
+
+    <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+
+        <!-- APPLICATIONS BY LGA -->
+
+        <div class="overflow-hidden rounded-2xl border border-slate-200
+                    bg-white shadow-sm">
+
+            <div class="border-b border-slate-200 px-5 py-5">
+
+                <h3 class="text-lg font-black text-slate-900">
+                    Applications by LGA
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Distribution of applications across local governments.
+                </p>
+
+            </div>
+
+            <div class="divide-y divide-slate-100">
+
+                {% for item in applications_by_lga|slice:":8" %}
+
+                <div class="flex items-center justify-between px-5 py-4">
+
+                    <span class="text-sm font-semibold text-slate-700">
+                        {{ item.local_government__name|default:"Not specified" }}
+                    </span>
+
+                    <span class="rounded-full bg-blue-50 px-3 py-1
+                                 text-xs font-bold text-blue-700">
+                        {{ item.total }}
+                    </span>
+
+                </div>
+
+                {% empty %}
+
+                <div class="px-5 py-8 text-center text-sm text-slate-500">
+                    No LGA data available.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- APPLICATIONS BY PROGRAMME -->
+
+        <div class="overflow-hidden rounded-2xl border border-slate-200
+                    bg-white shadow-sm">
+
+            <div class="border-b border-slate-200 px-5 py-5">
+
+                <h3 class="text-lg font-black text-slate-900">
+                    Applications by Programme
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Number of applications received per programme.
+                </p>
+
+            </div>
+
+            <div class="divide-y divide-slate-100">
+
+                {% for item in applications_by_programme|slice:":8" %}
+
+                <div class="flex items-center justify-between px-5 py-4">
+
+                    <span class="max-w-[75%] truncate text-sm font-semibold
+                                 text-slate-700">
+                        {{ item.programme__title|default:"Not specified" }}
+                    </span>
+
+                    <span class="rounded-full bg-purple-50 px-3 py-1
+                                 text-xs font-bold text-purple-700">
+                        {{ item.total }}
+                    </span>
+
+                </div>
+
+                {% empty %}
+
+                <div class="px-5 py-8 text-center text-sm text-slate-500">
+                    No programme data available.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

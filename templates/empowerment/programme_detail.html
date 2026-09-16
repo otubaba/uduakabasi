@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ programme.title }} | Uduak-Abasi 2027
+{% endblock %}
+
+
+{% block content %}
+
+<section class="bg-campaign-navy pt-32 pb-16">
+
+    <div class="container-campaign">
+
+        <div class="max-w-4xl">
+
+            <span class="section-label text-campaign-gold">
+                {{ programme.get_programme_type_display }}
+            </span>
+
+            <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+                {{ programme.title }}
+            </h1>
+
+            <p class="mt-6 text-lg leading-8 text-slate-300">
+                {{ programme.description }}
+            </p>
+
+        </div>
+        {% if applications_open %}
+
+        <div
+            class="inline-flex items-center gap-2
+                rounded-full
+                bg-emerald-50
+                px-4 py-2
+                text-sm font-semibold
+                text-emerald-700"
+        >
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Applications Open
+        </div>
+
+    {% else %}
+
+        <div
+            class="inline-flex items-center gap-2
+                rounded-full
+                bg-slate-100
+                px-4 py-2
+                text-sm font-semibold
+                text-slate-600"
+        >
+            <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+            Applications Closed
+        </div>
+
+    {% endif %}
+
+    </div>
+
+</section>
+
+
+<section class="campaign-section bg-slate-50">
+
+    <div class="container-campaign">
+
+        <div class="grid gap-8 lg:grid-cols-3">
+
+            <!-- =================================================
+                 MAIN CONTENT
+            ================================================== -->
+
+            <div class="lg:col-span-2">
+
+                <div class="campaign-card p-6 sm:p-8">
+
+                    <h2 class="text-2xl font-black text-campaign-navy">
+                        About This Programme
+                    </h2>
+
+                    <div class="mt-5 leading-8 text-slate-600">
+                        {{ programme.description|linebreaks }}
+                    </div>
+
+
+                    {% if programme.eligibility %}
+
+                        <div class="mt-8 border-t border-slate-100 pt-8">
+
+                            <h3 class="text-lg font-extrabold text-campaign-navy">
+                                Who Can Apply?
+                            </h3>
+
+                            <div class="mt-3 leading-7 text-slate-600">
+                                {{ programme.eligibility|linebreaks }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside>
+
+                <div class="campaign-card p-6">
+
+                    <h2 class="text-lg font-black text-campaign-navy">
+                        Programme Information
+                    </h2>
+
+
+                    <div class="mt-6 space-y-5">
+
+                        <div>
+
+                            <p class="text-xs font-bold uppercase tracking-wide text-slate-400">
+                                Programme Type
+                            </p>
+
+                            <p class="mt-1 font-bold text-slate-700">
+                                {{ programme.get_programme_type_display }}
+                            </p>
+
+                        </div>
+
+
+                        {% if programme.application_start %}
+
+                            <div>
+
+                                <p class="text-xs font-bold uppercase tracking-wide text-slate-400">
+                                    Applications Open
+                                </p>
+
+                                <p class="mt-1 font-bold text-slate-700">
+                                    {{ programme.application_start|date:"M d, Y" }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if programme.application_end %}
+
+                            <div>
+
+                                <p class="text-xs font-bold uppercase tracking-wide text-slate-400">
+                                    Applications Close
+                                </p>
+
+                                <p class="mt-1 font-bold text-slate-700">
+                                    {{ programme.application_end|date:"M d, Y" }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if programme.maximum_applicants %}
+
+                            <div>
+
+                                <p class="text-xs font-bold uppercase tracking-wide text-slate-400">
+                                    Available Places
+                                </p>
+
+                                <p class="mt-1 font-bold text-slate-700">
+                                    {{ programme.maximum_applicants }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="mt-8 border-t border-slate-100 pt-6">
+
+                        {% if applications_open %}
+
+                        <a
+                            href="{% url 'empowerment:apply' programme.slug %}"
+                            class="inline-flex items-center justify-center gap-2
+                                rounded-xl
+                                bg-campaign-gold
+                                px-6 py-3
+                                text-sm font-bold
+                                text-campaign-navy
+                                shadow-sm
+                                transition
+                                hover:-translate-y-0.5
+                                hover:shadow-lg"
+                        >
+                            <i class="fa-solid fa-file-pen"></i>
+                            Apply for This Programme
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="inline-flex items-center justify-center gap-2
+                                rounded-xl
+                                bg-slate-200
+                                px-6 py-3
+                                text-sm font-bold
+                                text-slate-500
+                                cursor-not-allowed"
+                        >
+                            <i class="fa-solid fa-lock"></i>
+                            Applications Closed
+                        </span>
+
+                    {% endif %}
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

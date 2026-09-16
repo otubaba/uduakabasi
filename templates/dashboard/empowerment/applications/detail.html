@@ -1,0 +1,582 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Application Details{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Application Details
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                {{ application.application_number }}
+            </p>
+        </div>
+
+        <a
+            href="{% url 'empowerment:application_list' %}"
+            class="inline-flex items-center justify-center gap-2 rounded-lg
+                   border border-slate-300 bg-white px-4 py-2.5
+                   text-sm font-semibold text-slate-700
+                   hover:bg-slate-50"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Applications
+        </a>
+
+    </div>
+
+
+    <!-- Status -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Application Status
+                </p>
+
+                <p class="mt-1 text-lg font-bold text-slate-900">
+                    {{ application.get_status_display }}
+                </p>
+            </div>
+
+            <form
+                method="post"
+                action="{% url 'empowerment:application_status_update' application.pk %}"
+                class="flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
+
+                {% csrf_token %}
+
+                <select
+                    name="status"
+                    class="rounded-lg border border-slate-300 bg-white
+                        px-4 py-2.5 text-sm font-medium text-slate-700
+                        focus:border-blue-500 focus:outline-none
+                        focus:ring-2 focus:ring-blue-200"
+                >
+                    <option value="submitted"
+                        {% if application.status == "submitted" %}selected{% endif %}>
+                        Submitted
+                    </option>
+
+                    <option value="under_review"
+                        {% if application.status == "under_review" %}selected{% endif %}>
+                        Under Review
+                    </option>
+
+                    <option value="shortlisted"
+                        {% if application.status == "shortlisted" %}selected{% endif %}>
+                        Shortlisted
+                    </option>
+
+                    <option value="approved"
+                        {% if application.status == "approved" %}selected{% endif %}>
+                        Approved
+                    </option>
+
+                    <option value="waitlisted"
+                        {% if application.status == "waitlisted" %}selected{% endif %}>
+                        Waitlisted
+                    </option>
+
+                    <option value="not_selected"
+                        {% if application.status == "not_selected" %}selected{% endif %}>
+                        Not Selected
+                    </option>
+
+                    <option value="completed"
+                        {% if application.status == "completed" %}selected{% endif %}>
+                        Completed
+                    </option>
+
+                    <option value="withdrawn"
+                        {% if application.status == "withdrawn" %}selected{% endif %}>
+                        Withdrawn
+                    </option>
+                </select>
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2
+                        rounded-lg bg-blue-600 px-5 py-2.5
+                        text-sm font-semibold text-white
+                        hover:bg-blue-700"
+                >
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Update Status
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Applicant Information -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Applicant Information
+            </h2>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    First Name
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.first_name }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Last Name
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.last_name }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Other Names
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.other_names|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Gender
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.get_gender_display|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Date of Birth
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.date_of_birth|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Phone
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.phone }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Email
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.email|default:"—" }}
+                </p>
+            </div>
+
+            <div class="md:col-span-2">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Address
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.address|default:"—" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Location -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Constituency Information
+            </h2>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-2 lg:grid-cols-4">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Local Government
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.local_government|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Ward
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.ward|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Polling Unit
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.polling_unit|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Senatorial District
+                </p>
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.senatorial_district|default:"—" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Programme -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Programme Information
+            </h2>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-2">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Programme
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.programme }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Application Number
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.application_number }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Education & Employment -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Education & Employment
+            </h2>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-2">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Occupation
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.occupation|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Employment Status
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.get_employment_status_display|default:"—" }}
+                </p>
+            </div>
+
+            <div class="md:col-span-2">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Educational Background
+                </p>
+
+                <p class="mt-1 whitespace-pre-line font-medium text-slate-900">
+                    {{ application.educational_background|default:"—" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Application Reason -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Application Details
+            </h2>
+        </div>
+
+        <div class="space-y-6 p-6">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Reason for Applying
+                </p>
+
+                <p class="mt-2 whitespace-pre-line leading-7 text-slate-700">
+                    {{ application.reason_for_applying|default:"—" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Proposed Use
+                </p>
+
+                <p class="mt-2 whitespace-pre-line leading-7 text-slate-700">
+                    {{ application.proposed_use|default:"—" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+        REVIEW NOTES
+    ====================================================== -->
+
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Internal Review Notes
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Add internal notes about the review of this application.
+            </p>
+        </div>
+
+        <form
+            method="post"
+            action="{% url 'empowerment:application_review' application.pk %}"
+            class="p-6"
+        >
+        {% if application.reviewed_at %}
+            <div class="mb-4 rounded-lg bg-green-50 px-4 py-3">
+                <div class="flex items-center gap-2 text-sm font-semibold text-green-700">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Application Reviewed
+                </div>
+
+                <p class="mt-1 text-xs text-green-600">
+                    Reviewed on
+                    {{ application.reviewed_at|date:"d M Y, h:i A" }}
+                </p>
+            </div>
+        {% endif %}
+
+            {% csrf_token %}
+
+            <textarea
+                name="reviewer_notes"
+                rows="6"
+                placeholder="Enter review notes..."
+                class="w-full rounded-xl border border-slate-300
+                    bg-white px-4 py-3 text-sm text-slate-700
+                    outline-none transition
+                    focus:border-campaign-blue
+                    focus:ring-2 focus:ring-campaign-blue/20"
+            >{{ application.reviewer_notes }}</textarea>
+
+            <div class="mt-4 flex items-center justify-between">
+
+                {% if application.reviewed_at %}
+                    <p class="text-xs text-slate-500">
+                        Last reviewed:
+                        {{ application.reviewed_at|date:"d M Y, h:i A" }}
+                    </p>
+                {% else %}
+                    <p class="text-xs text-slate-500">
+                        No review recorded yet.
+                    </p>
+                {% endif %}
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center gap-2 rounded-xl
+                        bg-campaign-blue px-5 py-2.5
+                        text-sm font-semibold text-white
+                        transition hover:bg-campaign-navy"
+                >
+                    <i class="fa-solid fa-note-sticky"></i>
+                    Save Review Notes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- Application Dates -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-4">
+            <h2 class="text-lg font-bold text-slate-900">
+                Application Record
+            </h2>
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-3">
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Application Number
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.application_number }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Submitted
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.created_at|date:"M d, Y H:i" }}
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Last Updated
+                </p>
+
+                <p class="mt-1 font-medium text-slate-900">
+                    {{ application.updated_at|date:"M d, Y H:i" }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Bottom Action -->
+    <div class="flex justify-end">
+
+        <a
+            href="{% url 'empowerment:application_list' %}"
+            class="inline-flex items-center gap-2 rounded-lg
+                   bg-slate-900 px-5 py-2.5
+                   text-sm font-semibold text-white
+                   hover:bg-slate-800"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Applications
+        </a>
+        <button
+            type="button"
+            onclick="window.print()"
+            class="no-print inline-flex items-center gap-2 rounded-xl
+                border border-slate-200 bg-white
+                px-4 py-2.5 text-sm font-semibold
+                text-slate-700 shadow-sm
+                transition hover:bg-slate-50"
+        >
+            <i class="fa-solid fa-print"></i>
+            Print Application
+        </button>
+
+    </div>
+
+</div>
+<style>
+    @media print {
+
+        /* Hide dashboard navigation */
+        aside,
+        nav,
+        header,
+        footer {
+            display: none !important;
+        }
+
+        /* Hide print-only controls */
+        button,
+        a {
+            text-decoration: none !important;
+        }
+
+        /* Remove dashboard spacing */
+        body {
+            background: white !important;
+        }
+
+        main {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        /* Improve printed content */
+        .shadow-sm,
+        .shadow {
+            box-shadow: none !important;
+        }
+
+        /* Prevent sections from being split awkwardly */
+        .rounded-xl,
+        .rounded-2xl {
+            break-inside: avoid;
+        }
+
+        /* Hide elements marked no-print */
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}

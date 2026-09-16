@@ -1,0 +1,625 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Join the Movement | UDUAK-ABASI 2027
+{% endblock %}
+
+
+{% block meta_description %}
+    Join the UDUAK-ABASI 2027 movement and stay connected with campaign activities and updates.
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section
+    class="
+        relative
+        overflow-hidden
+        bg-slate-950
+        py-20
+        sm:py-24
+    "
+>
+
+    <div
+        class="
+            absolute
+            inset-0
+            bg-gradient-to-br
+            from-blue-950
+            via-slate-950
+            to-slate-900
+        "
+    ></div>
+
+
+    <div
+        class="
+            relative
+            container-campaign
+        "
+    >
+
+        <div class="max-w-3xl">
+
+            <span class="section-label">
+                Get Involved
+            </span>
+
+            <h1
+                class="
+                    mt-5
+                    text-4xl
+                    font-black
+                    tracking-tight
+                    text-white
+                    sm:text-5xl
+                    lg:text-6xl
+                "
+            >
+                Join the Movement.
+            </h1>
+
+            <p
+                class="
+                    mt-6
+                    text-lg
+                    leading-8
+                    text-slate-300
+                    sm:text-xl
+                "
+            >
+                Register your interest in the
+                UDUAK-ABASI 2027 movement and stay connected
+                with campaign activities and updates.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FORM
+========================================================= -->
+
+<section
+    class="
+        campaign-section
+        bg-slate-50
+    "
+>
+
+    <div
+        class="
+            container-campaign
+            max-w-5xl
+        "
+    >
+
+        <div
+            class="
+                overflow-hidden
+                rounded-3xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="p-6 sm:p-10">
+
+
+                <div class="mb-10">
+
+                    <span class="section-label">
+                        Supporter Registration
+                    </span>
+
+                    <h2
+                        class="
+                            mt-3
+                            text-3xl
+                            font-black
+                            text-slate-900
+                        "
+                    >
+                        Tell Us About Yourself
+                    </h2>
+
+                    <p
+                        class="
+                            mt-3
+                            max-w-2xl
+                            leading-7
+                            text-slate-600
+                        "
+                    >
+                        Please provide the information below.
+                        Fields marked as required must be completed.
+                    </p>
+
+                </div>
+
+
+                {% if form.non_field_errors %}
+
+                    <div
+                        class="
+                            mb-8
+                            rounded-2xl
+                            border
+                            border-red-200
+                            bg-red-50
+                            p-5
+                            text-sm
+                            text-red-700
+                        "
+                    >
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <form
+                    method="post"
+                    class="space-y-10"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- ======================================
+                         PERSONAL INFORMATION
+                    ======================================= -->
+
+                    <div>
+
+                        <h3
+                            class="
+                                text-xl
+                                font-extrabold
+                                text-slate-900
+                            "
+                        >
+                            Personal Information
+                        </h3>
+
+                        <div
+                            class="
+                                mt-6
+                                grid
+                                gap-6
+                                sm:grid-cols-2
+                            "
+                        >
+
+                            <!-- FULL NAME -->
+
+                            <div class="sm:col-span-2">
+
+                                <label
+                                    for="{{ form.full_name.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Full Name
+                                </label>
+
+                                {{ form.full_name }}
+
+                                {% if form.full_name.errors %}
+                                    <p class="form-error">
+                                        {{ form.full_name.errors|striptags }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- PHONE -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.phone.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Phone Number
+                                </label>
+
+                                {{ form.phone }}
+
+                                {% if form.phone.errors %}
+                                    <p class="form-error">
+                                        {{ form.phone.errors|striptags }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.email.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Email Address
+                                </label>
+
+                                {{ form.email }}
+
+                                {% if form.email.errors %}
+                                    <p class="form-error">
+                                        {{ form.email.errors|striptags }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- GENDER -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.gender.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Gender
+                                </label>
+
+                                {{ form.gender }}
+
+                                {% if form.gender.errors %}
+                                    <p class="form-error">
+                                        {{ form.gender.errors|striptags }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- DOB -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.date_of_birth.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Date of Birth
+                                </label>
+
+                                {{ form.date_of_birth }}
+
+                                {% if form.date_of_birth.errors %}
+                                    <p class="form-error">
+                                        {{ form.date_of_birth.errors|striptags }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         LOCATION
+                    ======================================= -->
+
+                    <div
+                        class="
+                            border-t
+                            border-slate-200
+                            pt-10
+                        "
+                    >
+
+                        <h3
+                            class="
+                                text-xl
+                                font-extrabold
+                                text-slate-900
+                            "
+                        >
+                            Location
+                        </h3>
+
+                        <div
+                            class="
+                                mt-6
+                                grid
+                                gap-6
+                                sm:grid-cols-2
+                            "
+                        >
+
+                            <div>
+
+                                <label
+                                    for="{{ form.lga.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    LGA
+                                </label>
+
+                                {{ form.lga }}
+
+                            </div>
+
+
+                            <div>
+
+                                <label
+                                    for="{{ form.ward.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Ward
+                                </label>
+
+                                {{ form.ward }}
+
+                            </div>
+
+
+                            <div>
+
+                                <label
+                                    for="{{ form.community.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Community
+                                </label>
+
+                                {{ form.community }}
+
+                            </div>
+
+
+                            <div>
+
+                                <label
+                                    for="{{ form.occupation.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Occupation
+                                </label>
+
+                                {{ form.occupation }}
+
+                            </div>
+
+
+                            <div class="sm:col-span-2">
+
+                                <label
+                                    for="{{ form.address.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Address
+                                </label>
+
+                                {{ form.address }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         PARTICIPATION
+                    ======================================= -->
+
+                    <div
+                        class="
+                            border-t
+                            border-slate-200
+                            pt-10
+                        "
+                    >
+
+                        <h3
+                            class="
+                                text-xl
+                                font-extrabold
+                                text-slate-900
+                            "
+                        >
+                            Get Involved
+                        </h3>
+
+                        <div class="mt-6 space-y-6">
+
+
+                            <label
+                                class="
+                                    flex
+                                    cursor-pointer
+                                    gap-4
+                                    rounded-2xl
+                                    border
+                                    border-slate-200
+                                    p-5
+                                    transition
+                                    hover:border-blue-300
+                                    hover:bg-blue-50
+                                "
+                            >
+
+                                {{ form.volunteer }}
+
+                                <span>
+
+                                    <span
+                                        class="
+                                            block
+                                            font-bold
+                                            text-slate-900
+                                        "
+                                    >
+                                        I am interested in volunteering
+                                    </span>
+
+                                    <span
+                                        class="
+                                            mt-1
+                                            block
+                                            text-sm
+                                            leading-6
+                                            text-slate-600
+                                        "
+                                    >
+                                        Let the campaign team know that
+                                        you are interested in volunteering.
+                                    </span>
+
+                                </span>
+
+                            </label>
+
+
+                            <div>
+
+                                <label
+                                    for="{{ form.skills.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Skills or Areas of Contribution
+                                </label>
+
+                                {{ form.skills }}
+
+                                <p
+                                    class="
+                                        mt-2
+                                        text-xs
+                                        text-slate-500
+                                    "
+                                >
+                                    Optional.
+                                </p>
+
+                            </div>
+
+
+                            <label
+                                class="
+                                    flex
+                                    cursor-pointer
+                                    gap-4
+                                    rounded-2xl
+                                    border
+                                    border-slate-200
+                                    p-5
+                                "
+                            >
+
+                                {{ form.receive_updates }}
+
+                                <span>
+
+                                    <span
+                                        class="
+                                            block
+                                            font-bold
+                                            text-slate-900
+                                        "
+                                    >
+                                        Receive campaign updates
+                                    </span>
+
+                                    <span
+                                        class="
+                                            mt-1
+                                            block
+                                            text-sm
+                                            leading-6
+                                            text-slate-600
+                                        "
+                                    >
+                                        Receive information about campaign
+                                        activities and updates.
+                                    </span>
+
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         SUBMIT
+                    ======================================= -->
+
+                    <div
+                        class="
+                            border-t
+                            border-slate-200
+                            pt-8
+                        "
+                    >
+
+                        <p
+                            class="
+                                text-sm
+                                leading-6
+                                text-slate-500
+                            "
+                        >
+                            By submitting this form, you are voluntarily
+                            registering your interest in the
+                            UDUAK-ABASI 2027 movement.
+                        </p>
+
+
+                        <button
+                            type="submit"
+                            class="
+                                btn-primary
+                                mt-6
+                            "
+                        >
+
+                            <i class="fa-solid fa-user-plus"></i>
+
+                            Join the Movement
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

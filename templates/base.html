@@ -1,0 +1,1368 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="{% block meta_description %}UDUAK-ABASI 2027 — A campaign for purposeful leadership, inclusive representation and community development.{% endblock %}"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
+    <title>
+        {% block title %}
+            UDUAK-ABASI 2027
+        {% endblock %}
+    </title>
+
+
+    <!-- =================================================
+         FAVICON
+    ================================================== -->
+
+    <link
+        rel="icon"
+        type="image/jpeg"
+        href="{% static 'images/logo.jpeg' %}"
+    >
+
+
+    <!-- =================================================
+         TAILWIND CSS
+    ================================================== -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- =================================================
+         TAILWIND CONFIG
+    ================================================== -->
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        campaign: {
+
+                            navy: "#0f172a",
+
+                            blue: "#1d4ed8",
+
+                            gold: "#f59e0b",
+
+                            slate: "#64748b",
+
+                        },
+
+                    },
+
+                    fontFamily: {
+
+                        sans: [
+                            "Inter",
+                            "ui-sans-serif",
+                            "system-ui",
+                            "sans-serif"
+                        ],
+
+                    },
+
+                },
+
+            },
+
+        };
+
+    </script>
+
+
+    <!-- =================================================
+         CUSTOM CSS
+    ================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+
+    {% block extra_head %}
+    {% endblock %}
+
+</head>
+
+
+<body class="flex min-h-screen flex-col bg-white">
+
+
+
+    <!-- =========================================================
+        OFFICIAL CAMPAIGN NAVBAR
+    ========================================================= -->
+
+    <header
+        id="site-header"
+        class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md transition-shadow duration-300"
+        x-data="{
+            mobileOpen: false,
+            mediaOpen: false,
+            mediaMobileOpen: false
+        }"
+    >
+
+        <div class="container-campaign">
+
+            <!-- =====================================================
+                TOP NAVIGATION ROW
+            ====================================================== -->
+
+            <div class="flex min-h-20 items-center justify-between gap-4">
+
+                <!-- =================================================
+                    LOGO
+                ================================================== -->
+
+                <a
+                    href="{% url 'core:home' %}"
+                    class="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
+                    @click="mobileOpen = false"
+                >
+
+                    <div
+                        class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-campaign-gold bg-campaign-navy shadow-sm sm:h-12 sm:w-12"
+                    >
+                        <img
+                            src="{% static 'images/logo.jpeg' %}"
+                            alt="Uduak-Abasi 2027"
+                            class="h-full w-full object-cover"
+                        >
+                    </div>
+
+                    <div class="block min-w-0">
+
+                        <p
+                            class="truncate text-xs font-extrabold leading-tight tracking-tight text-campaign-navy sm:text-sm"
+                        >
+                            UDUAK-ABASI
+                        </p>
+
+                        <p
+                            class="mt-0.5 text-[10px] font-bold leading-tight tracking-[0.18em] text-campaign-blue sm:text-xs sm:tracking-[0.2em]"
+                        >
+                            2027
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <!-- =================================================
+                    DESKTOP NAVIGATION
+                ================================================== -->
+
+                <nav
+                    class="hidden items-center gap-5 lg:flex xl:gap-7"
+                    aria-label="Main navigation"
+                >
+
+                    <!-- HOME -->
+
+                    <a
+                        href="{% url 'core:home' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                    >
+                        Home
+                    </a>
+
+
+                    <!-- ABOUT -->
+
+                    <a
+                        href="{% url 'core:about' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                    >
+                        About
+                    </a>
+
+
+                    <!-- AGENDA -->
+
+                    <a
+                        href="{% url 'core:agenda' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'agenda' %}active{% endif %}"
+                    >
+                        Our Agenda
+                    </a>
+
+
+                    <!-- =================================================
+                        MEDIA DROPDOWN
+                    ================================================== -->
+
+                    <div class="relative">
+
+                        <button
+                            type="button"
+                            class="nav-link inline-flex items-center gap-1.5 border-0 bg-transparent p-0 {% if request.resolver_match.app_name == 'media' %}active{% endif %}"
+                            @click="mediaOpen = !mediaOpen"
+                            :aria-expanded="mediaOpen.toString()"
+                            aria-haspopup="true"
+                        >
+
+                            <span>Media</span>
+
+                            <i
+                                class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200"
+                                :class="{ 'rotate-180': mediaOpen }"
+                                aria-hidden="true"
+                            ></i>
+
+                        </button>
+
+
+                        <div
+                            x-show="mediaOpen"
+                            x-transition
+                            x-cloak
+                            @click.outside="mediaOpen = false"
+                            class="absolute left-1/2 top-full mt-4 w-64 -translate-x-1/2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"
+                        >
+
+                            <a
+                                href="{% url 'media:gallery' %}"
+                                class="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-50"
+                                @click="mediaOpen = false"
+                            >
+
+                                <span
+                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-campaign-navy text-campaign-gold"
+                                >
+                                    <i class="fa-solid fa-images"></i>
+                                </span>
+
+                                <span>
+                                    <span class="block text-sm font-bold text-campaign-navy">
+                                        Photo Gallery
+                                    </span>
+
+                                    <span class="block text-xs text-slate-500">
+                                        Campaign moments & events
+                                    </span>
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="{% url 'media:videos' %}"
+                                class="group flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-50"
+                                @click="mediaOpen = false"
+                            >
+
+                                <span
+                                    class="flex h-10 w-10 items-center justify-center rounded-xl bg-campaign-navy text-campaign-gold"
+                                >
+                                    <i class="fa-solid fa-circle-play"></i>
+                                </span>
+
+                                <span>
+                                    <span class="block text-sm font-bold text-campaign-navy">
+                                        Campaign Videos
+                                    </span>
+
+                                    <span class="block text-xs text-slate-500">
+                                        Speeches, events & updates
+                                    </span>
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NEWS -->
+                     
+
+                    <a
+                        href="{% url 'news:list' %}"
+                        class="nav-link {% if request.resolver_match.app_name == 'news' %}active{% endif %}"
+                    >
+                        News
+                    </a>
+                    <a href="{% url 'events:list' %}" 
+                    class="nav-link {% if request.resolver_match.app_name == 'events' %}active{% endif %}">
+                        Events
+                    </a>
+
+                    <a href="{% url 'empowerment:programmes' %}" 
+                    class="nav-link {% if request.resolver_match.app_name == 'empowerment' %}active{% endif %}">
+                        Empowerment
+                    </a>
+
+
+                    <!-- CONTACT -->
+
+                    <a
+                        href="{% url 'core:contact' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                    >
+                        Contact
+                    </a>
+
+                    {% if user.is_authenticated and user.is_staff %}
+
+                        <a
+                            href="{% url 'dashboard:home' %}"
+                            class="nav-link"
+                        >
+                            Dashboard
+                        </a>
+
+                    {% endif %}
+
+                </nav>
+
+
+                <!-- =================================================
+                    DESKTOP CTA
+                ================================================== -->
+
+                <div class="hidden lg:block">
+
+                    <a
+                        href="{% url 'supporters:join' %}"
+                        class="btn-gold whitespace-nowrap"
+                    >
+                        Join Us
+                    </a>
+
+                </div>
+
+
+                <!-- =================================================
+                    MOBILE MENU BUTTON
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition duration-200 hover:border-campaign-blue hover:bg-slate-50 hover:text-campaign-blue focus:outline-none focus:ring-2 focus:ring-campaign-gold lg:hidden"
+                    @click="mobileOpen = !mobileOpen"
+                    :aria-expanded="mobileOpen.toString()"
+                    aria-controls="mobile-menu"
+                    aria-label="Toggle navigation menu"
+                >
+
+                    <!-- HAMBURGER -->
+
+                    <svg
+                        x-show="!mobileOpen"
+                        x-cloak
+                        class="h-6 w-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+
+
+                    <!-- CLOSE -->
+
+                    <svg
+                        x-show="mobileOpen"
+                        x-cloak
+                        class="h-6 w-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+
+                </button>
+
+            </div>
+
+            <!-- =====================================================
+                MOBILE NAVIGATION
+            ====================================================== -->
+
+            <div
+                id="mobile-menu"
+                x-show="mobileOpen"
+                x-cloak
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 -translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 -translate-y-2"
+                class="max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-slate-200 bg-white lg:hidden"
+            >
+
+                <nav
+                    class="divide-y divide-slate-100"
+                    aria-label="Mobile navigation"
+                >
+
+                    <!-- =================================================
+                        HOME
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'core:home' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.url_name == 'home' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-house mr-3 w-5 text-center text-xs"></i>
+                        <span>Home</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        ABOUT
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'core:about' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.url_name == 'about' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-user mr-3 w-5 text-center text-xs"></i>
+                        <span>About</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        OUR AGENDA
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'core:agenda' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.url_name == 'agenda' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-bullseye mr-3 w-5 text-center text-xs"></i>
+                        <span>Our Agenda</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        MEDIA
+                    ================================================== -->
+
+                    <div>
+
+                        <button
+                            type="button"
+                            @click="mediaMobileOpen = !mediaMobileOpen"
+                            :aria-expanded="mediaMobileOpen.toString()"
+                            aria-controls="mobile-media-menu"
+                            class="
+                                flex min-h-12 w-full items-center
+                                border-l-4 px-5 py-3
+                                text-left text-sm font-semibold
+                                transition-all duration-200
+
+                                {% if request.resolver_match.app_name == 'media' %}
+                                    border-campaign-blue
+                                    bg-blue-50
+                                    text-campaign-blue
+                                {% else %}
+                                    border-transparent
+                                    text-slate-700
+                                    hover:bg-slate-50
+                                    hover:text-campaign-blue
+                                {% endif %}
+                            "
+                        >
+
+                            <i class="fa-solid fa-photo-film mr-3 w-5 text-center text-xs"></i>
+
+                            <span class="flex-1">Media</span>
+
+                            <i
+                                class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+                                :class="{ 'rotate-180': mediaMobileOpen }"
+                                aria-hidden="true"
+                            ></i>
+
+                        </button>
+
+
+                        <!-- MEDIA SUBMENU -->
+
+                        <div
+                            id="mobile-media-menu"
+                            x-show="mediaMobileOpen"
+                            x-cloak
+                            x-transition
+                            class="border-t border-slate-100 bg-slate-50"
+                        >
+
+                            <!-- PHOTO GALLERY -->
+
+                            <a
+                                href="{% url 'media:album_list' %}"
+                                @click="mobileOpen = false"
+                                class="
+                                    flex min-h-11 items-center
+                                    gap-3 border-l-4
+                                    px-10 py-2.5
+                                    text-sm font-medium
+                                    transition-all duration-200
+
+                                    {% if request.resolver_match.url_name == 'album_list' %}
+                                        border-campaign-blue
+                                        bg-blue-100
+                                        text-campaign-blue
+                                    {% else %}
+                                        border-transparent
+                                        text-slate-600
+                                        hover:bg-white
+                                        hover:text-campaign-blue
+                                    {% endif %}
+                                "
+                            >
+                                <i class="fa-solid fa-images w-5 text-center text-xs"></i>
+                                <span>Photo Gallery</span>
+                            </a>
+
+
+                            <!-- CAMPAIGN VIDEOS -->
+
+                            <a
+                                href="{% url 'media:videos' %}"
+                                @click="mobileOpen = false"
+                                class="
+                                    flex min-h-11 items-center
+                                    gap-3 border-l-4
+                                    px-10 py-2.5
+                                    text-sm font-medium
+                                    transition-all duration-200
+
+                                    {% if request.resolver_match.url_name == 'videos' %}
+                                        border-campaign-blue
+                                        bg-blue-100
+                                        text-campaign-blue
+                                    {% else %}
+                                        border-transparent
+                                        text-slate-600
+                                        hover:bg-white
+                                        hover:text-campaign-blue
+                                    {% endif %}
+                                "
+                            >
+                                <i class="fa-solid fa-circle-play w-5 text-center text-xs"></i>
+                                <span>Campaign Videos</span>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                        NEWS
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'news:list' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.app_name == 'news' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-newspaper mr-3 w-5 text-center text-xs"></i>
+                        <span>News</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        EVENTS
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'events:list' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.app_name == 'events' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-calendar-days mr-3 w-5 text-center text-xs"></i>
+                        <span>Events</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        EMPOWERMENT
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'empowerment:programmes' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.app_name == 'empowerment' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-hands-holding-child mr-3 w-5 text-center text-xs"></i>
+                        <span>Empowerment</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        CONTACT
+                    ================================================== -->
+
+                    <a
+                        href="{% url 'core:contact' %}"
+                        @click="mobileOpen = false"
+                        class="
+                            flex min-h-12 items-center
+                            border-l-4 px-5 py-3
+                            text-sm font-semibold
+                            transition-all duration-200
+
+                            {% if request.resolver_match.url_name == 'contact' %}
+                                border-campaign-blue
+                                bg-blue-50
+                                text-campaign-blue
+                            {% else %}
+                                border-transparent
+                                text-slate-700
+                                hover:bg-slate-50
+                                hover:text-campaign-blue
+                            {% endif %}
+                        "
+                    >
+                        <i class="fa-solid fa-envelope mr-3 w-5 text-center text-xs"></i>
+                        <span>Contact</span>
+                    </a>
+
+
+                    <!-- =================================================
+                        STAFF DASHBOARD
+                    ================================================== -->
+
+                    {% if user.is_authenticated and user.is_staff %}
+
+                        <div class="border-t-4 border-slate-100">
+
+                            <a
+                                href="{% url 'dashboard:home' %}"
+                                @click="mobileOpen = false"
+                                class="
+                                    flex min-h-12 items-center
+                                    border-l-4 px-5 py-3
+                                    text-sm font-semibold
+                                    transition-all duration-200
+
+                                    {% if request.resolver_match.app_name == 'dashboard' %}
+                                        border-campaign-blue
+                                        bg-blue-50
+                                        text-campaign-blue
+                                    {% else %}
+                                        border-transparent
+                                        text-slate-700
+                                        hover:bg-slate-50
+                                        hover:text-campaign-blue
+                                    {% endif %}
+                                "
+                            >
+                                <i class="fa-solid fa-chart-pie mr-3 w-5 text-center text-xs"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- =================================================
+                        MOBILE CTA
+                    ================================================== -->
+
+                    <div class="bg-slate-50 p-4">
+
+                        <a
+                            href="{% url 'supporters:join' %}"
+                            @click="mobileOpen = false"
+                            class="
+                                flex min-h-11 w-full
+                                items-center justify-center
+                                gap-2
+                                rounded-xl
+                                bg-campaign-gold
+                                px-5 py-2.5
+                                text-center
+                                text-sm font-extrabold
+                                text-campaign-navy
+                                shadow-sm
+                                transition-all duration-200
+                                hover:-translate-y-0.5
+                                hover:shadow-lg
+                                hover:brightness-105
+                            "
+                        >
+                            <i class="fa-solid fa-handshake"></i>
+                            <span>Join Uduak-Abasi 2027</span>
+                        </a>
+
+                    </div>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+<!-- =============================================================
+     MOBILE MENU SCRIPT
+============================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const menuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        const openIcon = document.getElementById("menu-open-icon");
+        const closeIcon = document.getElementById("menu-close-icon");
+
+        if (!menuButton || !mobileMenu) {
+            return;
+        }
+
+
+        /* =====================================================
+           TOGGLE MOBILE MENU
+        ====================================================== */
+
+        menuButton.addEventListener("click", function () {
+
+            const isOpen =
+                menuButton.getAttribute("aria-expanded") === "true";
+
+
+            if (isOpen) {
+
+                mobileMenu.classList.add("hidden");
+
+                openIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+
+                menuButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+
+            } else {
+
+                mobileMenu.classList.remove("hidden");
+
+                openIcon.classList.add("hidden");
+                closeIcon.classList.remove("hidden");
+
+                menuButton.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Close navigation menu"
+                );
+
+            }
+
+        });
+
+
+        /* =====================================================
+           CLOSE MENU WHEN A LINK IS CLICKED
+        ====================================================== */
+
+        const mobileLinks =
+            mobileMenu.querySelectorAll("a");
+
+
+        mobileLinks.forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                mobileMenu.classList.add("hidden");
+
+                openIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+
+                menuButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+
+            });
+
+        });
+
+
+        /* =====================================================
+           CLOSE MENU WHEN RESIZING TO DESKTOP
+        ====================================================== */
+
+        window.addEventListener("resize", function () {
+
+            if (window.innerWidth >= 1024) {
+
+                mobileMenu.classList.add("hidden");
+
+                openIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+
+                menuButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+        });
+
+    });
+
+</script>
+
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="flex-grow pt-20">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <footer
+        class="
+            bg-campaign-navy
+            text-white
+        "
+    >
+
+        <div class="container-campaign">
+
+            <div
+                class="
+                    grid
+                    gap-10
+                    py-14
+                    md:grid-cols-2
+                    lg:grid-cols-4
+                "
+            >
+
+
+                <!-- =====================================
+                     BRAND
+                ====================================== -->
+
+                <div>
+
+                    <div class="flex items-center gap-3">
+
+                        <div
+                            class="
+                                h-12
+                                w-12
+                                overflow-hidden
+                                rounded-full
+                                border-2
+                                border-campaign-gold
+                            "
+                        >
+
+                            <img
+                                src="{% static 'images/logo.jpeg' %}"
+                                alt="Uduak-Abasi 2027"
+                                class="h-full w-full object-cover"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <p class="font-extrabold">
+                                UDUAK-ABASI
+                            </p>
+
+                            <p
+                                class="
+                                    text-xs
+                                    font-bold
+                                    tracking-[0.2em]
+                                    text-campaign-gold
+                                "
+                            >
+                                2027
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        class="
+                            mt-5
+                            max-w-sm
+                            text-sm
+                            leading-7
+                            text-slate-300
+                        "
+                    >
+                        A movement focused on purposeful leadership,
+                        inclusive representation and meaningful
+                        community development.
+                    </p>
+
+                </div>
+
+
+                <!-- =====================================
+                     QUICK LINKS
+                ====================================== -->
+
+                <div>
+
+                    <h3
+                        class="
+                            text-sm
+                            font-bold
+                            uppercase
+                            tracking-wider
+                            text-white
+                        "
+                    >
+                        Quick Links
+                    </h3>
+
+                    <ul
+                        class="
+                            mt-5
+                            space-y-3
+                            text-sm
+                            text-slate-300
+                        "
+                    >
+
+                        <li>
+                            <a
+                                href="{% url 'core:about' %}"
+                                class="hover:text-campaign-gold"
+                            >
+                                About
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="{% url 'core:agenda' %}"
+                                class="hover:text-campaign-gold"
+                            >
+                                Our Agenda
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-campaign-gold"
+                            >
+                                News
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-campaign-gold"
+                            >
+                                Events
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- =====================================
+                     GET INVOLVED
+                ====================================== -->
+
+                <div>
+
+                    <h3
+                        class="
+                            text-sm
+                            font-bold
+                            uppercase
+                            tracking-wider
+                        "
+                    >
+                        Get Involved
+                    </h3>
+
+                    <ul
+                        class="
+                            mt-5
+                            space-y-3
+                            text-sm
+                            text-slate-300
+                        "
+                    >
+
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-campaign-gold"
+                            >
+                                Join Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="{% url 'core:contact' %}"
+                                class="hover:text-campaign-gold"
+                            >
+                                Contact Us
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'accounts:login' %}"
+                                class="hover:text-campaign-gold"
+                            >
+                                Staff Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-campaign-gold"
+                            >
+                                Campaign Media
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- =====================================
+                     SOCIAL
+                ====================================== -->
+
+                <div>
+
+                    <h3
+                        class="
+                            text-sm
+                            font-bold
+                            uppercase
+                            tracking-wider
+                        "
+                    >
+                        Follow the Movement
+                    </h3>
+
+                    <p
+                        class="
+                            mt-5
+                            text-sm
+                            leading-6
+                            text-slate-300
+                        "
+                    >
+                        Follow campaign updates,
+                        activities and announcements
+                        across our official channels.
+                    </p>
+
+                    <div class="mt-5 flex gap-3">
+
+                        <a
+                            href="#"
+                            aria-label="Facebook"
+                            class="
+                                flex
+                                h-10
+                                w-10
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-white/10
+                                hover:bg-campaign-gold
+                                hover:text-campaign-navy
+                            "
+                        >
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+
+                        <a
+                            href="#"
+                            aria-label="X"
+                            class="
+                                flex
+                                h-10
+                                w-10
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-white/10
+                                hover:bg-campaign-gold
+                                hover:text-campaign-navy
+                            "
+                        >
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+
+                        <a
+                            href="#"
+                            aria-label="Instagram"
+                            class="
+                                flex
+                                h-10
+                                w-10
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-white/10
+                                hover:bg-campaign-gold
+                                hover:text-campaign-navy
+                            "
+                        >
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 COPYRIGHT
+            ========================================== -->
+
+            <div
+                class="
+                    flex
+                    flex-col
+                    gap-3
+                    border-t
+                    border-white/10
+                    py-6
+                    text-sm
+                    text-slate-400
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                "
+            >
+
+                <p>
+                    ©
+                    <span id="current-year"></span>
+                    UDUAK-ABASI 2027.
+                    All rights reserved.
+                </p>
+
+                <p>
+                    Built for the movement.
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =================================================
+         FONT AWESOME
+    ================================================== -->
+
+    <script
+        src="https://kit.fontawesome.com/c27acce84b.js"
+        crossorigin="anonymous"
+    ></script>
+
+
+    <!-- =================================================
+         MAIN JAVASCRIPT
+    ================================================== -->
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>

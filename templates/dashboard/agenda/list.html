@@ -1,0 +1,741 @@
+{% extends "dashboard/base.html" %}
+
+
+{% block title %}
+    Agenda Management
+{% endblock %}
+
+
+{% block page_title %}
+    Agenda Management
+{% endblock %}
+
+
+{% block content %}
+
+<div class="space-y-6">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div
+        class="
+            flex
+            flex-col
+            gap-4
+            lg:flex-row
+            lg:items-center
+            lg:justify-between
+        "
+    >
+
+        <div>
+
+            <p
+                class="
+                    text-xs
+                    font-extrabold
+                    uppercase
+                    tracking-[0.18em]
+                    text-blue-700
+                "
+            >
+                Campaign Management
+            </p>
+
+            <h2
+                class="
+                    mt-1
+                    text-2xl
+                    font-black
+                    text-slate-900
+                "
+            >
+                Campaign Agenda
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage the campaign's development priorities and agenda items.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'dashboard:agenda_create' %}"
+            class="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                bg-blue-700
+                px-4
+                py-3
+                text-xs
+                font-black
+                text-white
+                shadow-sm
+                transition
+                hover:bg-blue-800
+            "
+        >
+            <i class="fa-solid fa-plus"></i>
+            Add Agenda Item
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div
+        class="
+            grid
+            grid-cols-1
+            gap-4
+            sm:grid-cols-3
+        "
+    >
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Total Agenda
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-slate-900">
+                {{ total_agendas }}
+            </p>
+
+        </div>
+
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Active
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-emerald-600">
+                {{ active_agendas }}
+            </p>
+
+        </div>
+
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Inactive
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-slate-500">
+                {{ inactive_agendas }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH & FILTER
+    ====================================================== -->
+
+    <div
+        class="
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white
+            p-4
+            shadow-sm
+            sm:p-5
+        "
+    >
+
+        <form
+            method="get"
+            class="
+                grid
+                grid-cols-1
+                gap-3
+                md:grid-cols-4
+            "
+        >
+
+            <div class="md:col-span-2">
+
+                <label
+                    for="agenda-search"
+                    class="mb-1.5 block text-xs font-bold text-slate-600"
+                >
+                    Search
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-magnifying-glass
+                            absolute
+                            left-3
+                            top-1/2
+                            -translate-y-1/2
+                            text-xs
+                            text-slate-400
+                        "
+                    ></i>
+
+                    <input
+                        id="agenda-search"
+                        type="search"
+                        name="q"
+                        value="{{ current_search }}"
+                        placeholder="Search agenda items..."
+                        class="form-control w-full pl-9"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <label
+                    for="agenda-status"
+                    class="mb-1.5 block text-xs font-bold text-slate-600"
+                >
+                    Status
+                </label>
+
+                <select
+                    id="agenda-status"
+                    name="status"
+                    class="form-control w-full"
+                >
+
+                    <option value="">
+                        All
+                    </option>
+
+                    <option
+                        value="active"
+                        {% if current_status == "active" %}
+                            selected
+                        {% endif %}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="inactive"
+                        {% if current_status == "inactive" %}
+                            selected
+                        {% endif %}
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="flex items-end gap-2">
+
+                <button
+                    type="submit"
+                    class="
+                        inline-flex
+                        flex-1
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        bg-slate-900
+                        px-4
+                        py-2.5
+                        text-xs
+                        font-bold
+                        text-white
+                        hover:bg-slate-800
+                    "
+                >
+                    <i class="fa-solid fa-filter"></i>
+                    Filter
+                </button>
+
+
+                <a
+                    href="{% url 'dashboard:agenda_list' %}"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-slate-200
+                        px-4
+                        py-2.5
+                        text-xs
+                        font-bold
+                        text-slate-600
+                        hover:bg-slate-50
+                    "
+                >
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         AGENDA TABLE
+    ====================================================== -->
+
+    <div
+        class="
+            overflow-hidden
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white
+            shadow-sm
+        "
+    >
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full">
+
+                <thead class="border-b border-slate-200 bg-slate-50">
+
+                    <tr>
+
+                        <th class="table-heading w-20">
+                            Order
+                        </th>
+
+                        <th class="table-heading">
+                            Agenda
+                        </th>
+
+                        <th class="table-heading">
+                            Icon
+                        </th>
+
+                        <th class="table-heading">
+                            Status
+                        </th>
+
+                        <th class="table-heading text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for agenda in agendas %}
+
+                        <tr class="transition hover:bg-slate-50">
+
+
+                            <!-- ORDER -->
+
+                            <td class="table-cell">
+
+                                <div
+                                    class="
+                                        flex
+                                        h-9
+                                        w-9
+                                        items-center
+                                        justify-center
+                                        rounded-lg
+                                        bg-slate-100
+                                        text-sm
+                                        font-black
+                                        text-slate-700
+                                    "
+                                >
+                                    {{ agenda.number }}
+                                </div>
+
+                            </td>
+
+
+                            <!-- AGENDA -->
+
+                            <td class="table-cell">
+
+                                <div class="max-w-xl">
+
+                                    <p
+                                        class="
+                                            text-sm
+                                            font-black
+                                            text-slate-900
+                                        "
+                                    >
+                                        {{ agenda.title }}
+                                    </p>
+
+                                    <p
+                                        class="
+                                            mt-1
+                                            line-clamp-2
+                                            text-xs
+                                            leading-5
+                                            text-slate-500
+                                        "
+                                    >
+                                        {{ agenda.description }}
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- ICON -->
+
+                            <td class="table-cell">
+
+                                {% if agenda.icon %}
+
+                                    <div
+                                        class="
+                                            flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            bg-blue-50
+                                            text-blue-700
+                                        "
+                                        title="{{ agenda.icon }}"
+                                    >
+                                        <i class="{{ agenda.icon }}"></i>
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="text-xs text-slate-400">
+                                        None
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td class="table-cell">
+
+                                {% if agenda.is_active %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            items-center
+                                            gap-1.5
+                                            rounded-full
+                                            bg-emerald-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-black
+                                            text-emerald-700
+                                        "
+                                    >
+
+                                        <span
+                                            class="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-emerald-500
+                                            "
+                                        ></span>
+
+                                        Active
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            items-center
+                                            gap-1.5
+                                            rounded-full
+                                            bg-slate-100
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-black
+                                            text-slate-500
+                                        "
+                                    >
+
+                                        <span
+                                            class="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-slate-400
+                                            "
+                                        ></span>
+
+                                        Inactive
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td class="table-cell">
+
+                                <div class="flex justify-end gap-2">
+
+                                    <a
+                                        href="{% url 'dashboard:agenda_edit' agenda.pk %}"
+                                        class="
+                                            flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            border
+                                            border-slate-200
+                                            text-slate-500
+                                            transition
+                                            hover:bg-blue-50
+                                            hover:text-blue-700
+                                        "
+                                        title="Edit agenda"
+                                    >
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'dashboard:agenda_delete' agenda.pk %}"
+                                        class="
+                                            flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            border
+                                            border-slate-200
+                                            text-slate-500
+                                            transition
+                                            hover:bg-red-50
+                                            hover:text-red-600
+                                        "
+                                        title="Delete agenda"
+                                    >
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="
+                                    px-6
+                                    py-16
+                                    text-center
+                                "
+                            >
+
+                                <div
+                                    class="
+                                        mx-auto
+                                        flex
+                                        h-14
+                                        w-14
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-slate-100
+                                        text-slate-400
+                                    "
+                                >
+                                    <i class="fa-solid fa-list-check text-lg"></i>
+                                </div>
+
+                                <h3
+                                    class="
+                                        mt-4
+                                        text-sm
+                                        font-black
+                                        text-slate-800
+                                    "
+                                >
+                                    No agenda items found
+                                </h3>
+
+                                <p class="mt-1 text-xs text-slate-500">
+                                    Create your first campaign agenda item.
+                                </p>
+
+                                <a
+                                    href="{% url 'dashboard:agenda_create' %}"
+                                    class="
+                                        mt-5
+                                        inline-flex
+                                        items-center
+                                        gap-2
+                                        rounded-xl
+                                        bg-blue-700
+                                        px-4
+                                        py-2.5
+                                        text-xs
+                                        font-bold
+                                        text-white
+                                        hover:bg-blue-800
+                                    "
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                    Add Agenda Item
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
+
+        {% if is_paginated %}
+
+            <div
+                class="
+                    flex
+                    items-center
+                    justify-between
+                    border-t
+                    border-slate-100
+                    px-5
+                    py-4
+                "
+            >
+
+                <p class="text-xs text-slate-500">
+
+                    Page
+                    <span class="font-bold text-slate-700">
+                        {{ page_obj.number }}
+                    </span>
+
+                    of
+
+                    <span class="font-bold text-slate-700">
+                        {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                </p>
+
+
+                <div class="flex gap-2">
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?q={{ current_search }}&status={{ current_status }}&page={{ page_obj.previous_page_number }}"
+                            class="
+                                rounded-lg
+                                border
+                                border-slate-200
+                                px-3
+                                py-2
+                                text-xs
+                                font-bold
+                                text-slate-600
+                                hover:bg-slate-50
+                            "
+                        >
+                            Previous
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?q={{ current_search }}&status={{ current_status }}&page={{ page_obj.next_page_number }}"
+                            class="
+                                rounded-lg
+                                border
+                                border-slate-200
+                                px-3
+                                py-2
+                                text-xs
+                                font-bold
+                                text-slate-600
+                                hover:bg-slate-50
+                            "
+                        >
+                            Next
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

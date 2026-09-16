@@ -1,0 +1,2079 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    Apply for {{ programme.title }} | Uduak-Abasi 2027
+{% endblock %}
+
+
+{% block content %}
+
+<!-- ============================================================
+     PAGE HEADER
+============================================================= -->
+
+<section class="bg-campaign-navy text-white">
+
+    <div class="container-campaign py-20 sm:py-24">
+
+        <div class="max-w-4xl">
+
+            <span
+                class="inline-flex
+                       items-center
+                       rounded-full
+                       border
+                       border-campaign-gold/30
+                       bg-campaign-gold/10
+                       px-4
+                       py-2
+                       text-xs
+                       font-bold
+                       uppercase
+                       tracking-widest
+                       text-campaign-gold"
+            >
+                Empowerment Programme
+            </span>
+
+            <h1
+                class="mt-6
+                       text-3xl
+                       font-black
+                       leading-tight
+                       sm:text-4xl
+                       lg:text-5xl"
+            >
+                Apply for {{ programme.title }}
+            </h1>
+
+            <p
+                class="mt-5
+                       max-w-3xl
+                       text-base
+                       leading-8
+                       text-slate-300
+                       sm:text-lg"
+            >
+                Complete this application carefully. Your information
+                will help us understand your needs and assess applications
+                using the published programme criteria.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     APPLICATION FORM
+============================================================= -->
+
+<section
+    class="campaign-section relative min-h-screen bg-cover bg-center bg-no-repeat bg-fixed"
+    style="background-image: url('{% static 'images/empowerment-bg.jpeg' %}');"
+>
+
+    <!-- Background Overlay -->
+    <div class="absolute inset-0 bg-slate-950/75"></div>
+
+    <div class="container-campaign relative z-10">
+
+        <div class="mx-auto max-w-5xl">
+
+            <form
+                method="post"
+                novalidate
+                class="space-y-8"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     NON-FIELD ERRORS
+                ================================================== -->
+
+                {% if form.non_field_errors %}
+
+                    <div
+                        class="rounded-2xl
+                               border border-red-200
+                               bg-red-50
+                               p-5
+                               text-sm
+                               leading-6
+                               text-red-700"
+                    >
+
+                        <div class="flex items-start gap-3">
+
+                            <i
+                                class="fa-solid
+                                       fa-circle-exclamation
+                                       mt-1
+                                       shrink-0"
+                            ></i>
+
+                            <div>
+
+                                {% for error in form.non_field_errors %}
+
+                                    <p>{{ error }}</p>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     PROGRAMME
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-6">
+
+                        <span class="section-label">
+                            Programme
+                        </span>
+
+                        <h2
+                            class="mt-2
+                                   text-2xl
+                                   font-black
+                                   text-slate-900"
+                        >
+                            {{ programme.title }}
+                        </h2>
+
+                        {% if programme.description %}
+
+                            <p
+                                class="mt-3
+                                       max-w-3xl
+                                       leading-7
+                                       text-slate-600"
+                            >
+                                {{ programme.description }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <div
+                            class="mt-5
+                                   flex
+                                   flex-wrap
+                                   items-center
+                                   gap-3"
+                        >
+
+                            {% if programme.programme_type %}
+
+                                <span
+                                    class="inline-flex
+                                           items-center
+                                           gap-2
+                                           rounded-full
+                                           bg-campaign-blue/10
+                                           px-4
+                                           py-2
+                                           text-xs
+                                           font-bold
+                                           text-campaign-blue"
+                                >
+
+                                    <i class="fa-solid fa-layer-group"></i>
+
+                                    {{ programme.get_programme_type_display }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if applications_open %}
+
+                                <span
+                                    class="inline-flex
+                                           items-center
+                                           gap-2
+                                           rounded-full
+                                           bg-emerald-50
+                                           px-4
+                                           py-2
+                                           text-xs
+                                           font-bold
+                                           text-emerald-700"
+                                >
+
+                                    <span
+                                        class="h-2
+                                               w-2
+                                               rounded-full
+                                               bg-emerald-500"
+                                    ></span>
+
+                                    Applications Open
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSONAL INFORMATION
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-7">
+
+                        <span class="section-label">
+                            Section 01
+                        </span>
+
+                        <h2 class="section-title mt-2">
+                            Personal Information
+                        </h2>
+
+                        <p class="section-description mt-2">
+                            Provide your basic personal information.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="grid
+                               gap-6
+                               md:grid-cols-2"
+                    >
+
+                        <!-- FIRST NAME -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.first_name.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.first_name.label }}
+
+                                {% if form.first_name.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.first_name }}
+
+                            {% for error in form.first_name.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- LAST NAME -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.last_name.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.last_name.label }}
+
+                                {% if form.last_name.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.last_name }}
+
+                            {% for error in form.last_name.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- OTHER NAMES -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.other_names.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.other_names.label }}
+
+                                {% if form.other_names.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.other_names }}
+
+                            <p class="form-help">
+                                Optional.
+                            </p>
+
+                            {% for error in form.other_names.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- GENDER -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.gender.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.gender.label }}
+
+                                {% if form.gender.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.gender }}
+
+                            {% for error in form.gender.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- DATE OF BIRTH -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.date_of_birth.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.date_of_birth.label }}
+
+                                {% if form.date_of_birth.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.date_of_birth }}
+
+                            <p class="form-help">
+                                Your date of birth helps determine whether
+                                a VIN is required.
+                            </p>
+
+                            {% for error in form.date_of_birth.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CONTACT INFORMATION
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-7">
+
+                        <span class="section-label">
+                            Section 02
+                        </span>
+
+                        <h2 class="section-title mt-2">
+                            Contact Information
+                        </h2>
+
+                        <p class="section-description mt-2">
+                            Provide accurate contact and residential details.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="grid
+                               gap-6
+                               md:grid-cols-2"
+                    >
+
+                        <!-- PHONE -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.phone.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.phone.label }}
+
+                                {% if form.phone.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.phone }}
+
+                            <p class="form-help">
+                                Enter an active Nigerian phone number.
+                            </p>
+
+                            {% for error in form.phone.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.email.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.email.label }}
+
+                                {% if form.email.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.email }}
+
+                            <p class="form-help">
+                                Optional. Provide an email address if available.
+                            </p>
+
+                            {% for error in form.email.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- ADDRESS -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                for="{{ form.address.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.address.label }}
+
+                                {% if form.address.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.address }}
+
+                            {% for error in form.address.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- COMMUNITY -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                for="{{ form.community.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.community.label }}
+
+                                {% if form.community.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.community }}
+
+                            <p class="form-help">
+                                Enter the name of your community.
+                            </p>
+
+                            {% for error in form.community.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CONSTITUENCY LOCATION
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-7">
+
+                        <span class="section-label">
+                            Section 03
+                        </span>
+
+                        <h2 class="section-title mt-2">
+                            Constituency Location
+                        </h2>
+
+                        <p class="section-description mt-2">
+                            Select your Local Government Area, Ward and
+                            Polling Unit.
+                        </p>
+
+                    </div>
+
+
+                    <!-- INFORMATION NOTICE -->
+
+                    <div
+                        class="rounded-2xl
+                               border border-blue-100
+                               bg-blue-50
+                               p-4
+                               text-sm
+                               leading-6
+                               text-blue-800"
+                    >
+
+                        <div class="flex items-start gap-3">
+
+                            <i
+                                class="fa-solid
+                                       fa-circle-info
+                                       mt-1
+                                       shrink-0"
+                            ></i>
+
+                            <p>
+                                Please select your location carefully.
+                                Your Ward and Polling Unit will be loaded
+                                automatically based on your previous selection.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="mt-6
+                               grid
+                               gap-6
+                               md:grid-cols-3"
+                    >
+
+                        <!-- LGA -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.local_government.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.local_government.label }}
+
+                                {% if form.local_government.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.local_government }}
+
+                            <p class="form-help">
+                                Select your Local Government Area.
+                            </p>
+
+                            {% for error in form.local_government.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- WARD -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.ward.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.ward.label }}
+
+                                {% if form.ward.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.ward }}
+
+                            <p class="form-help">
+                                Select your Ward after choosing your LGA.
+                            </p>
+
+                            {% for error in form.ward.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- POLLING UNIT -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.polling_unit.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.polling_unit.label }}
+
+                                {% if form.polling_unit.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.polling_unit }}
+
+                            <p class="form-help">
+                                Select your Polling Unit after choosing your Ward.
+                            </p>
+
+                            {% for error in form.polling_unit.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- POLLING UNIT INFORMATION -->
+
+                    <div
+                        id="polling-unit-info"
+                        class="mt-5
+                               hidden
+                               rounded-2xl
+                               border border-slate-200
+                               bg-slate-50
+                               p-4"
+                    >
+
+                        <div class="flex items-start gap-3">
+
+                            <div
+                                class="flex
+                                       h-10
+                                       w-10
+                                       shrink-0
+                                       items-center
+                                       justify-center
+                                       rounded-full
+                                       bg-campaign-gold/15
+                                       text-campaign-gold"
+                            >
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <p
+                                    class="text-xs
+                                           font-bold
+                                           uppercase
+                                           tracking-wider
+                                           text-slate-500"
+                                >
+                                    Selected Polling Unit
+                                </p>
+
+                                <p
+                                    id="selected-pu-name"
+                                    class="mt-1
+                                           font-bold
+                                           text-slate-900"
+                                ></p>
+
+                                <p
+                                    id="selected-pu-code"
+                                    class="mt-1
+                                           text-sm
+                                           text-slate-600"
+                                ></p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         VIN
+                    ================================================== -->
+
+                    <div
+                        class="mt-6
+                               rounded-2xl
+                               border border-amber-200
+                               bg-amber-50
+                               p-5"
+                    >
+
+                        <div class="flex items-start gap-3">
+
+                            <div
+                                class="flex
+                                       h-10
+                                       w-10
+                                       shrink-0
+                                       items-center
+                                       justify-center
+                                       rounded-full
+                                       bg-amber-100
+                                       text-amber-600"
+                            >
+
+                                <i class="fa-solid fa-id-card"></i>
+
+                            </div>
+
+
+                            <div class="min-w-0">
+
+                                <h3
+                                    class="font-black
+                                           text-amber-900"
+                                >
+                                    Voters Identification Number (VIN)
+                                </h3>
+
+                                <p
+                                    class="mt-1
+                                           text-sm
+                                           leading-6
+                                           text-amber-800"
+                                >
+                                    Applicants aged 16 years and above
+                                    are required to provide their VIN.
+                                    Applicants below 16 years do not need
+                                    to provide a VIN.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mt-5">
+
+                            <label
+                                for="{{ form.vin.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+
+                                {{ form.vin.label }}
+
+                                <span
+                                    id="vin-required-indicator"
+                                    class="text-red-500"
+                                >
+                                    *
+                                </span>
+
+                            </label>
+
+
+                            {{ form.vin }}
+
+
+                            <p
+                                id="vin-help"
+                                class="form-help"
+                            >
+                                Required for applicants aged 16 years and above.
+                                Optional for applicants below 16.
+                            </p>
+
+
+                            {% for error in form.vin.errors %}
+
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     BACKGROUND
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-7">
+
+                        <span class="section-label">
+                            Section 04
+                        </span>
+
+                        <h2 class="section-title mt-2">
+                            Background
+                        </h2>
+
+                        <p class="section-description mt-2">
+                            Tell us a little about your education, occupation
+                            and current circumstances.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="grid
+                               gap-6
+                               md:grid-cols-2"
+                    >
+
+                        <!-- OCCUPATION -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.occupation.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.occupation.label }}
+
+                                {% if form.occupation.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.occupation }}
+
+                            <p class="form-help">
+                                Optional.
+                            </p>
+
+                            {% for error in form.occupation.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- EMPLOYMENT STATUS -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.employment_status.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.employment_status.label }}
+
+                                {% if form.employment_status.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.employment_status }}
+
+                            <p class="form-help">
+                                Describe your current employment situation.
+                            </p>
+
+                            {% for error in form.employment_status.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- EDUCATION -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                for="{{ form.educational_background.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.educational_background.label }}
+
+                                {% if form.educational_background.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.educational_background }}
+
+                            <p class="form-help">
+                                Enter your highest educational qualification.
+                            </p>
+
+                            {% for error in form.educational_background.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     APPLICATION QUESTIONS
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-slate-200
+                           bg-white
+                           p-6
+                           shadow-sm
+                           sm:p-8"
+                >
+
+                    <div class="mb-7">
+
+                        <span class="section-label">
+                            Section 05
+                        </span>
+
+                        <h2 class="section-title mt-2">
+                            Your Application
+                        </h2>
+
+                        <p class="section-description mt-2">
+                            Tell us about your needs, experience and how this
+                            opportunity could make a meaningful difference.
+                        </p>
+
+                    </div>
+
+
+                    <div class="space-y-7">
+
+                        <!-- REASON -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.reason_for_applying.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.reason_for_applying.label }}
+
+                                {% if form.reason_for_applying.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.reason_for_applying }}
+
+                            <p class="form-help">
+                                Explain why you need this opportunity and what
+                                you hope to gain from the programme.
+                            </p>
+
+                            {% for error in form.reason_for_applying.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- PROPOSED USE -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.proposed_use.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.proposed_use.label }}
+
+                                {% if form.proposed_use.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.proposed_use }}
+
+                            <p class="form-help">
+                                Explain how you intend to use the support if selected.
+                            </p>
+
+                            {% for error in form.proposed_use.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- EXPERIENCE -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.relevant_experience.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.relevant_experience.label }}
+
+                                {% if form.relevant_experience.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.relevant_experience }}
+
+                            <p class="form-help">
+                                Describe any relevant skills, training, business
+                                or work experience.
+                            </p>
+
+                            {% for error in form.relevant_experience.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- EXPECTED IMPACT -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.expected_impact.id_for_label }}"
+                                class="mb-2 block text-sm font-bold text-slate-700"
+                            >
+                                {{ form.expected_impact.label }}
+
+                                {% if form.expected_impact.field.required %}
+                                    <span class="text-red-500">*</span>
+                                {% endif %}
+                            </label>
+
+                            {{ form.expected_impact }}
+
+                            <p class="form-help">
+                                Explain how this opportunity could benefit you,
+                                your family or your community.
+                            </p>
+
+                            {% for error in form.expected_impact.errors %}
+                                <p class="form-error">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     DECLARATION
+                ================================================== -->
+
+                <div
+                    class="rounded-3xl
+                           border border-amber-200
+                           bg-amber-50
+                           p-6
+                           sm:p-7"
+                >
+
+                    <div class="flex items-start gap-4">
+
+                        <div
+                            class="flex
+                                   h-10
+                                   w-10
+                                   shrink-0
+                                   items-center
+                                   justify-center
+                                   rounded-full
+                                   bg-amber-100
+                                   text-amber-600"
+                        >
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h3 class="font-black text-amber-900">
+                                Application Declaration
+                            </h3>
+
+                            <p
+                                class="mt-2
+                                       text-sm
+                                       leading-6
+                                       text-amber-800"
+                            >
+                                Please provide accurate and truthful information.
+                                Applications will be reviewed according to the
+                                published eligibility and programme criteria.
+                                Submission of an application does not guarantee
+                                selection or support.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SUBMIT
+                ================================================== -->
+
+                <div
+                    class="flex
+                           flex-col
+                           gap-4
+                           sm:flex-row
+                           sm:items-center
+                           sm:justify-between"
+                >
+
+                    <a
+                        href="{% url 'empowerment:programme_detail' programme.slug %}"
+                        class="btn-outline
+                               inline-flex
+                               items-center
+                               justify-center
+                               gap-2"
+                    >
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back to Programme
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn-gold
+                               inline-flex
+                               items-center
+                               justify-center
+                               gap-2
+                               px-8
+                               py-4
+                               font-black"
+                    >
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Submit Application
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     CASCADING LOCATION + VIN JAVASCRIPT
+============================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ============================================================
+       FORM ELEMENTS
+    ============================================================ */
+
+    const lgaSelect =
+        document.getElementById("id_local_government");
+
+    const wardSelect =
+        document.getElementById("id_ward");
+
+    const pollingUnitSelect =
+        document.getElementById("id_polling_unit");
+
+    const dobInput =
+        document.getElementById("id_date_of_birth");
+
+    const vinInput =
+        document.getElementById("id_vin");
+
+    const vinRequiredIndicator =
+        document.getElementById("vin-required-indicator");
+
+    const vinHelp =
+        document.getElementById("vin-help");
+
+    const pollingUnitInfo =
+        document.getElementById("polling-unit-info");
+
+    const selectedPuName =
+        document.getElementById("selected-pu-name");
+
+    const selectedPuCode =
+        document.getElementById("selected-pu-code");
+
+
+    /* ============================================================
+       SAFETY CHECK
+    ============================================================ */
+
+    if (
+        !lgaSelect ||
+        !wardSelect ||
+        !pollingUnitSelect
+    ) {
+
+        console.error(
+            "Constituency form fields could not be found."
+        );
+
+        return;
+    }
+
+
+    /* ============================================================
+       AJAX URLS
+    ============================================================ */
+
+    const wardsUrl =
+        "{% url 'empowerment:wards_ajax' %}";
+
+    const pollingUnitsUrl =
+        "{% url 'empowerment:polling_units_ajax' %}";
+
+
+    /* ============================================================
+       INITIAL VALUES
+    ============================================================ */
+
+    const initialLgaId =
+        lgaSelect.value;
+
+    const initialWardId =
+        wardSelect.value;
+
+    const initialPollingUnitId =
+        pollingUnitSelect.value;
+
+
+    /* ============================================================
+       VIN AGE LOGIC
+    ============================================================ */
+
+    function calculateAge(dateOfBirth) {
+
+        if (!dateOfBirth) {
+            return null;
+        }
+
+        const today = new Date();
+
+        const birthDate =
+            new Date(
+                dateOfBirth + "T00:00:00"
+            );
+
+        let age =
+            today.getFullYear() -
+            birthDate.getFullYear();
+
+        const monthDifference =
+            today.getMonth() -
+            birthDate.getMonth();
+
+        if (
+            monthDifference < 0 ||
+            (
+                monthDifference === 0 &&
+                today.getDate() < birthDate.getDate()
+            )
+        ) {
+            age--;
+        }
+
+        return age;
+    }
+
+
+    function updateVinRequirement() {
+
+        if (!vinInput || !dobInput) {
+            return;
+        }
+
+        const age =
+            calculateAge(dobInput.value);
+
+
+        /*
+        ------------------------------------------------------------
+        No DOB supplied
+        ------------------------------------------------------------
+        */
+
+        if (age === null) {
+
+            vinInput.required = false;
+
+            if (vinRequiredIndicator) {
+                vinRequiredIndicator.classList.remove(
+                    "hidden"
+                );
+            }
+
+            if (vinHelp) {
+                vinHelp.textContent =
+                    "VIN is required for applicants aged 16 years and above. "
+                    + "Applicants below 16 years do not need to provide a VIN.";
+            }
+
+            return;
+        }
+
+
+        /*
+        ------------------------------------------------------------
+        Applicant below 16
+        ------------------------------------------------------------
+        */
+
+        if (age < 16) {
+
+            vinInput.required = false;
+
+            if (vinRequiredIndicator) {
+                vinRequiredIndicator.classList.add(
+                    "hidden"
+                );
+            }
+
+            if (vinHelp) {
+                vinHelp.textContent =
+                    "VIN is optional for applicants below 16 years.";
+            }
+
+            return;
+        }
+
+
+        /*
+        ------------------------------------------------------------
+        Applicant 16 or older
+        ------------------------------------------------------------
+        */
+
+        vinInput.required = true;
+
+        if (vinRequiredIndicator) {
+            vinRequiredIndicator.classList.remove(
+                "hidden"
+            );
+        }
+
+        if (vinHelp) {
+            vinHelp.textContent =
+                "VIN is required for applicants aged 16 years and above.";
+        }
+
+    }
+
+
+    if (dobInput) {
+
+        dobInput.addEventListener(
+            "change",
+            updateVinRequirement
+        );
+
+        dobInput.addEventListener(
+            "input",
+            updateVinRequirement
+        );
+
+    }
+
+
+    updateVinRequirement();
+
+
+    /* ============================================================
+       RESET WARD
+    ============================================================ */
+
+    function resetWard() {
+
+        wardSelect.innerHTML =
+            '<option value="">Select Ward</option>';
+
+        wardSelect.disabled = true;
+
+    }
+
+
+    /* ============================================================
+       RESET POLLING UNIT
+    ============================================================ */
+
+    function resetPollingUnit() {
+
+        pollingUnitSelect.innerHTML =
+            '<option value="">Select Polling Unit</option>';
+
+        pollingUnitSelect.disabled = true;
+
+
+        if (pollingUnitInfo) {
+
+            pollingUnitInfo.classList.add(
+                "hidden"
+            );
+
+        }
+
+
+        if (selectedPuName) {
+            selectedPuName.textContent = "";
+        }
+
+
+        if (selectedPuCode) {
+            selectedPuCode.textContent = "";
+        }
+
+    }
+
+
+    /* ============================================================
+       SHOW SELECTED POLLING UNIT
+    ============================================================ */
+
+    function showPollingUnitInfo(option) {
+
+        if (
+            !option ||
+            !option.value ||
+            !pollingUnitInfo
+        ) {
+
+            if (pollingUnitInfo) {
+
+                pollingUnitInfo.classList.add(
+                    "hidden"
+                );
+
+            }
+
+            return;
+        }
+
+
+        if (selectedPuName) {
+
+            selectedPuName.textContent =
+                option.dataset.name || "";
+
+        }
+
+
+        if (selectedPuCode) {
+
+            const code =
+                option.dataset.code || "";
+
+            const type =
+                option.dataset.type || "";
+
+            let text = "";
+
+            if (code) {
+                text += "Code: " + code;
+            }
+
+            if (type) {
+
+                if (text) {
+                    text += " • ";
+                }
+
+                text += type;
+            }
+
+            selectedPuCode.textContent =
+                text;
+
+        }
+
+
+        pollingUnitInfo.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    /* ============================================================
+       LOAD WARDS
+    ============================================================ */
+
+    async function loadWards(
+        lgaId,
+        selectedWardId = null
+    ) {
+
+        resetWard();
+
+        resetPollingUnit();
+
+
+        if (!lgaId) {
+            return;
+        }
+
+
+        wardSelect.innerHTML =
+            '<option value="">Loading wards...</option>';
+
+        wardSelect.disabled = true;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    wardsUrl +
+                    "?lga=" +
+                    encodeURIComponent(lgaId),
+                    {
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest"
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load wards."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            wardSelect.innerHTML =
+                '<option value="">Select Ward</option>';
+
+
+            if (
+                !data.wards ||
+                data.wards.length === 0
+            ) {
+
+                wardSelect.innerHTML =
+                    '<option value="">No wards available</option>';
+
+                wardSelect.disabled = true;
+
+                return;
+
+            }
+
+
+            data.wards.forEach(
+                function (ward) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        ward.id;
+
+
+                    option.textContent =
+                        ward.code
+                            ? `${ward.code} — ${ward.name}`
+                            : ward.name;
+
+
+                    if (
+                        selectedWardId &&
+                        String(selectedWardId) ===
+                        String(ward.id)
+                    ) {
+
+                        option.selected = true;
+
+                    }
+
+
+                    wardSelect.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+            wardSelect.disabled = false;
+
+
+            if (selectedWardId) {
+
+                await loadPollingUnits(
+                    selectedWardId,
+                    initialPollingUnitId
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error loading wards:",
+                error
+            );
+
+
+            wardSelect.innerHTML =
+                '<option value="">Unable to load wards</option>';
+
+            wardSelect.disabled = true;
+
+        }
+
+    }
+
+
+    /* ============================================================
+       LOAD POLLING UNITS
+    ============================================================ */
+
+    async function loadPollingUnits(
+        wardId,
+        selectedPollingUnitId = null
+    ) {
+
+        resetPollingUnit();
+
+
+        if (!wardId) {
+            return;
+        }
+
+
+        pollingUnitSelect.innerHTML =
+            '<option value="">Loading polling units...</option>';
+
+        pollingUnitSelect.disabled = true;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    pollingUnitsUrl +
+                    "?ward=" +
+                    encodeURIComponent(wardId),
+                    {
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest"
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load polling units."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            pollingUnitSelect.innerHTML =
+                '<option value="">Select Polling Unit</option>';
+
+
+            if (
+                !data.polling_units ||
+                data.polling_units.length === 0
+            ) {
+
+                pollingUnitSelect.innerHTML =
+                    '<option value="">No polling units available</option>';
+
+                pollingUnitSelect.disabled = true;
+
+                return;
+
+            }
+
+
+            data.polling_units.forEach(
+                function (pollingUnit) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        pollingUnit.id;
+
+
+                    option.textContent =
+                        pollingUnit.label ||
+                        (
+                            pollingUnit.code +
+                            " — " +
+                            pollingUnit.name
+                        );
+
+
+                    option.dataset.code =
+                        pollingUnit.code || "";
+
+
+                    option.dataset.name =
+                        pollingUnit.name || "";
+
+
+                    option.dataset.type =
+                        pollingUnit.type || "";
+
+
+                    if (
+                        selectedPollingUnitId &&
+                        String(selectedPollingUnitId) ===
+                        String(pollingUnit.id)
+                    ) {
+
+                        option.selected = true;
+
+                    }
+
+
+                    pollingUnitSelect.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+            pollingUnitSelect.disabled = false;
+
+
+            const selectedOption =
+                pollingUnitSelect.options[
+                    pollingUnitSelect.selectedIndex
+                ];
+
+
+            if (
+                selectedPollingUnitId &&
+                selectedOption
+            ) {
+
+                showPollingUnitInfo(
+                    selectedOption
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error loading polling units:",
+                error
+            );
+
+
+            pollingUnitSelect.innerHTML =
+                '<option value="">Unable to load polling units</option>';
+
+            pollingUnitSelect.disabled = true;
+
+        }
+
+    }
+
+
+    /* ============================================================
+       LGA CHANGE
+    ============================================================ */
+
+    lgaSelect.addEventListener(
+        "change",
+        function () {
+
+            const lgaId =
+                this.value;
+
+
+            resetWard();
+
+            resetPollingUnit();
+
+
+            if (!lgaId) {
+                return;
+            }
+
+
+            loadWards(lgaId);
+
+        }
+    );
+
+
+    /* ============================================================
+       WARD CHANGE
+    ============================================================ */
+
+    wardSelect.addEventListener(
+        "change",
+        function () {
+
+            const wardId =
+                this.value;
+
+
+            resetPollingUnit();
+
+
+            if (!wardId) {
+                return;
+            }
+
+
+            loadPollingUnits(
+                wardId
+            );
+
+        }
+    );
+
+
+    /* ============================================================
+       POLLING UNIT CHANGE
+    ============================================================ */
+
+    pollingUnitSelect.addEventListener(
+        "change",
+        function () {
+
+            const selectedOption =
+                this.options[
+                    this.selectedIndex
+                ];
+
+
+            if (
+                !this.value ||
+                !selectedOption
+            ) {
+
+                if (pollingUnitInfo) {
+
+                    pollingUnitInfo.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+                return;
+
+            }
+
+
+            showPollingUnitInfo(
+                selectedOption
+            );
+
+        }
+    );
+
+
+    /* ============================================================
+       INITIAL PAGE LOAD
+    ============================================================ */
+
+    if (initialLgaId) {
+
+        loadWards(
+            initialLgaId,
+            initialWardId || null
+        );
+
+    } else {
+
+        resetWard();
+
+        resetPollingUnit();
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,434 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Add Staff | UDUAK-ABASI 2027
+{% endblock %}
+
+{% block page_title %}
+    Add New Staff
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-3xl">
+
+    <!-- PAGE HEADER -->
+
+    <div class="mb-6">
+
+        <h2 class="text-2xl font-bold text-slate-800">
+            Create Staff Account
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Create a new staff account and give the staff member access
+            to the campaign dashboard.
+        </p>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-6 py-5">
+
+            <h3 class="text-lg font-bold text-slate-800">
+                Staff Information
+            </h3>
+
+            <p class="mt-1 text-sm text-slate-500">
+                All fields marked with * are required.
+            </p>
+
+        </div>
+
+
+        <form
+            method="post"
+            class="space-y-6 p-6"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- USERNAME -->
+
+            <div>
+
+                <label
+                    for="username"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Username *
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    autocomplete="username"
+                    class="
+                        w-full
+                        rounded-xl
+                        border
+                        border-slate-300
+                        bg-white
+                        px-4
+                        py-3
+                        text-sm
+                        text-slate-800
+                        outline-none
+                        transition
+                        focus:border-campaign-blue
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                    placeholder="Enter username"
+                >
+
+            </div>
+
+
+            <!-- NAME -->
+
+            <div class="grid gap-6 md:grid-cols-2">
+
+                <div>
+
+                    <label
+                        for="first_name"
+                        class="mb-2 block text-sm font-semibold text-slate-700"
+                    >
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        autocomplete="given-name"
+                        class="
+                            w-full
+                            rounded-xl
+                            border
+                            border-slate-300
+                            bg-white
+                            px-4
+                            py-3
+                            text-sm
+                            text-slate-800
+                            outline-none
+                            transition
+                            focus:border-campaign-blue
+                            focus:ring-2
+                            focus:ring-blue-100
+                        "
+                        placeholder="First name"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="last_name"
+                        class="mb-2 block text-sm font-semibold text-slate-700"
+                    >
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        autocomplete="family-name"
+                        class="
+                            w-full
+                            rounded-xl
+                            border
+                            border-slate-300
+                            bg-white
+                            px-4
+                            py-3
+                            text-sm
+                            text-slate-800
+                            outline-none
+                            transition
+                            focus:border-campaign-blue
+                            focus:ring-2
+                            focus:ring-blue-100
+                        "
+                        placeholder="Last name"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div>
+
+                <label
+                    for="email"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    class="
+                        w-full
+                        rounded-xl
+                        border
+                        border-slate-300
+                        bg-white
+                        px-4
+                        py-3
+                        text-sm
+                        text-slate-800
+                        outline-none
+                        transition
+                        focus:border-campaign-blue
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                    placeholder="staff@example.com"
+                >
+
+            </div>
+
+            <!-- Role -->
+            <div>
+                <label
+                    for="role"
+                    class="mb-2 block text-sm font-medium text-slate-700"
+                >
+                    Staff Role
+                </label>
+
+                <select
+                    id="role"
+                    name="role"
+                    required
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3
+                        text-sm text-slate-700 outline-none transition
+                        focus:border-campaign-blue focus:ring-2 focus:ring-campaign-blue/20"
+                >
+                    <option value="">Select a role</option>
+
+                    <option value="News Manager">
+                        News Manager
+                    </option>
+
+                    <option value="Events Manager">
+                        Events Manager
+                    </option>
+
+                    <option value="Empowerment Manager">
+                        Empowerment Manager
+                    </option>
+
+                    <option value="Gallery Manager">
+                        Gallery Manager
+                    </option>
+
+                    <option value="Supporters Manager">
+                        Supporters Manager
+                    </option>
+                </select>
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="grid gap-6 md:grid-cols-2">
+
+                <div>
+
+                    <label
+                        for="password"
+                        class="mb-2 block text-sm font-semibold text-slate-700"
+                    >
+                        Password *
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        autocomplete="new-password"
+                        class="
+                            w-full
+                            rounded-xl
+                            border
+                            border-slate-300
+                            bg-white
+                            px-4
+                            py-3
+                            text-sm
+                            text-slate-800
+                            outline-none
+                            transition
+                            focus:border-campaign-blue
+                            focus:ring-2
+                            focus:ring-blue-100
+                        "
+                        placeholder="Enter password"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="confirm_password"
+                        class="mb-2 block text-sm font-semibold text-slate-700"
+                    >
+                        Confirm Password *
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        required
+                        autocomplete="new-password"
+                        class="
+                            w-full
+                            rounded-xl
+                            border
+                            border-slate-300
+                            bg-white
+                            px-4
+                            py-3
+                            text-sm
+                            text-slate-800
+                            outline-none
+                            transition
+                            focus:border-campaign-blue
+                            focus:ring-2
+                            focus:ring-blue-100
+                        "
+                        placeholder="Confirm password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- NOTICE -->
+
+            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+
+                <div class="flex gap-3">
+
+                    <i class="fa-solid fa-circle-info mt-0.5 text-campaign-blue"></i>
+
+                    <div>
+
+                        <p class="text-sm font-semibold text-slate-800">
+                            Staff access
+                        </p>
+
+                        <p class="mt-1 text-sm leading-6 text-slate-600">
+                            This account will be created as an active staff
+                            account and will have access to the campaign
+                            dashboard.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div
+                class="
+                    flex
+                    flex-col-reverse
+                    gap-3
+                    border-t
+                    border-slate-200
+                    pt-6
+                    sm:flex-row
+                    sm:justify-end
+                "
+            >
+
+                <a
+                    href="{% url 'dashboard:home' %}"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        rounded-xl
+                        border
+                        border-slate-300
+                        bg-white
+                        px-5
+                        py-3
+                        text-sm
+                        font-bold
+                        text-slate-700
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        bg-campaign-blue
+                        px-5
+                        py-3
+                        text-sm
+                        font-bold
+                        text-white
+                        shadow-sm
+                        transition
+                        hover:-translate-y-0.5
+                        hover:shadow-md
+                    "
+                >
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    <span>
+                        Create Staff Account
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

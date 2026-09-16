@@ -1,0 +1,1598 @@
+{% extends "dashboard/base.html" %}
+{% load dashboard_extras %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard Overview
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-8">
+
+<!-- =====================================================
+     WELCOME HEADER
+====================================================== -->
+
+<div
+    class="
+        overflow-hidden rounded-2xl
+        bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950
+        px-6 py-7 shadow-lg sm:px-8
+    "
+>
+    <div
+        class="
+            flex flex-col gap-6
+            lg:flex-row lg:items-center lg:justify-between
+        "
+    >
+
+        <div>
+
+            <p
+                class="
+                    text-xs font-extrabold uppercase
+                    tracking-[0.2em] text-amber-400
+                "
+            >
+                UDUAK-ABASI 2027
+            </p>
+
+            <h2
+                class="
+                    mt-2 text-2xl font-black tracking-tight
+                    text-white sm:text-3xl
+                "
+            >
+                Welcome back,
+                {{ request.user.get_full_name|default:request.user.username }}
+            </h2>
+
+            <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                Manage campaign supporters, news, events, empowerment,
+                media and website content from one place.
+            </p>
+
+        </div>
+
+        <div class="flex shrink-0 flex-wrap gap-3">
+
+            <a
+                href="{% url 'core:home' %}"
+                target="_blank"
+                rel="noopener"
+                class="
+                    inline-flex items-center gap-2 rounded-xl
+                    border border-white/15 bg-white/10
+                    px-4 py-2.5 text-xs font-bold text-white
+                    transition hover:bg-white/15
+                "
+            >
+                <i class="fa-solid fa-globe"></i>
+                View Website
+            </a>
+
+            {% if request.user|has_group:"Supporters Manager" %}
+
+            <a
+                href="{% url 'supporters:dashboard' %}"
+                class="
+                    inline-flex items-center gap-2 rounded-xl
+                    bg-amber-400 px-4 py-2.5
+                    text-xs font-black text-slate-950
+                    transition hover:bg-amber-300
+                "
+            >
+                <i class="fa-solid fa-users"></i>
+                Supporters
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- =====================================================
+     CAMPAIGN SNAPSHOT
+====================================================== -->
+
+{% if request.user|has_group:"Supporters Manager" or request.user|has_group:"Empowerment Manager" %}
+
+<div>
+
+    <div class="mb-4">
+
+        <h3 class="text-lg font-black text-slate-900">
+            Campaign Snapshot
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            A quick overview of your campaign activity.
+        </p>
+
+    </div>
+
+    <div
+        class="
+            grid grid-cols-1 gap-4
+            sm:grid-cols-2
+            xl:grid-cols-4
+        "
+    >
+
+        {% if request.user|has_group:"Supporters Manager" %}
+
+        <!-- TOTAL SUPPORTERS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Total Supporters
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ total_supporters }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-blue-50 text-blue-700
+                ">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'supporters:dashboard' %}"
+                class="
+                    mt-4 inline-flex items-center gap-2
+                    text-xs font-bold text-blue-700
+                    hover:text-blue-900
+                "
+            >
+                Manage supporters
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+        <!-- APPROVED SUPPORTERS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Approved
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ approved_supporters }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-emerald-50 text-emerald-700
+                ">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Confirmed campaign supporters
+            </p>
+
+        </div>
+
+
+        <!-- PENDING SUPPORTERS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Pending
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ pending_supporters }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-amber-50 text-amber-600
+                ">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Awaiting review
+            </p>
+
+        </div>
+
+
+        <!-- VOLUNTEERS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Volunteers
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ volunteer_count }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-purple-50 text-purple-700
+                ">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Registered volunteers
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Empowerment Manager" %}
+
+        <!-- TOTAL APPLICATIONS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Empowerment Applications
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ total_empowerment_applications }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-blue-50 text-blue-700
+                ">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Total applications received
+            </p>
+
+        </div>
+
+
+        <!-- PENDING APPLICATIONS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Pending Applications
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ pending_empowerment_applications }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-amber-50 text-amber-600
+                ">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Awaiting application review
+            </p>
+
+        </div>
+
+
+        <!-- APPROVED APPLICATIONS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Approved Applications
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ approved_empowerment_applications }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-emerald-50 text-emerald-700
+                ">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Applications approved
+            </p>
+
+        </div>
+
+
+        <!-- REJECTED APPLICATIONS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Rejected Applications
+                    </p>
+
+                    <p class="mt-2 text-3xl font-black text-slate-900">
+                        {{ rejected_empowerment_applications }}
+                    </p>
+
+                </div>
+
+                <div class="
+                    flex h-11 w-11 items-center justify-center
+                    rounded-xl bg-red-50 text-red-700
+                ">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+
+            </div>
+
+            <p class="mt-4 text-xs font-medium text-slate-500">
+                Applications not approved
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- =====================================================
+     WEBSITE CONTENT
+====================================================== -->
+
+{% if request.user|has_group:"News Manager" or request.user|has_group:"Events Manager" or request.user|has_group:"Gallery Manager" %}
+
+<div>
+
+    <div class="mb-4">
+
+        <h3 class="text-lg font-black text-slate-900">
+            Website Content
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Current status of your public campaign content.
+        </p>
+
+    </div>
+
+    <div
+        class="
+            grid grid-cols-1 gap-4
+            sm:grid-cols-2
+            lg:grid-cols-4
+        "
+    >
+
+        {% if request.user|has_group:"News Manager" %}
+
+        <!-- PUBLISHED NEWS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-blue-50 text-blue-700
+                ">
+                    <i class="fa-solid fa-newspaper"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Published News
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ published_news }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NEWS DRAFTS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-slate-100 text-slate-700
+                ">
+                    <i class="fa-solid fa-file-pen"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        News Drafts
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ draft_news }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Events Manager" %}
+
+        <!-- UPCOMING EVENTS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-emerald-50 text-emerald-700
+                ">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Upcoming Events
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ upcoming_event_count }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Gallery Manager" %}
+
+        <!-- GALLERY ALBUMS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-purple-50 text-purple-700
+                ">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Published Albums
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ gallery_album_count }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDIA IMAGES -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-amber-50 text-amber-700
+                ">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Gallery Images
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ gallery_image_count }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- VIDEOS -->
+
+        <div class="campaign-card p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div class="
+                    flex h-11 w-11 shrink-0 items-center
+                    justify-center rounded-xl
+                    bg-red-50 text-red-700
+                ">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+
+                <div>
+
+                    <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                        Published Videos
+                    </p>
+
+                    <p class="mt-1 text-2xl font-black text-slate-900">
+                        {{ published_video_count }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- =====================================================
+     RECENT ACTIVITY
+====================================================== -->
+
+<div
+    class="
+        grid grid-cols-1 gap-6
+        xl:grid-cols-2
+    "
+>
+
+    <!-- =================================================
+         RECENT SUPPORTERS
+    ================================================== -->
+
+    {% if request.user|has_group:"Supporters Manager" %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div
+            class="
+                flex items-center justify-between
+                border-b border-slate-100
+                px-5 py-4 sm:px-6
+            "
+        >
+
+            <div>
+
+                <h3 class="text-sm font-black text-slate-900">
+                    Recent Supporters
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Latest supporter registrations
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'supporters:dashboard' %}"
+                class="text-xs font-bold text-blue-700 hover:text-blue-900"
+            >
+                View all
+            </a>
+
+        </div>
+
+        {% if recent_supporters %}
+
+        <div class="divide-y divide-slate-100">
+
+            {% for supporter in recent_supporters %}
+
+            <div class="flex items-center gap-4 px-5 py-4 sm:px-6">
+
+                <div
+                    class="
+                        flex h-10 w-10 shrink-0 items-center
+                        justify-center rounded-full
+                        bg-blue-50 text-sm font-black text-blue-700
+                    "
+                >
+                    {{ supporter.full_name|first|upper }}
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                    <p class="truncate text-sm font-bold text-slate-800">
+                        {{ supporter.full_name }}
+                    </p>
+
+                    <p class="mt-0.5 truncate text-xs text-slate-500">
+                        {{ supporter.lga|default:"LGA not specified" }}
+                    </p>
+
+                </div>
+
+                {% if supporter.status == "approved" %}
+
+                <span class="
+                    rounded-full bg-emerald-50
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-emerald-700
+                ">
+                    Approved
+                </span>
+
+                {% elif supporter.status == "pending" %}
+
+                <span class="
+                    rounded-full bg-amber-50
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-amber-700
+                ">
+                    Pending
+                </span>
+
+                {% else %}
+
+                <span class="
+                    rounded-full bg-slate-100
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-slate-600
+                ">
+                    {{ supporter.get_status_display }}
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="px-6 py-12 text-center">
+
+            <div class="
+                mx-auto flex h-12 w-12 items-center justify-center
+                rounded-full bg-slate-100 text-slate-400
+            ">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-slate-700">
+                No supporters yet
+            </p>
+
+            <p class="mt-1 text-xs text-slate-500">
+                New registrations will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         UPCOMING EVENTS
+    ================================================== -->
+
+    {% if request.user|has_group:"Events Manager" %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div
+            class="
+                flex items-center justify-between
+                border-b border-slate-100
+                px-5 py-4 sm:px-6
+            "
+        >
+
+            <div>
+
+                <h3 class="text-sm font-black text-slate-900">
+                    Upcoming Events
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Your next campaign activities
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'events:list' %}"
+                class="text-xs font-bold text-blue-700 hover:text-blue-900"
+            >
+                View all
+            </a>
+
+        </div>
+
+        {% if upcoming_events %}
+
+        <div class="divide-y divide-slate-100">
+
+            {% for event in upcoming_events %}
+
+            <div class="flex gap-4 px-5 py-4 sm:px-6">
+
+                <div
+                    class="
+                        flex h-12 w-12 shrink-0 flex-col
+                        items-center justify-center rounded-xl
+                        bg-blue-50 text-blue-700
+                    "
+                >
+                    <span class="text-[9px] font-black uppercase">
+                        {{ event.event_date|date:"M" }}
+                    </span>
+
+                    <span class="text-lg font-black leading-none">
+                        {{ event.event_date|date:"d" }}
+                    </span>
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                    <p class="truncate text-sm font-bold text-slate-800">
+                        {{ event.title }}
+                    </p>
+
+                    <div
+                        class="
+                            mt-1 flex flex-wrap items-center
+                            gap-x-3 gap-y-1 text-xs text-slate-500
+                        "
+                    >
+
+                        {% if event.start_time %}
+                        <span>
+                            <i class="fa-regular fa-clock mr-1"></i>
+                            {{ event.start_time|time:"g:i A" }}
+                        </span>
+                        {% endif %}
+
+                        {% if event.location %}
+                        <span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            {{ event.location }}
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="px-6 py-12 text-center">
+
+            <div class="
+                mx-auto flex h-12 w-12 items-center justify-center
+                rounded-full bg-slate-100 text-slate-400
+            ">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-slate-700">
+                No upcoming events
+            </p>
+
+            <p class="mt-1 text-xs text-slate-500">
+                Create an event to display it here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         RECENT EMPOWERMENT APPLICATIONS
+    ================================================== -->
+
+    {% if request.user|has_group:"Empowerment Manager" %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div
+            class="
+                flex items-center justify-between
+                border-b border-slate-100
+                px-5 py-4 sm:px-6
+            "
+        >
+
+            <div>
+
+                <h3 class="text-sm font-black text-slate-900">
+                    Recent Empowerment Applications
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Latest applications received
+                </p>
+
+            </div>
+
+            <a
+                href="#"
+                class="text-xs font-bold text-blue-700 hover:text-blue-900"
+            >
+                View all
+            </a>
+
+        </div>
+
+        {% if recent_empowerment_applications %}
+
+        <div class="divide-y divide-slate-100">
+
+            {% for application in recent_empowerment_applications %}
+
+            <div class="flex items-center gap-4 px-5 py-4 sm:px-6">
+
+                <div
+                    class="
+                        flex h-10 w-10 shrink-0 items-center
+                        justify-center rounded-full
+                        bg-amber-50 text-sm font-black text-amber-700
+                    "
+                >
+                    {{ application.first_name|first|upper }}
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                    <p class="truncate text-sm font-bold text-slate-800">
+                        {{ application.first_name }}
+                        {{ application.last_name }}
+                    </p>
+
+                    <p class="mt-0.5 truncate text-xs text-slate-500">
+
+                        {{ application.application_number }}
+
+                        {% if application.programme %}
+                            • {{ application.programme }}
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+                {% if application.status == "approved" %}
+
+                <span class="
+                    rounded-full bg-emerald-50
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-emerald-700
+                ">
+                    Approved
+                </span>
+
+                {% elif application.status == "pending" %}
+
+                <span class="
+                    rounded-full bg-amber-50
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-amber-700
+                ">
+                    Pending
+                </span>
+
+                {% elif application.status == "rejected" %}
+
+                <span class="
+                    rounded-full bg-red-50
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-red-700
+                ">
+                    Rejected
+                </span>
+
+                {% else %}
+
+                <span class="
+                    rounded-full bg-slate-100
+                    px-2.5 py-1 text-[10px]
+                    font-extrabold text-slate-600
+                ">
+                    {{ application.get_status_display }}
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="px-6 py-12 text-center">
+
+            <div class="
+                mx-auto flex h-12 w-12 items-center justify-center
+                rounded-full bg-slate-100 text-slate-400
+            ">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <p class="mt-4 text-sm font-bold text-slate-700">
+                No applications yet
+            </p>
+
+            <p class="mt-1 text-xs text-slate-500">
+                New empowerment applications will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         RECENT MEDIA
+    ================================================== -->
+
+    {% if request.user|has_group:"Gallery Manager" %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div
+            class="
+                flex items-center justify-between
+                border-b border-slate-100
+                px-5 py-4 sm:px-6
+            "
+        >
+
+            <div>
+
+                <h3 class="text-sm font-black text-slate-900">
+                    Recent Media
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Latest gallery albums and videos
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="divide-y divide-slate-100">
+
+            {% for album in recent_media_albums %}
+
+            <div class="flex items-center gap-4 px-5 py-4 sm:px-6">
+
+                <div class="
+                    flex h-10 w-10 shrink-0 items-center justify-center
+                    rounded-xl bg-purple-50 text-purple-700
+                ">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                    <p class="truncate text-sm font-bold text-slate-800">
+                        {{ album.title }}
+                    </p>
+
+                    <p class="mt-0.5 text-xs text-slate-500">
+                        Gallery album
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+            {% for video in recent_media_videos %}
+
+            <div class="flex items-center gap-4 px-5 py-4 sm:px-6">
+
+                <div class="
+                    flex h-10 w-10 shrink-0 items-center justify-center
+                    rounded-xl bg-red-50 text-red-700
+                ">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+
+                <div class="min-w-0 flex-1">
+
+                    <p class="truncate text-sm font-bold text-slate-800">
+                        {{ video.title }}
+                    </p>
+
+                    <p class="mt-0.5 text-xs text-slate-500">
+                        Campaign video
+                    </p>
+
+                </div>
+
+                <span class="text-xs text-slate-400">
+                    {{ video.views }} views
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+            {% if not recent_media_albums and not recent_media_videos %}
+
+            <div class="px-6 py-12 text-center">
+
+                <div class="
+                    mx-auto flex h-12 w-12 items-center justify-center
+                    rounded-full bg-slate-100 text-slate-400
+                ">
+                    <i class="fa-solid fa-photo-film"></i>
+                </div>
+
+                <p class="mt-4 text-sm font-bold text-slate-700">
+                    No media yet
+                </p>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Create a gallery or add a campaign video.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     RECENT NEWS
+====================================================== -->
+
+{% if request.user|has_group:"News Manager" %}
+
+<div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+    <div
+        class="
+            flex flex-col gap-3
+            border-b border-slate-100
+            px-5 py-4
+            sm:flex-row sm:items-center
+            sm:justify-between sm:px-6
+        "
+    >
+
+        <div>
+
+            <h3 class="text-sm font-black text-slate-900">
+                Recent News
+            </h3>
+
+            <p class="mt-1 text-xs text-slate-500">
+                Latest published campaign updates
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'news:list' %}"
+            class="
+                inline-flex items-center gap-2
+                text-xs font-bold text-blue-700
+                hover:text-blue-900
+            "
+        >
+            View all news
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+    {% if recent_news %}
+
+    <div class="divide-y divide-slate-100">
+
+        {% for article in recent_news %}
+
+        <div
+            class="
+                flex flex-col gap-3 px-5 py-4
+                sm:flex-row sm:items-center sm:px-6
+            "
+        >
+
+            <div class="min-w-0 flex-1">
+
+                <div class="flex flex-wrap items-center gap-2">
+
+                    {% if article.category %}
+
+                    <span class="
+                        rounded-full bg-blue-50
+                        px-2.5 py-1 text-[10px]
+                        font-extrabold text-blue-700
+                    ">
+                        {{ article.category.name }}
+                    </span>
+
+                    {% endif %}
+
+                    <span class="text-[10px] font-medium text-slate-400">
+                        {{ article.published_at|date:"M d, Y" }}
+                    </span>
+
+                </div>
+
+                <h4 class="mt-2 truncate text-sm font-bold text-slate-800">
+                    {{ article.title }}
+                </h4>
+
+            </div>
+
+            <div class="flex shrink-0 items-center gap-4">
+
+                <span class="text-xs text-slate-400">
+                    <i class="fa-regular fa-eye mr-1"></i>
+                    {{ article.views }}
+                </span>
+
+                <a
+                    href="{% url 'news:detail' article.slug %}"
+                    class="text-xs font-bold text-blue-700 hover:text-blue-900"
+                >
+                    Read
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="px-6 py-12 text-center">
+
+        <div class="
+            mx-auto flex h-12 w-12 items-center justify-center
+            rounded-full bg-slate-100 text-slate-400
+        ">
+            <i class="fa-solid fa-newspaper"></i>
+        </div>
+
+        <p class="mt-4 text-sm font-bold text-slate-700">
+            No published news
+        </p>
+
+        <p class="mt-1 text-xs text-slate-500">
+            Publish campaign news to see it here.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+====================================================== -->
+
+{% if request.user.is_superuser or request.user|has_group:"Supporters Manager" or request.user|has_group:"News Manager" or request.user|has_group:"Events Manager" or request.user|has_group:"Gallery Manager" or request.user|has_group:"Empowerment Manager" %}
+
+<div>
+
+    <div class="mb-4">
+
+        <h3 class="text-lg font-black text-slate-900">
+            Quick Actions
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Frequently used campaign management tools.
+        </p>
+
+    </div>
+
+    <div
+        class="
+            grid grid-cols-1 gap-4
+            sm:grid-cols-2
+            lg:grid-cols-4
+        "
+    >
+
+        {% if request.user|has_group:"Supporters Manager" %}
+
+        <a
+            href="{% url 'supporters:dashboard' %}"
+            class="
+                group rounded-2xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5 hover:border-blue-200
+                hover:shadow-md
+            "
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-xl bg-blue-50 text-blue-700
+                transition group-hover:bg-blue-700
+                group-hover:text-white
+            ">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h4 class="mt-4 text-sm font-black text-slate-900">
+                Manage Supporters
+            </h4>
+
+            <p class="mt-1 text-xs leading-5 text-slate-500">
+                Review registrations and update supporter status.
+            </p>
+
+        </a>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"News Manager" %}
+
+        <a
+            href="{% url 'dashboard:news_create' %}"
+            class="
+                group rounded-2xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5 hover:border-blue-200
+                hover:shadow-md
+            "
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-xl bg-blue-50 text-blue-700
+                transition group-hover:bg-blue-700
+                group-hover:text-white
+            ">
+                <i class="fa-solid fa-newspaper"></i>
+            </div>
+
+            <h4 class="mt-4 text-sm font-black text-slate-900">
+                Add News
+            </h4>
+
+            <p class="mt-1 text-xs leading-5 text-slate-500">
+                Publish a new campaign update or announcement.
+            </p>
+
+        </a>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Events Manager" %}
+
+        <a
+            href="{% url 'dashboard:event_create' %}"
+            class="
+                group rounded-2xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5 hover:border-blue-200
+                hover:shadow-md
+            "
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-xl bg-emerald-50 text-emerald-700
+                transition group-hover:bg-emerald-700
+                group-hover:text-white
+            ">
+                <i class="fa-solid fa-calendar-plus"></i>
+            </div>
+
+            <h4 class="mt-4 text-sm font-black text-slate-900">
+                Add Event
+            </h4>
+
+            <p class="mt-1 text-xs leading-5 text-slate-500">
+                Schedule a campaign event or community engagement.
+            </p>
+
+        </a>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Gallery Manager" %}
+
+        <a
+            href="{% url 'dashboard:media_album_create' %}"
+            class="campaign-card flex items-center gap-4 p-5 transition hover:-translate-y-0.5"
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-lg bg-slate-100 text-slate-700
+            ">
+                <i class="fa-solid fa-images"></i>
+            </div>
+
+            <div>
+
+                <p class="font-semibold text-slate-900">
+                    Create Gallery
+                </p>
+
+                <p class="text-sm text-slate-500">
+                    Add a new photo album
+                </p>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="{% url 'dashboard:media_video_create' %}"
+            class="campaign-card flex items-center gap-4 p-5 transition hover:-translate-y-0.5"
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-lg bg-slate-100 text-slate-700
+            ">
+                <i class="fa-solid fa-video"></i>
+            </div>
+
+            <div>
+
+                <p class="font-semibold text-slate-900">
+                    Add Video
+                </p>
+
+                <p class="text-sm text-slate-500">
+                    Publish campaign video
+                </p>
+
+            </div>
+
+        </a>
+
+        {% endif %}
+
+
+        {% if request.user|has_group:"Empowerment Manager" %}
+
+        <a
+            href="#"
+            class="
+                group rounded-2xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5
+                hover:border-amber-200 hover:shadow-md
+            "
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-xl bg-amber-50 text-amber-700
+                transition group-hover:bg-amber-400
+                group-hover:text-slate-950
+            ">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <h4 class="mt-4 text-sm font-black text-slate-900">
+                Manage Empowerment
+            </h4>
+
+            <p class="mt-1 text-xs leading-5 text-slate-500">
+                Review and manage empowerment applications.
+            </p>
+
+        </a>
+
+        {% endif %}
+
+
+        {% if request.user.is_superuser %}
+
+        <a
+            href="{% url 'admin:core_agenda_add' %}"
+            class="
+                group rounded-2xl border border-slate-200
+                bg-white p-5 shadow-sm transition
+                hover:-translate-y-0.5
+                hover:border-amber-200 hover:shadow-md
+            "
+        >
+
+            <div class="
+                flex h-11 w-11 items-center justify-center
+                rounded-xl bg-amber-50 text-amber-700
+                transition group-hover:bg-amber-400
+                group-hover:text-slate-950
+            ">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+
+            <h4 class="mt-4 text-sm font-black text-slate-900">
+                Manage Agenda
+            </h4>
+
+            <p class="mt-1 text-xs leading-5 text-slate-500">
+                Update the campaign's plans and priorities.
+            </p>
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+{% endblock %}

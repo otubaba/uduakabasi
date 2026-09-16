@@ -1,0 +1,556 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+
+    {% if object %}
+        Edit News
+    {% else %}
+        Add News
+    {% endif %}
+
+{% endblock %}
+
+
+{% block page_title %}
+
+    {% if object %}
+        Edit News Article
+    {% else %}
+        Add News Article
+    {% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-auto max-w-5xl">
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="space-y-6"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =================================================
+             ERROR SUMMARY
+        ================================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div
+                class="
+                    rounded-xl
+                    border
+                    border-red-200
+                    bg-red-50
+                    p-4
+                    text-sm
+                    text-red-700
+                "
+            >
+
+                {% for error in form.non_field_errors %}
+
+                    <p>{{ error }}</p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             ARTICLE INFORMATION
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div
+                class="
+                    border-b
+                    border-slate-100
+                    px-6
+                    py-5
+                "
+            >
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Article Information
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Add the main details of the campaign article.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+
+                <!-- TITLE -->
+
+                <div>
+
+                    <label
+                        for="{{ form.title.id_for_label }}"
+                        class="form-label"
+                    >
+                        Article Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% for error in form.title.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- CATEGORY / TYPE -->
+
+                <div
+                    class="
+                        grid
+                        grid-cols-1
+                        gap-5
+                        md:grid-cols-2
+                    "
+                >
+
+                    <div>
+
+                        <label
+                            for="{{ form.category.id_for_label }}"
+                            class="form-label"
+                        >
+                            Category
+                        </label>
+
+                        {{ form.category }}
+
+                        {% for error in form.category.errors %}
+
+                            <p class="form-error">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div>
+
+                        <label
+                            for="{{ form.content_type.id_for_label }}"
+                            class="form-label"
+                        >
+                            Content Type
+                        </label>
+
+                        {{ form.content_type }}
+
+                        {% for error in form.content_type.errors %}
+
+                            <p class="form-error">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- EXCERPT -->
+
+                <div>
+
+                    <label
+                        for="{{ form.excerpt.id_for_label }}"
+                        class="form-label"
+                    >
+                        Short Summary
+                    </label>
+
+                    {{ form.excerpt }}
+
+                    <p class="form-help">
+                        This summary appears on news cards and previews.
+                    </p>
+
+                    {% for error in form.excerpt.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- CONTENT -->
+
+                <div>
+
+                    <label
+                        for="{{ form.content.id_for_label }}"
+                        class="form-label"
+                    >
+                        Article Content
+                    </label>
+
+                    {{ form.content }}
+
+                    {% for error in form.content.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MEDIA
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div
+                class="
+                    border-b
+                    border-slate-100
+                    px-6
+                    py-5
+                "
+            >
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Media
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Add an image or video to the article.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+
+                <!-- FEATURED IMAGE -->
+
+                <div>
+
+                    <label
+                        for="{{ form.featured_image.id_for_label }}"
+                        class="form-label"
+                    >
+                        Featured Image
+                    </label>
+
+                    {{ form.featured_image }}
+
+                    {% if object.featured_image %}
+
+                        <div class="mt-3">
+
+                            <img
+                                src="{{ object.featured_image.url }}"
+                                alt="{{ object.title }}"
+                                class="
+                                    h-40
+                                    w-full
+                                    rounded-xl
+                                    object-cover
+                                    sm:w-64
+                                "
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+                    {% for error in form.featured_image.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VIDEO -->
+
+                <div>
+
+                    <label
+                        for="{{ form.video.id_for_label }}"
+                        class="form-label"
+                    >
+                        Upload Video
+                    </label>
+
+                    {{ form.video }}
+
+                    <p class="form-help">
+                        Optional. Upload an MP4, WebM or supported video file.
+                    </p>
+
+                    {% for error in form.video.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VIDEO URL -->
+
+                <div>
+
+                    <label
+                        for="{{ form.video_url.id_for_label }}"
+                        class="form-label"
+                    >
+                        External Video URL
+                    </label>
+
+                    {{ form.video_url }}
+
+                    <p class="form-help">
+                        Optional. You can paste a YouTube video URL.
+                    </p>
+
+                    {% for error in form.video_url.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PUBLICATION
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div
+                class="
+                    border-b
+                    border-slate-100
+                    px-6
+                    py-5
+                "
+            >
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Publication
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Control when the article appears publicly.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+
+                <!-- PUBLISHED -->
+
+                <label
+                    class="
+                        flex
+                        cursor-pointer
+                        items-start
+                        gap-3
+                        rounded-xl
+                        border
+                        border-slate-200
+                        p-4
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+
+                    {{ form.published }}
+
+                    <span>
+
+                        <span class="block text-sm font-bold text-slate-800">
+                            Publish this article
+                        </span>
+
+                        <span class="mt-1 block text-xs text-slate-500">
+                            Published articles are visible on the public website.
+                        </span>
+
+                    </span>
+
+                </label>
+
+
+                <!-- DATE -->
+
+                <div>
+
+                    <label
+                        for="{{ form.published_at.id_for_label }}"
+                        class="form-label"
+                    >
+                        Publication Date
+                    </label>
+
+                    {{ form.published_at }}
+
+                    {% for error in form.published_at.errors %}
+
+                        <p class="form-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div
+            class="
+                flex
+                flex-col-reverse
+                gap-3
+                sm:flex-row
+                sm:justify-end
+            "
+        >
+
+            <a
+                href="{% url 'dashboard:news_list' %}"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-slate-200
+                    px-5
+                    py-3
+                    text-xs
+                    font-bold
+                    text-slate-600
+                    transition
+                    hover:bg-slate-50
+                "
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    bg-blue-700
+                    px-5
+                    py-3
+                    text-xs
+                    font-black
+                    text-white
+                    shadow-sm
+                    transition
+                    hover:bg-blue-800
+                "
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                {% if object %}
+                    Save Changes
+                {% else %}
+                    Create Article
+                {% endif %}
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

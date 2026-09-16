@@ -1,0 +1,1091 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    Contact Us | UDUAK-ABASI 2027
+{% endblock %}
+
+
+{% block meta_description %}
+    Get in touch with the UDUAK-ABASI 2027 campaign team. Send us a message,
+    share your thoughts, or connect with the campaign.
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================================================
+     CONTACT HERO
+========================================================== -->
+
+<section
+    class="
+        relative
+        overflow-hidden
+        bg-campaign-navy
+        pt-32
+        pb-20
+        sm:pt-36
+        lg:pt-40
+        lg:pb-24
+    "
+>
+
+    <!-- Decorative background -->
+
+    <div
+        class="
+            absolute
+            -right-24
+            -top-24
+            h-72
+            w-72
+            rounded-full
+            bg-campaign-blue/20
+            blur-3xl
+        "
+    ></div>
+
+    <div
+        class="
+            absolute
+            -bottom-32
+            -left-24
+            h-80
+            w-80
+            rounded-full
+            bg-campaign-gold/10
+            blur-3xl
+        "
+    ></div>
+
+
+    <div class="container-campaign relative">
+
+        <div class="max-w-3xl">
+
+            <!-- Section label -->
+
+            <div
+                class="
+                    mb-5
+                    inline-flex
+                    items-center
+                    gap-3
+                "
+            >
+
+                <span
+                    class="
+                        h-px
+                        w-10
+                        bg-campaign-gold
+                    "
+                ></span>
+
+                <span
+                    class="
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-[0.25em]
+                        text-campaign-gold
+                    "
+                >
+                    Get In Touch
+                </span>
+
+            </div>
+
+
+            <!-- Heading -->
+
+            <h1
+                class="
+                    text-4xl
+                    font-extrabold
+                    leading-tight
+                    tracking-tight
+                    text-white
+                    sm:text-5xl
+                    lg:text-6xl
+                "
+            >
+                Let's Build a Better
+                <span class="text-campaign-gold">
+                    Future Together.
+                </span>
+            </h1>
+
+
+            <!-- Description -->
+
+            <p
+                class="
+                    mt-6
+                    max-w-2xl
+                    text-base
+                    leading-7
+                    text-slate-300
+                    sm:text-lg
+                    sm:leading-8
+                "
+            >
+                Your voice matters. Whether you have a question, an idea,
+                a concern, or simply want to connect with the campaign,
+                we would love to hear from you.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CONTACT SECTION
+========================================================== -->
+
+<section
+    class="
+        campaign-section
+        bg-white 
+    "
+>
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                grid
+                gap-10
+                lg:grid-cols-5
+                lg:gap-14
+            "
+        >
+
+
+            <!-- =================================================
+                 CONTACT INFORMATION
+            ================================================== -->
+
+            <div class="lg:col-span-2">
+
+                <span class="section-label">
+                    Contact Information
+                </span>
+
+                <h2
+                    class="
+                        section-title
+                        mt-3
+                    "
+                >
+                    Connect With
+                    <span class="text-campaign-blue">
+                        Us
+                    </span>
+                </h2>
+
+
+                <p
+                    class="
+                        section-description
+                        mt-5
+                    "
+                >
+                    We are committed to listening to the people we serve.
+                    Reach out to us and let us know how we can work together
+                    to build a stronger and more prosperous constituency.
+                </p>
+
+
+                <!-- =============================================
+                     CONTACT DETAILS
+                ============================================== -->
+
+                <div class="mt-8 space-y-5">
+
+
+                    <!-- ADDRESS -->
+
+                    {% if profile.address %}
+
+                    <div
+                        class="
+                            flex
+                            gap-4
+                        "
+                    >
+
+                        <div
+                            class="
+                                flex
+                                h-12
+                                w-12
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-xl
+                                bg-campaign-navy
+                                text-campaign-gold
+                            "
+                        >
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <p
+                                class="
+                                    text-sm
+                                    font-bold
+                                    text-campaign-navy
+                                "
+                            >
+                                Office Address
+                            </p>
+
+                            <p
+                                class="
+                                    mt-1
+                                    text-sm
+                                    leading-6
+                                    text-slate-600
+                                "
+                            >
+                                {{ profile.address }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <!-- PHONE -->
+
+                    {% if profile.phone %}
+
+                    <div
+                        class="
+                            flex
+                            gap-4
+                        "
+                    >
+
+                        <div
+                            class="
+                                flex
+                                h-12
+                                w-12
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-xl
+                                bg-campaign-blue
+                                text-white
+                            "
+                        >
+
+                            <i class="fa-solid fa-phone"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <p
+                                class="
+                                    text-sm
+                                    font-bold
+                                    text-campaign-navy
+                                "
+                            >
+                                Phone
+                            </p>
+
+                            <a
+                                href="tel:{{ profile.phone }}"
+                                class="
+                                    mt-1
+                                    block
+                                    text-sm
+                                    font-medium
+                                    text-slate-600
+                                    transition
+                                    hover:text-campaign-blue
+                                "
+                            >
+                                {{ profile.phone }}
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    <!-- EMAIL -->
+
+                    {% if profile.email %}
+
+                    <div
+                        class="
+                            flex
+                            gap-4
+                        "
+                    >
+
+                        <div
+                            class="
+                                flex
+                                h-12
+                                w-12
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-xl
+                                bg-campaign-gold
+                                text-campaign-navy
+                            "
+                        >
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <p
+                                class="
+                                    text-sm
+                                    font-bold
+                                    text-campaign-navy
+                                "
+                            >
+                                Email
+                            </p>
+
+                            <a
+                                href="mailto:{{ profile.email }}"
+                                class="
+                                    mt-1
+                                    block
+                                    break-all
+                                    text-sm
+                                    font-medium
+                                    text-slate-600
+                                    transition
+                                    hover:text-campaign-blue
+                                "
+                            >
+                                {{ profile.email }}
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- =============================================
+                     SOCIAL MEDIA
+                ============================================== -->
+
+                <div class="mt-10">
+
+                    <p
+                        class="
+                            text-sm
+                            font-bold
+                            text-campaign-navy
+                        "
+                    >
+                        Follow the Campaign
+                    </p>
+
+
+                    <div
+                        class="
+                            mt-4
+                            flex
+                            flex-wrap
+                            gap-3
+                        "
+                    >
+
+                        {% if profile.facebook_url %}
+
+                        <a
+                            href="{{ profile.facebook_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                            class="
+                                flex
+                                h-11
+                                w-11
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                text-slate-600
+                                transition
+                                duration-200
+                                hover:border-campaign-blue
+                                hover:bg-campaign-blue
+                                hover:text-white
+                            "
+                        >
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+
+                        {% endif %}
+
+
+                        {% if profile.twitter_url %}
+
+                        <a
+                            href="{{ profile.twitter_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="X / Twitter"
+                            class="
+                                flex
+                                h-11
+                                w-11
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                text-slate-600
+                                transition
+                                duration-200
+                                hover:border-campaign-navy
+                                hover:bg-campaign-navy
+                                hover:text-white
+                            "
+                        >
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+
+                        {% endif %}
+
+
+                        {% if profile.instagram_url %}
+
+                        <a
+                            href="{{ profile.instagram_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            class="
+                                flex
+                                h-11
+                                w-11
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                text-slate-600
+                                transition
+                                duration-200
+                                hover:border-campaign-gold
+                                hover:bg-campaign-gold
+                                hover:text-campaign-navy
+                            "
+                        >
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+
+                        {% endif %}
+
+
+                        {% if profile.youtube_url %}
+
+                        <a
+                            href="{{ profile.youtube_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="YouTube"
+                            class="
+                                flex
+                                h-11
+                                w-11
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                border-slate-200
+                                text-slate-600
+                                transition
+                                duration-200
+                                hover:border-red-500
+                                hover:bg-red-500
+                                hover:text-white
+                            "
+                        >
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                CONTACT FORM
+            ================================================== -->
+
+            <div class="lg:col-span-3">
+
+                <div
+                    class="
+                        rounded-3xl
+                        border
+                        border-slate-200
+                        bg-white
+                        p-6
+                        shadow-xl
+                        shadow-slate-200/40
+                        sm:p-8
+                        lg:p-10
+                    "
+                >
+
+                    <div class="mb-8">
+
+                        <span class="section-label">
+                            Send a Message
+                        </span>
+
+                        <h2
+                            class="
+                                mt-2
+                                text-2xl
+                                font-extrabold
+                                tracking-tight
+                                text-campaign-navy
+                                sm:text-3xl
+                            "
+                        >
+                            We'd Love to Hear From You
+                        </h2>
+
+                        <p
+                            class="
+                                mt-3
+                                text-sm
+                                leading-6
+                                text-slate-500
+                            "
+                        >
+                            Complete the form below and our campaign team
+                            will get back to you as soon as possible.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =============================================
+                        SUCCESS MESSAGE
+                    ============================================== -->
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div
+                                class="
+                                    mb-6
+                                    flex
+                                    items-start
+                                    gap-3
+                                    rounded-xl
+                                    border
+                                    border-emerald-200
+                                    bg-emerald-50
+                                    p-4
+                                    text-sm
+                                    text-emerald-800
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-circle-check
+                                        mt-0.5
+                                        text-emerald-600
+                                    "
+                                ></i>
+
+                                <p>
+                                    {{ message }}
+                                </p>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <!-- =============================================
+                        FORM
+                    ============================================== -->
+
+                    <form
+                        method="post"
+                        action="{% url 'core:contact' %}"
+                        class="space-y-6"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- =========================================
+                            FORM ERRORS
+                        ========================================== -->
+
+                        {% if form.non_field_errors %}
+
+                            <div
+                                class="
+                                    rounded-xl
+                                    border
+                                    border-red-200
+                                    bg-red-50
+                                    p-4
+                                    text-sm
+                                    text-red-700
+                                "
+                            >
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- =========================================
+                            NAME
+                        ========================================== -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.name.id_for_label }}"
+                                class="
+                                    mb-2
+                                    block
+                                    text-sm
+                                    font-bold
+                                    text-slate-700
+                                "
+                            >
+                                Full Name
+                            </label>
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+
+                                <div class="mt-2 text-sm text-red-600">
+                                    {{ form.name.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                            EMAIL + PHONE
+                        ========================================== -->
+
+                        <div
+                            class="
+                                grid
+                                gap-6
+                                sm:grid-cols-2
+                            "
+                        >
+
+                            <!-- EMAIL -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.email.id_for_label }}"
+                                    class="
+                                        mb-2
+                                        block
+                                        text-sm
+                                        font-bold
+                                        text-slate-700
+                                    "
+                                >
+                                    Email Address
+                                </label>
+
+                                {{ form.email }}
+
+                                {% if form.email.errors %}
+
+                                    <div class="mt-2 text-sm text-red-600">
+                                        {{ form.email.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- PHONE -->
+
+                            <div>
+
+                                <label
+                                    for="{{ form.phone.id_for_label }}"
+                                    class="
+                                        mb-2
+                                        block
+                                        text-sm
+                                        font-bold
+                                        text-slate-700
+                                    "
+                                >
+                                    Phone Number
+                                </label>
+
+                                {{ form.phone }}
+
+                                {% if form.phone.errors %}
+
+                                    <div class="mt-2 text-sm text-red-600">
+                                        {{ form.phone.errors }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                            SUBJECT
+                        ========================================== -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.subject.id_for_label }}"
+                                class="
+                                    mb-2
+                                    block
+                                    text-sm
+                                    font-bold
+                                    text-slate-700
+                                "
+                            >
+                                Subject
+                            </label>
+
+                            {{ form.subject }}
+
+                            {% if form.subject.errors %}
+
+                                <div class="mt-2 text-sm text-red-600">
+                                    {{ form.subject.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                            MESSAGE
+                        ========================================== -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.message.id_for_label }}"
+                                class="
+                                    mb-2
+                                    block
+                                    text-sm
+                                    font-bold
+                                    text-slate-700
+                                "
+                            >
+                                Message
+                            </label>
+
+                            {{ form.message }}
+
+                            {% if form.message.errors %}
+
+                                <div class="mt-2 text-sm text-red-600">
+                                    {{ form.message.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =========================================
+                            SUBMIT
+                        ========================================== -->
+
+                        <button
+                            type="submit"
+                            class="
+                                inline-flex
+                                w-full
+                                items-center
+                                justify-center
+                                gap-3
+                                rounded-xl
+                                bg-campaign-gold
+                                px-6
+                                py-4
+                                text-sm
+                                font-extrabold
+                                text-campaign-navy
+                                shadow-sm
+                                transition
+                                duration-200
+                                hover:-translate-y-0.5
+                                hover:shadow-lg
+                                focus:outline-none
+                                focus:ring-2
+                                focus:ring-campaign-gold
+                                focus:ring-offset-2
+                            "
+                        >
+
+                            <span>
+                                Send Message
+                            </span>
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CAMPAIGN CTA
+========================================================== -->
+
+<section
+    class="
+        campaign-section
+        bg-campaign-navy
+    "
+>
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                relative
+                overflow-hidden
+                rounded-3xl
+                bg-campaign-blue
+                px-6
+                py-12
+                text-center
+                sm:px-10
+                sm:py-16
+                lg:px-16
+            "
+        >
+
+            <!-- Decorative circle -->
+
+            <div
+                class="
+                    absolute
+                    -right-20
+                    -top-20
+                    h-56
+                    w-56
+                    rounded-full
+                    bg-campaign-gold/10
+                "
+            ></div>
+
+
+            <div class="relative mx-auto max-w-3xl">
+
+                <span
+                    class="
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-[0.25em]
+                        text-campaign-gold
+                    "
+                >
+                    UDUAK-ABASI 2027
+                </span>
+
+
+                <h2
+                    class="
+                        mt-4
+                        text-3xl
+                        font-extrabold
+                        tracking-tight
+                        text-white
+                        sm:text-4xl
+                        lg:text-5xl
+                    "
+                >
+                    Your Voice.
+                    <span class="text-campaign-gold">
+                        Your Future.
+                    </span>
+                </h2>
+
+
+                <p
+                    class="
+                        mx-auto
+                        mt-5
+                        max-w-2xl
+                        text-sm
+                        leading-7
+                        text-blue-100
+                        sm:text-base
+                    "
+                >
+                    Together, we can create meaningful progress and build
+                    a stronger future for our people and our communities.
+                </p>
+
+
+                <div
+                    class="
+                        mt-8
+                        flex
+                        flex-col
+                        items-center
+                        justify-center
+                        gap-3
+                        sm:flex-row
+                    "
+                >
+
+                    <a
+                        href="{% url 'core:about' %}"
+                        class="
+                            inline-flex
+                            w-full
+                            items-center
+                            justify-center
+                            rounded-xl
+                            bg-campaign-gold
+                            px-6
+                            py-3.5
+                            text-sm
+                            font-extrabold
+                            text-campaign-navy
+                            transition
+                            hover:-translate-y-0.5
+                            hover:shadow-lg
+                            sm:w-auto
+                        "
+                    >
+                        Learn More
+                    </a>
+
+
+                    <a
+                        href="{% url 'news:list' %}"
+                        class="
+                            inline-flex
+                            w-full
+                            items-center
+                            justify-center
+                            rounded-xl
+                            border
+                            border-white/30
+                            px-6
+                            py-3.5
+                            text-sm
+                            font-bold
+                            text-white
+                            transition
+                            hover:border-white
+                            hover:bg-white/10
+                            sm:w-auto
+                        "
+                    >
+                        Latest Updates
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+

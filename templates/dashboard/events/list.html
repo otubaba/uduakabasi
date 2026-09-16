@@ -1,0 +1,1022 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Events Management
+{% endblock %}
+
+{% block page_title %}
+    Events Management
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div
+        class="
+            flex
+            flex-col
+            gap-4
+            lg:flex-row
+            lg:items-center
+            lg:justify-between
+        "
+    >
+
+        <div>
+
+            <p
+                class="
+                    text-xs
+                    font-extrabold
+                    uppercase
+                    tracking-[0.18em]
+                    text-blue-700
+                "
+            >
+                Campaign Planning
+            </p>
+
+            <h2
+                class="
+                    mt-1
+                    text-2xl
+                    font-black
+                    text-slate-900
+                "
+            >
+                Events
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Create and manage campaign events and engagements.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'dashboard:event_create' %}"
+            class="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                bg-blue-700
+                px-4
+                py-3
+                text-xs
+                font-black
+                text-white
+                shadow-sm
+                transition
+                hover:bg-blue-800
+            "
+        >
+            <i class="fa-solid fa-plus"></i>
+            Add Event
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div
+        class="
+            grid
+            grid-cols-1
+            gap-4
+            sm:grid-cols-2
+            xl:grid-cols-5
+        "
+    >
+
+        <!-- TOTAL -->
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Total
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-slate-900">
+                {{ total_events }}
+            </p>
+
+        </div>
+
+
+        <!-- UPCOMING -->
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Upcoming
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-blue-600">
+                {{ upcoming_events_count }}
+            </p>
+
+        </div>
+
+
+        <!-- ONGOING -->
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Ongoing
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-emerald-600">
+                {{ ongoing_events_count }}
+            </p>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Completed
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-slate-600">
+                {{ completed_events_count }}
+            </p>
+
+        </div>
+
+
+        <!-- CANCELLED -->
+
+        <div class="campaign-card p-5">
+
+            <p class="text-xs font-bold uppercase tracking-wide text-slate-500">
+                Cancelled
+            </p>
+
+            <p class="mt-2 text-3xl font-black text-red-600">
+                {{ cancelled_events_count }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <div
+        class="
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white
+            p-4
+            shadow-sm
+            sm:p-5
+        "
+    >
+
+        <form
+            method="get"
+            class="
+                grid
+                grid-cols-1
+                gap-3
+                md:grid-cols-4
+            "
+        >
+
+            <!-- SEARCH -->
+
+            <div class="md:col-span-2">
+
+                <label
+                    for="event-search"
+                    class="mb-1.5 block text-xs font-bold text-slate-600"
+                >
+                    Search
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-magnifying-glass
+                            absolute
+                            left-3
+                            top-1/2
+                            -translate-y-1/2
+                            text-xs
+                            text-slate-400
+                        "
+                    ></i>
+
+                    <input
+                        id="event-search"
+                        type="search"
+                        name="q"
+                        value="{{ current_search }}"
+                        placeholder="Search events..."
+                        class="form-control w-full pl-9"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div>
+
+                <label
+                    for="event-status"
+                    class="mb-1.5 block text-xs font-bold text-slate-600"
+                >
+                    Status
+                </label>
+
+                <select
+                    id="event-status"
+                    name="status"
+                    class="form-control w-full"
+                >
+
+                    <option value="">
+                        All statuses
+                    </option>
+
+                    {% for value, label in event_statuses %}
+
+                        <option
+                            value="{{ value }}"
+                            {% if current_status == value %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ label }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- PUBLISHED -->
+
+            <div>
+
+                <label
+                    for="event-published"
+                    class="mb-1.5 block text-xs font-bold text-slate-600"
+                >
+                    Publication
+                </label>
+
+                <select
+                    id="event-published"
+                    name="published"
+                    class="form-control w-full"
+                >
+
+                    <option value="">
+                        All events
+                    </option>
+
+                    <option
+                        value="yes"
+                        {% if current_published == "yes" %}
+                            selected
+                        {% endif %}
+                    >
+                        Published
+                    </option>
+
+                    <option
+                        value="no"
+                        {% if current_published == "no" %}
+                            selected
+                        {% endif %}
+                    >
+                        Unpublished
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="md:col-span-4 flex gap-2">
+
+                <button
+                    type="submit"
+                    class="
+                        inline-flex
+                        items-center
+                        gap-2
+                        rounded-xl
+                        bg-slate-900
+                        px-4
+                        py-2.5
+                        text-xs
+                        font-bold
+                        text-white
+                        transition
+                        hover:bg-slate-800
+                    "
+                >
+                    <i class="fa-solid fa-filter"></i>
+                    Apply Filters
+                </button>
+
+
+                <a
+                    href="{% url 'dashboard:event_list' %}"
+                    class="
+                        inline-flex
+                        items-center
+                        rounded-xl
+                        border
+                        border-slate-200
+                        px-4
+                        py-2.5
+                        text-xs
+                        font-bold
+                        text-slate-600
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         EVENTS TABLE
+    ====================================================== -->
+
+    <div
+        class="
+            overflow-hidden
+            rounded-2xl
+            border
+            border-slate-200
+            bg-white
+            shadow-sm
+        "
+    >
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead
+                    class="
+                        border-b
+                        border-slate-100
+                        bg-slate-50
+                    "
+                >
+
+                    <tr>
+
+                        <th class="table-heading">
+                            Event
+                        </th>
+
+                        <th class="table-heading">
+                            Date
+                        </th>
+
+                        <th class="table-heading">
+                            Location
+                        </th>
+
+                        <th class="table-heading">
+                            Status
+                        </th>
+
+                        <th class="table-heading">
+                            Published
+                        </th>
+
+                        <th class="table-heading text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for event in events %}
+
+                        <tr class="transition hover:bg-slate-50">
+
+                            <!-- EVENT -->
+
+                            <td class="table-cell">
+
+                                <div class="flex items-center gap-3">
+
+                                    {% if event.featured_image %}
+
+                                        <img
+                                            src="{{ event.featured_image.url }}"
+                                            alt="{{ event.title }}"
+                                            class="
+                                                h-12
+                                                w-16
+                                                shrink-0
+                                                rounded-lg
+                                                object-cover
+                                            "
+                                        >
+
+                                    {% else %}
+
+                                        <div
+                                            class="
+                                                flex
+                                                h-12
+                                                w-16
+                                                shrink-0
+                                                items-center
+                                                justify-center
+                                                rounded-lg
+                                                bg-slate-100
+                                                text-slate-400
+                                            "
+                                        >
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="min-w-0">
+
+                                        <p
+                                            class="
+                                                max-w-xs
+                                                truncate
+                                                text-sm
+                                                font-bold
+                                                text-slate-800
+                                            "
+                                        >
+                                            {{ event.title }}
+                                        </p>
+
+
+                                        {% if event.featured %}
+
+                                            <div class="mt-1">
+
+                                                <span
+                                                    class="
+                                                        text-[10px]
+                                                        font-extrabold
+                                                        text-amber-600
+                                                    "
+                                                >
+                                                    <i class="fa-solid fa-star"></i>
+                                                    Featured
+                                                </span>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- DATE -->
+
+                            <td class="table-cell">
+
+                                <div>
+
+                                    <p
+                                        class="
+                                            whitespace-nowrap
+                                            text-xs
+                                            font-bold
+                                            text-slate-700
+                                        "
+                                    >
+                                        {{ event.event_date|date:"M d, Y" }}
+                                    </p>
+
+
+                                    {% if event.start_time %}
+
+                                        <p
+                                            class="
+                                                mt-1
+                                                text-[11px]
+                                                text-slate-400
+                                            "
+                                        >
+
+                                            {{ event.start_time|time:"g:i A" }}
+
+                                            {% if event.end_time %}
+
+                                                – {{ event.end_time|time:"g:i A" }}
+
+                                            {% endif %}
+
+                                        </p>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- LOCATION -->
+
+                            <td class="table-cell">
+
+                                <div class="max-w-xs">
+
+                                    {% if event.venue %}
+
+                                        <p
+                                            class="
+                                                text-xs
+                                                font-semibold
+                                                text-slate-700
+                                            "
+                                        >
+                                            {{ event.venue }}
+                                        </p>
+
+                                    {% endif %}
+
+
+                                    {% if event.location %}
+
+                                        <p
+                                            class="
+                                                mt-1
+                                                text-[11px]
+                                                text-slate-400
+                                            "
+                                        >
+                                            {{ event.location }}
+                                        </p>
+
+                                    {% endif %}
+
+
+                                    {% if not event.venue and not event.location %}
+
+                                        <span class="text-xs text-slate-400">
+                                            No location
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td class="table-cell">
+
+                                {% if event.status == "upcoming" %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            rounded-full
+                                            bg-blue-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-blue-700
+                                        "
+                                    >
+                                        Upcoming
+                                    </span>
+
+                                {% elif event.status == "ongoing" %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            rounded-full
+                                            bg-emerald-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-emerald-700
+                                        "
+                                    >
+                                        Ongoing
+                                    </span>
+
+                                {% elif event.status == "completed" %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            rounded-full
+                                            bg-slate-100
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-slate-600
+                                        "
+                                    >
+                                        Completed
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            rounded-full
+                                            bg-red-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-red-700
+                                        "
+                                    >
+                                        Cancelled
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- PUBLISHED -->
+
+                            <td class="table-cell">
+
+                                {% if event.published %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            items-center
+                                            gap-1.5
+                                            rounded-full
+                                            bg-emerald-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-emerald-700
+                                        "
+                                    >
+
+                                        <span
+                                            class="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-emerald-500
+                                            "
+                                        ></span>
+
+                                        Published
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="
+                                            inline-flex
+                                            items-center
+                                            gap-1.5
+                                            rounded-full
+                                            bg-amber-50
+                                            px-2.5
+                                            py-1
+                                            text-[10px]
+                                            font-extrabold
+                                            text-amber-700
+                                        "
+                                    >
+
+                                        <span
+                                            class="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-amber-500
+                                            "
+                                        ></span>
+
+                                        Hidden
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td class="table-cell">
+
+                                <div
+                                    class="
+                                        flex
+                                        items-center
+                                        justify-end
+                                        gap-1
+                                    "
+                                >
+
+                                    {% if event.published %}
+
+                                        <a
+                                            href="{% url 'events:detail' event.slug %}"
+                                            target="_blank"
+                                            rel="noopener"
+                                            title="View event"
+                                            class="
+                                                flex
+                                                h-9
+                                                w-9
+                                                items-center
+                                                justify-center
+                                                rounded-lg
+                                                text-slate-500
+                                                transition
+                                                hover:bg-blue-50
+                                                hover:text-blue-700
+                                            "
+                                        >
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                        </a>
+
+                                    {% endif %}
+
+
+                                    <a
+                                        href="{% url 'dashboard:event_edit' event.pk %}"
+                                        title="Edit event"
+                                        class="
+                                            flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            text-slate-500
+                                            transition
+                                            hover:bg-amber-50
+                                            hover:text-amber-700
+                                        "
+                                    >
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'dashboard:event_delete' event.pk %}"
+                                        title="Delete event"
+                                        class="
+                                            flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            text-slate-500
+                                            transition
+                                            hover:bg-red-50
+                                            hover:text-red-600
+                                        "
+                                    >
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="px-6 py-16 text-center"
+                            >
+
+                                <div
+                                    class="
+                                        mx-auto
+                                        flex
+                                        h-14
+                                        w-14
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-slate-100
+                                        text-slate-400
+                                    "
+                                >
+                                    <i class="fa-solid fa-calendar-days text-lg"></i>
+                                </div>
+
+
+                                <h3
+                                    class="
+                                        mt-4
+                                        text-sm
+                                        font-black
+                                        text-slate-800
+                                    "
+                                >
+                                    No events found
+                                </h3>
+
+
+                                <p class="mt-1 text-xs text-slate-500">
+                                    Create your first campaign event.
+                                </p>
+
+
+                                <a
+                                    href="{% url 'dashboard:event_create' %}"
+                                    class="
+                                        mt-5
+                                        inline-flex
+                                        items-center
+                                        gap-2
+                                        rounded-xl
+                                        bg-blue-700
+                                        px-4
+                                        py-2.5
+                                        text-xs
+                                        font-bold
+                                        text-white
+                                        hover:bg-blue-800
+                                    "
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                    Create Event
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
+
+        {% if is_paginated %}
+
+            <div
+                class="
+                    flex
+                    flex-col
+                    gap-3
+                    border-t
+                    border-slate-100
+                    px-5
+                    py-4
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                "
+            >
+
+                <p class="text-xs text-slate-500">
+
+                    Page
+
+                    <span class="font-bold text-slate-700">
+                        {{ page_obj.number }}
+                    </span>
+
+                    of
+
+                    <span class="font-bold text-slate-700">
+                        {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                </p>
+
+
+                <div class="flex items-center gap-2">
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?q={{ current_search }}&status={{ current_status }}&published={{ current_published }}&page={{ page_obj.previous_page_number }}"
+                            class="
+                                rounded-lg
+                                border
+                                border-slate-200
+                                px-3
+                                py-2
+                                text-xs
+                                font-bold
+                                text-slate-600
+                                hover:bg-slate-50
+                            "
+                        >
+                            Previous
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?q={{ current_search }}&status={{ current_status }}&published={{ current_published }}&page={{ page_obj.next_page_number }}"
+                            class="
+                                rounded-lg
+                                border
+                                border-slate-200
+                                px-3
+                                py-2
+                                text-xs
+                                font-bold
+                                text-slate-600
+                                hover:bg-slate-50
+                            "
+                        >
+                            Next
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Registration Successful | UDUAK-ABASI 2027
+{% endblock %}
+
+
+{% block content %}
+
+<section
+    class="
+        flex
+        min-h-[70vh]
+        items-center
+        bg-slate-50
+        py-20
+    "
+>
+
+    <div
+        class="
+            container-campaign
+            w-full
+        "
+    >
+
+        <div
+            class="
+                mx-auto
+                max-w-2xl
+                rounded-3xl
+                border
+                border-slate-200
+                bg-white
+                p-8
+                text-center
+                shadow-sm
+                sm:p-12
+            "
+        >
+
+            <div
+                class="
+                    mx-auto
+                    flex
+                    h-20
+                    w-20
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-blue-100
+                    text-blue-700
+                "
+            >
+
+                <i
+                    class="
+                        fa-solid
+                        fa-check
+                        text-3xl
+                    "
+                ></i>
+
+            </div>
+
+
+            <span
+                class="
+                    mt-8
+                    inline-block
+                    text-sm
+                    font-bold
+                    uppercase
+                    tracking-widest
+                    text-blue-700
+                "
+            >
+                Registration Successful
+            </span>
+
+
+            <h1
+                class="
+                    mt-4
+                    text-3xl
+                    font-black
+                    text-slate-900
+                    sm:text-4xl
+                "
+            >
+                Welcome to the Movement.
+            </h1>
+
+
+            <p
+                class="
+                    mx-auto
+                    mt-5
+                    max-w-xl
+                    leading-7
+                    text-slate-600
+                "
+            >
+                Thank you for registering your interest in
+                UDUAK-ABASI 2027. We appreciate your support
+                and look forward to staying connected.
+            </p>
+
+
+            <div
+                class="
+                    mt-8
+                    flex
+                    flex-col
+                    justify-center
+                    gap-3
+                    sm:flex-row
+                "
+            >
+
+                <a
+                    href="{% url 'core:home' %}"
+                    class="btn-primary"
+                >
+                    Return Home
+                </a>
+
+                <a
+                    href="{% url 'news:list' %}"
+                    class="btn-outline"
+                >
+                    Read Campaign Updates
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

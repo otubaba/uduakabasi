@@ -1,0 +1,55 @@
+@layer components {
+
+    .form-control {
+        @apply block w-full
+               rounded-xl
+               border border-slate-300
+               bg-white
+               px-4 py-3
+               text-sm
+               text-slate-900
+               shadow-sm
+               outline-none
+               transition
+               duration-200
+               placeholder:text-slate-400
+               focus:border-campaign-blue
+               focus:ring-2
+               focus:ring-campaign-blue/20;
+    }
+
+    .form-control:hover {
+        @apply border-slate-400;
+    }
+
+    .form-control:disabled {
+        @apply cursor-not-allowed
+               bg-slate-100
+               text-slate-500
+               opacity-80;
+    }
+
+    textarea.form-control {
+        @apply resize-y;
+    }
+
+    select.form-control {
+        @apply cursor-pointer;
+    }
+}
+@layer components {
+
+    .form-error {
+        @apply mt-1.5
+               text-sm
+               font-medium
+               text-red-600;
+    }
+
+    .form-help {
+        @apply mt-1.5
+               text-xs
+               leading-5
+               text-slate-500;
+    }
+}

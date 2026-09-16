@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Empowerment Programmes | Uduak-Abasi 2027
+{% endblock %}
+
+
+{% block content %}
+
+<section class="bg-campaign-navy pt-32 pb-16">
+
+    <div class="container-campaign">
+
+        <div class="max-w-3xl">
+
+            <span class="section-label text-campaign-gold">
+                Empowering Our People
+            </span>
+
+            <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+                Opportunities for Our Constituents
+            </h1>
+
+            <p class="mt-6 text-lg leading-8 text-slate-300">
+                We believe empowerment should create real opportunities,
+                strengthen livelihoods and help individuals and communities
+                build a better future.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="campaign-section bg-slate-50">
+
+    <div class="container-campaign">
+
+        {% if programmes %}
+
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+                {% for programme in programmes %}
+
+                    <article
+                        class="campaign-card flex h-full flex-col overflow-hidden"
+                    >
+
+                        <div class="flex-1 p-6">
+
+                            <div class="flex items-start justify-between gap-4">
+
+                                <span
+                                    class="inline-flex rounded-full bg-campaign-gold/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-campaign-blue"
+                                >
+                                    {{ programme.get_programme_type_display }}
+                                </span>
+
+                                {% if programme.featured %}
+
+                                    <span
+                                        class="text-campaign-gold"
+                                        title="Featured programme"
+                                    >
+                                        <i class="fa-solid fa-star"></i>
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <h2
+                                class="mt-5 text-xl font-extrabold text-campaign-navy"
+                            >
+                                {{ programme.title }}
+                            </h2>
+
+
+                            <p
+                                class="mt-3 line-clamp-4 text-sm leading-7 text-slate-600"
+                            >
+                                {{ programme.description }}
+                            </p>
+
+
+                            {% if programme.eligibility %}
+
+                                <div class="mt-5">
+
+                                    <p class="text-xs font-extrabold uppercase tracking-wide text-campaign-blue">
+                                        Eligibility
+                                    </p>
+
+                                    <p class="mt-1 text-sm leading-6 text-slate-600">
+                                        {{ programme.eligibility|truncatewords:25 }}
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="border-t border-slate-100 p-6">
+
+                            <div class="flex items-center justify-between gap-4">
+
+                                <div class="text-sm text-slate-500">
+
+                                    {% if programme.application_end %}
+
+                                        <span class="block text-xs font-semibold">
+                                            Applications close
+                                        </span>
+
+                                        <span class="font-bold text-slate-700">
+                                            {{ programme.application_end|date:"M d, Y" }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <a
+                                    href="{% url 'empowerment:programme_detail' programme.slug %}"
+                                    class="btn-gold"
+                                >
+                                    View Programme
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- PAGINATION -->
+
+            {% if is_paginated %}
+
+                <div class="mt-12 flex justify-center gap-2">
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?page={{ page_obj.previous_page_number }}"
+                            class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                        >
+                            Previous
+                        </a>
+
+                    {% endif %}
+
+
+                    <span
+                        class="rounded-xl bg-campaign-navy px-4 py-2 text-sm font-bold text-white"
+                    >
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?page={{ page_obj.next_page_number }}"
+                            class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                        >
+                            Next
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        {% else %}
+
+            <div class="mx-auto max-w-2xl py-16 text-center">
+
+                <div
+                    class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-campaign-navy text-campaign-gold"
+                >
+                    <i class="fa-solid fa-hand-holding-heart text-2xl"></i>
+                </div>
+
+                <h2 class="mt-6 text-2xl font-black text-campaign-navy">
+                    No programmes available yet
+                </h2>
+
+                <p class="mt-3 text-slate-600">
+                    New empowerment opportunities will be published here
+                    as they become available.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

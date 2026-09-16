@@ -1,0 +1,697 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+
+    {% if object %}
+        Edit Event
+    {% else %}
+        Add Event
+    {% endif %}
+
+{% endblock %}
+
+
+{% block page_title %}
+
+    {% if object %}
+        Edit Event
+    {% else %}
+        Add Event
+    {% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-auto max-w-5xl">
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="space-y-6"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =================================================
+             ERROR SUMMARY
+        ================================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div
+                class="
+                    rounded-xl
+                    border
+                    border-red-200
+                    bg-red-50
+                    p-4
+                    text-sm
+                    text-red-700
+                "
+            >
+
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             BASIC INFORMATION
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Event Information
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Add the main details of the campaign event.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <!-- TITLE -->
+
+                <div>
+
+                    <label
+                        for="{{ form.title.id_for_label }}"
+                        class="form-label"
+                    >
+                        Event Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% for error in form.title.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- SHORT DESCRIPTION -->
+
+                <div>
+
+                    <label
+                        for="{{ form.short_description.id_for_label }}"
+                        class="form-label"
+                    >
+                        Short Description
+                    </label>
+
+                    {{ form.short_description }}
+
+                    <p class="form-help">
+                        This appears on event cards and summaries.
+                    </p>
+
+                    {% for error in form.short_description.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div>
+
+                    <label
+                        for="{{ form.description.id_for_label }}"
+                        class="form-label"
+                    >
+                        Full Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% for error in form.description.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EVENT IMAGE
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Event Image
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Add a featured image for this event.
+                </p>
+
+            </div>
+
+
+            <div class="p-6">
+
+                <label
+                    for="{{ form.featured_image.id_for_label }}"
+                    class="form-label"
+                >
+                    Featured Image
+                </label>
+
+                {{ form.featured_image }}
+
+                {% if object.featured_image %}
+
+                    <div class="mt-4">
+
+                        <img
+                            src="{{ object.featured_image.url }}"
+                            alt="{{ object.title }}"
+                            class="
+                                h-48
+                                w-full
+                                rounded-xl
+                                object-cover
+                                sm:w-80
+                            "
+                        >
+
+                    </div>
+
+                {% endif %}
+
+                {% for error in form.featured_image.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DATE & TIME
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Date & Time
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Set when the event will take place.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    grid
+                    grid-cols-1
+                    gap-5
+                    p-6
+                    md:grid-cols-3
+                "
+            >
+
+                <div>
+
+                    <label
+                        for="{{ form.event_date.id_for_label }}"
+                        class="form-label"
+                    >
+                        Event Date
+                    </label>
+
+                    {{ form.event_date }}
+
+                    {% for error in form.event_date.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="{{ form.start_time.id_for_label }}"
+                        class="form-label"
+                    >
+                        Start Time
+                    </label>
+
+                    {{ form.start_time }}
+
+                    {% for error in form.start_time.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="{{ form.end_time.id_for_label }}"
+                        class="form-label"
+                    >
+                        End Time
+                    </label>
+
+                    {{ form.end_time }}
+
+                    {% for error in form.end_time.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             LOCATION
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Location
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Tell supporters where the event will take place.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <div>
+
+                    <label
+                        for="{{ form.venue.id_for_label }}"
+                        class="form-label"
+                    >
+                        Venue
+                    </label>
+
+                    {{ form.venue }}
+
+                    {% for error in form.venue.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="{{ form.location.id_for_label }}"
+                        class="form-label"
+                    >
+                        Location
+                    </label>
+
+                    {{ form.location }}
+
+                    {% for error in form.location.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        for="{{ form.address.id_for_label }}"
+                        class="form-label"
+                    >
+                        Address
+                    </label>
+
+                    {{ form.address }}
+
+                    {% for error in form.address.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STATUS
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Event Status
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Control the current state and website visibility.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <!-- STATUS -->
+
+                <div>
+
+                    <label
+                        for="{{ form.status.id_for_label }}"
+                        class="form-label"
+                    >
+                        Status
+                    </label>
+
+                    {{ form.status }}
+
+                    {% for error in form.status.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- FEATURED -->
+
+                <label
+                    class="
+                        flex
+                        cursor-pointer
+                        items-start
+                        gap-3
+                        rounded-xl
+                        border
+                        border-slate-200
+                        p-4
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+
+                    {{ form.featured }}
+
+                    <span>
+
+                        <span class="block text-sm font-bold text-slate-800">
+                            Featured event
+                        </span>
+
+                        <span class="mt-1 block text-xs text-slate-500">
+                            Give this event prominent placement on the website.
+                        </span>
+
+                    </span>
+
+                </label>
+
+
+                <!-- PUBLISHED -->
+
+                <label
+                    class="
+                        flex
+                        cursor-pointer
+                        items-start
+                        gap-3
+                        rounded-xl
+                        border
+                        border-slate-200
+                        p-4
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+
+                    {{ form.published }}
+
+                    <span>
+
+                        <span class="block text-sm font-bold text-slate-800">
+                            Publish this event
+                        </span>
+
+                        <span class="mt-1 block text-xs text-slate-500">
+                            Published events are visible to website visitors.
+                        </span>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REGISTRATION
+        ================================================== -->
+
+        <div
+            class="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+            "
+        >
+
+            <div class="border-b border-slate-100 px-6 py-5">
+
+                <h2 class="text-sm font-black text-slate-900">
+                    Registration
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Configure optional event registration.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <label
+                    class="
+                        flex
+                        cursor-pointer
+                        items-start
+                        gap-3
+                        rounded-xl
+                        border
+                        border-slate-200
+                        p-4
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+
+                    {{ form.registration_open }}
+
+                    <span>
+
+                        <span class="block text-sm font-bold text-slate-800">
+                            Open registration
+                        </span>
+
+                        <span class="mt-1 block text-xs text-slate-500">
+                            Allow visitors to register for this event.
+                        </span>
+
+                    </span>
+
+                </label>
+
+
+                <div>
+
+                    <label
+                        for="{{ form.registration_url.id_for_label }}"
+                        class="form-label"
+                    >
+                        Registration URL
+                    </label>
+
+                    {{ form.registration_url }}
+
+                    <p class="form-help">
+                        Optional external registration page.
+                    </p>
+
+                    {% for error in form.registration_url.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div
+            class="
+                flex
+                flex-col-reverse
+                gap-3
+                sm:flex-row
+                sm:justify-end
+            "
+        >
+
+            <a
+                href="{% url 'dashboard:event_list' %}"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-slate-200
+                    px-5
+                    py-3
+                    text-xs
+                    font-bold
+                    text-slate-600
+                    transition
+                    hover:bg-slate-50
+                "
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    bg-blue-700
+                    px-5
+                    py-3
+                    text-xs
+                    font-black
+                    text-white
+                    shadow-sm
+                    transition
+                    hover:bg-blue-800
+                "
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                {% if object %}
+                    Save Changes
+                {% else %}
+                    Create Event
+                {% endif %}
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

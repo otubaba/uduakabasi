@@ -1,0 +1,2331 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if profile %}
+{{ profile.campaign_name }} | {{ profile.slogan|default:"A New Vision for Our People" }}
+{% else %}
+UDUAK-ABASI 2027 | A New Vision for Our People
+{% endif %}
+{% endblock %}
+
+
+{% block meta_description %}
+{% if profile %}
+{{ profile.campaign_name }} — {{ profile.short_bio|truncatechars:160 }}
+{% else %}
+UDUAK-ABASI 2027 — A movement for purposeful leadership,
+inclusive representation, economic empowerment and
+community development across Etinan Federal Constituency.
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     HERO SECTION
+========================================================= -->
+
+<section
+    class="
+        relative
+        overflow-hidden
+        bg-campaign-navy
+        text-white
+    "
+>
+
+    <!-- Background decoration -->
+
+    <div
+        class="
+            absolute
+            -right-40
+            -top-40
+            h-96
+            w-96
+            rounded-full
+            bg-campaign-blue
+            opacity-20
+            blur-3xl
+        "
+    ></div>
+
+
+    <div
+        class="
+            absolute
+            -bottom-40
+            -left-40
+            h-96
+            w-96
+            rounded-full
+            bg-campaign-gold
+            opacity-10
+            blur-3xl
+        "
+    ></div>
+
+
+    <div
+        class="
+            container-campaign
+            relative
+            z-10
+        "
+    >
+
+        <div
+            class="
+                grid
+                min-h-[calc(100vh-5rem)]
+                items-center
+                gap-12
+                py-16
+                lg:grid-cols-2
+                lg:py-20
+            "
+        >
+
+            <!-- =================================================
+                 HERO CONTENT
+            ================================================== -->
+
+            <div class="fade-up">
+
+                <!-- Campaign badge -->
+
+                <div
+                    class="
+                        inline-flex
+                        items-center
+                        gap-3
+                        rounded-full
+                        border
+                        border-white/20
+                        bg-white/5
+                        px-4
+                        py-2
+                        backdrop-blur
+                    "
+                >
+
+                    <span
+                        class="
+                            h-2
+                            w-2
+                            rounded-full
+                            bg-campaign-gold
+                        "
+                    ></span>
+
+
+                    <span
+                        class="
+                            text-xs
+                            font-bold
+                            uppercase
+                            tracking-[0.18em]
+                            text-slate-200
+                        "
+                    >
+
+                        {% if profile %}
+                            {{ profile.campaign_name }}
+                        {% else %}
+                            UDUAK-ABASI 2027
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <!-- Main headline -->
+
+                <h1
+                    class="
+                        mt-7
+                        max-w-3xl
+                        text-5xl
+                        font-black
+                        leading-[1.02]
+                        tracking-tight
+                        sm:text-6xl
+                        lg:text-7xl
+                    "
+                >
+
+                    {% if profile and profile.slogan %}
+
+                        {{ profile.slogan }}
+
+                    {% else %}
+
+                        A New Vision
+
+                        <span
+                            class="
+                                block
+                                text-campaign-gold
+                            "
+                        >
+                            For Our People.
+                        </span>
+
+                    {% endif %}
+
+                </h1>
+
+
+                <!-- Short biography -->
+
+                <p
+                    class="
+                        mt-7
+                        max-w-2xl
+                        text-lg
+                        leading-8
+                        text-slate-300
+                        sm:text-xl
+                        text-justify
+                    "
+                >
+
+                    {% if profile and profile.short_bio %}
+
+                        {{ profile.short_bio }}
+
+                    {% else %}
+
+                        A movement built around purposeful leadership,
+                        inclusive representation, opportunity and
+                        meaningful community development.
+
+                    {% endif %}
+
+                </p>
+
+
+                <!-- Candidate -->
+
+                <div
+                    class="
+                        mt-8
+                        flex
+                        items-center
+                        gap-4
+                    "
+                >
+
+                    <div
+                        class="
+                            h-1
+                            w-10
+                            bg-campaign-gold
+                        "
+                    ></div>
+
+
+                    <div>
+
+                        <p
+                            class="
+                                text-sm
+                                font-bold
+                                uppercase
+                                tracking-wider
+                                text-slate-400
+                            "
+                        >
+                            Champion
+                        </p>
+
+
+                        <p
+                            class="
+                                text-lg
+                                font-bold
+                                text-white
+                            "
+                        >
+
+                            {% if profile %}
+                                {{ profile.candidate_name }}
+                            {% else %}
+                                Hon. Emem Jackson
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Position -->
+
+                {% if profile and profile.position %}
+
+                    <p
+                        class="
+                            mt-4
+                            text-sm
+                            font-medium
+                            text-slate-400
+                        "
+                    >
+                        {{ profile.position }}
+                    </p>
+
+                {% endif %}
+
+
+                <!-- Buttons -->
+
+                <div
+                    class="
+                        mt-9
+                        flex
+                        flex-col
+                        gap-4
+                        sm:flex-row
+                    "
+                >
+
+                    <a
+                        href="{% url 'core:agenda' %}"
+                        class="btn-gold"
+                    >
+
+                        Explore Our Agenda
+
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6"
+                            />
+                        </svg>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'core:about' %}"
+                        class="btn-outline"
+                    >
+                        Meet the Candidate
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 HERO IMAGE
+            ================================================== -->
+
+            <div
+                class="
+                    relative
+                    mx-auto
+                    w-full
+                    max-w-xl
+                "
+            >
+
+                <!-- Decorative frame -->
+
+                <div
+                    class="
+                        absolute
+                        -right-3
+                        -top-3
+                        h-full
+                        w-full
+                        rounded-3xl
+                        border
+                        border-campaign-gold/40
+                        sm:-right-5
+                        sm:-top-5
+                    "
+                ></div>
+
+
+                <div
+                    class="
+                        image-container
+                        relative
+                        aspect-[4/5]
+                        overflow-hidden
+                        rounded-3xl
+                        bg-slate-800
+                        shadow-2xl
+                    "
+                >
+
+                    {% if profile and profile.hero_image %}
+
+                        <img
+                            src="{{ profile.hero_image.url }}"
+                            alt="{{ profile.candidate_name }}"
+                            class="campaign-image"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{% static 'images/candidate.jpeg' %}"
+                            alt="Hon. Emem Jackson"
+                            class="campaign-image"
+                        >
+
+                    {% endif %}
+
+
+                    <!-- Image gradient -->
+
+                    <div
+                        class="
+                            absolute
+                            inset-0
+                            bg-gradient-to-t
+                            from-campaign-navy
+                            via-transparent
+                            to-transparent
+                            opacity-80
+                        "
+                    ></div>
+
+
+                    <!-- Image caption -->
+
+                    <div
+                        class="
+                            absolute
+                            bottom-0
+                            left-0
+                            right-0
+                            p-6
+                            sm:p-8
+                        "
+                    >
+
+                        <p
+                            class="
+                                text-xs
+                                font-bold
+                                uppercase
+                                tracking-[0.2em]
+                                text-campaign-gold
+                            "
+                        >
+
+                            {% if profile %}
+                                {{ profile.campaign_name }}
+                            {% else %}
+                                UDUAK-ABASI 2027
+                            {% endif %}
+
+                        </p>
+
+
+                        <p
+                            class="
+                                mt-2
+                                text-2xl
+                                font-extrabold
+                            "
+                        >
+
+                            {% if profile %}
+                                {{ profile.candidate_name }}
+                            {% else %}
+                                Hon. Emem Jackson
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CONSTITUENCY STRIP
+========================================================= -->
+
+<section
+    class="
+        border-b
+        border-slate-200
+        bg-white
+    "
+>
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                grid
+                divide-y
+                divide-slate-200
+                sm:grid-cols-3
+                sm:divide-x
+                sm:divide-y-0
+            "
+        >
+
+            <div class="py-7 text-center">
+
+                <p
+                    class="
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-[0.18em]
+                        text-slate-400
+                    "
+                >
+                    Constituency
+                </p>
+
+                <p
+                    class="
+                        mt-2
+                        text-lg
+                        font-extrabold
+                        text-campaign-navy
+                    "
+                >
+                    Etinan
+                </p>
+
+            </div>
+
+
+            <div class="py-7 text-center">
+
+                <p
+                    class="
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-[0.18em]
+                        text-slate-400
+                    "
+                >
+                    Constituency
+                </p>
+
+                <p
+                    class="
+                        mt-2
+                        text-lg
+                        font-extrabold
+                        text-campaign-navy
+                    "
+                >
+                    Nsit Ibom
+                </p>
+
+            </div>
+
+
+            <div class="py-7 text-center">
+
+                <p
+                    class="
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-[0.18em]
+                        text-slate-400
+                    "
+                >
+                    Constituency
+                </p>
+
+                <p
+                    class="
+                        mt-2
+                        text-lg
+                        font-extrabold
+                        text-campaign-navy
+                    "
+                >
+                    Nsit Ubium
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ABOUT / CANDIDATE
+========================================================= -->
+
+<section class="campaign-section bg-slate-50">
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                grid
+                items-start
+                gap-10
+                lg:grid-cols-2
+                lg:gap-12
+            "
+        >
+
+        
+        <!-- =====================================================
+            IMAGE
+        ====================================================== -->
+
+        <div
+            class="
+                image-container
+                relative
+                overflow-hidden
+                rounded-2xl
+                bg-slate-200
+                aspect-[4/3]
+                w-full
+            "
+        >
+
+            {% if profile and profile.profile_image %}
+
+                <img
+                    src="{{ profile.profile_image.url }}"
+                    alt="{{ profile.candidate_name }}"
+                    class="campaign-image w-full h-full object-cover"
+                >
+
+            {% else %}
+
+                <img
+                    src="{% static 'images/candidate-about.jpeg' %}"
+                    alt="Hon. Emem Jackson"
+                    class="campaign-image w-full h-full object-cover"
+                >
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+            CONTENT
+        ====================================================== -->
+
+        <div class="lg:h-full lg:max-h-[420px] overflow-hidden">
+
+            <span class="section-label">
+                Meet the Leader
+            </span>
+
+
+            <h2 class="section-title">
+                Leadership With Purpose.
+            </h2>
+
+
+            <!-- Vision -->
+
+            {% if profile and profile.vision %}
+
+                <p
+                    class="
+                        section-description
+                        line-clamp-3
+                        overflow-hidden
+                    "
+                >
+                    {{ profile.vision }}
+                </p>
+
+            {% else %}
+
+                <p
+                    class="
+                        section-description
+                        text-justify
+                        line-clamp-3
+                        overflow-hidden
+                    "
+                >
+                    UDUAK-ABASI 2027 is built around a commitment
+                    to purposeful leadership, service and
+                    meaningful representation.
+                </p>
+
+            {% endif %}
+
+
+            <!-- Biography -->
+
+            {% if profile and profile.biography %}
+
+                <div
+                    class="
+                        mt-5
+                        text-base
+                        leading-8
+                        text-slate-600
+                        text-justify
+                        line-clamp-6
+                        overflow-hidden
+                    "
+                >
+                    {{ profile.biography|linebreaks }}
+                </div>
+
+            {% else %}
+
+                <p
+                    class="
+                        mt-5
+                        text-base
+                        leading-8
+                        text-slate-600
+                        text-justify
+                        line-clamp-6
+                        overflow-hidden
+                    "
+                >
+                    Hon. Emem Jackson brings together experience,
+                    community engagement, entrepreneurship and a
+                    commitment to supporting opportunities for
+                    individuals and communities.
+                </p>
+
+            {% endif %}
+
+
+            <!-- Learn More -->
+
+            <a
+                href="{% url 'core:about' %}"
+                class="
+                    mt-6
+                    inline-flex
+                    items-center
+                    gap-2
+                    font-bold
+                    text-campaign-blue
+                    hover:text-campaign-blue-dark
+                "
+            >
+
+                Learn more about the candidate
+
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+
+                </svg>
+
+            </a>
+
+        </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CAMPAIGN AGENDA
+========================================================= -->
+
+<section
+    id="agenda"
+    class="campaign-section bg-slate-50"
+>
+
+    <div class="container-campaign">
+
+        <!-- Section Heading -->
+
+        <div class="max-w-3xl mb-12">
+
+            <span class="section-label">
+                Our Agenda
+            </span>
+
+            <h2 class="section-title">
+
+                A Practical Plan
+
+                <span class="text-blue-700">
+                    For Our People.
+                </span>
+
+            </h2>
+
+            <p class="section-description text-justify">
+                Our priorities are focused on creating opportunities,
+                empowering our people and building a stronger future
+                for the constituency.
+            </p>
+
+        </div>
+
+
+        <!-- Agenda Grid -->
+
+        <div
+            class="
+                grid
+                grid-cols-1
+                gap-6
+                md:grid-cols-2
+                lg:grid-cols-3
+            "
+        >
+
+            {% for agenda in agendas %}
+
+                <article
+                    class="
+                        campaign-card
+                        group
+                        relative
+                        overflow-hidden
+                    "
+                >
+
+                    <!-- Number -->
+
+                    <div
+                        class="
+                            absolute
+                            right-5
+                            top-5
+                            text-5xl
+                            font-black
+                            text-slate-100
+                            transition
+                            group-hover:text-blue-100
+                        "
+                    >
+                        {{ agenda.number|stringformat:"02d" }}
+                    </div>
+
+
+                    <!-- Icon -->
+
+                    <div class="agenda-icon">
+
+                        {% if agenda.icon %}
+
+                            <i class="{{ agenda.icon }}"></i>
+
+                        {% else %}
+
+                            <i class="fa-solid fa-check"></i>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Content -->
+
+                    <div class="relative z-10">
+
+                        <h3
+                            class="
+                                mb-3
+                                text-xl
+                                font-bold
+                                text-slate-900
+                                transition
+                                group-hover:text-blue-700
+                            "
+                        >
+                            {{ agenda.title }}
+                        </h3>
+
+                        <p
+                            class="
+                                leading-7
+                                text-slate-600
+                                text-justify
+                            "
+                        >
+                            {{ agenda.description }}
+                        </p>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div
+                    class="
+                        col-span-full
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        bg-white
+                        p-8
+                        text-center
+                    "
+                >
+
+                    <div
+                        class="
+                            mb-4
+                            text-4xl
+                            text-slate-400
+                        "
+                    >
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+
+                    <h3
+                        class="
+                            mb-2
+                            text-xl
+                            font-bold
+                            text-slate-900
+                        "
+                    >
+                        Campaign Agenda Coming Soon
+                    </h3>
+
+                    <p class="text-slate-600">
+                        Our campaign priorities will be published here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CAMPAIGN MESSAGE
+========================================================= -->
+
+<section
+    class="
+        bg-slate-50
+        py-16
+        md:py-20
+    "
+>
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                mx-auto
+                max-w-4xl
+                text-center
+            "
+        >
+
+            <span class="section-label">
+                The Movement
+            </span>
+
+
+            <h2 class="section-title">
+
+                {% if profile and profile.slogan %}
+
+                    {{ profile.slogan }}
+
+                {% else %}
+
+                    Leadership That Listens.
+                    Leadership That Acts.
+
+                {% endif %}
+
+            </h2>
+
+
+            {% if profile and profile.mission %}
+
+                <div
+                    class="
+                        mx-auto
+                        mt-6
+                        max-w-3xl
+                        text-lg
+                        leading-8
+                        text-slate-600
+                        text-justify
+                    "
+                >
+                    {{ profile.mission|linebreaks }}
+                </div>
+
+            {% else %}
+
+                <p
+                    class="
+                        mx-auto
+                        mt-6
+                        max-w-3xl
+                        text-lg
+                        leading-8
+                        text-slate-600
+                    "
+                >
+                    UDUAK-ABASI 2027 represents a commitment to
+                    listening to communities, understanding their
+                    priorities and pursuing practical opportunities
+                    for development.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     UPCOMING EVENTS
+========================================================= -->
+
+<section
+    id="events"
+    class="campaign-section bg-slate-50"
+>
+
+    <div class="container-campaign">
+
+        <!-- Section Heading -->
+
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+
+            <div>
+
+                <span class="section-label text-blue-700">
+                    Campaign Activities
+                </span>
+
+                <h2 class="section-title mt-3">
+                    Upcoming Events
+                </h2>
+
+                <p class="section-description mt-4 text-justify">
+                    Join us at our upcoming meetings, community engagements
+                    and campaign activities across the constituency.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'events:list' %}"
+                class="inline-flex shrink-0 items-center gap-2 font-bold text-blue-700 transition hover:text-blue-900"
+            >
+
+                View All Events
+
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             EVENTS GRID
+        ====================================================== -->
+
+        {% if upcoming_events %}
+
+            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+                {% for event in upcoming_events %}
+
+                    <article
+                        class="campaign-card group flex h-full flex-col overflow-hidden bg-white"
+                    >
+
+                        <!-- =====================================
+                             IMAGE
+                        ====================================== -->
+
+                        <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+
+                            {% if event.featured_image %}
+
+                                <img
+                                    src="{{ event.featured_image.url }}"
+                                    alt="{{ event.title }}"
+                                    class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div
+                                    class="flex h-full items-center justify-center"
+                                >
+
+                                    <i class="fa-regular fa-calendar-days text-5xl text-slate-300"></i>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- Date Badge -->
+
+                            <div
+                                class="absolute bottom-4 left-4 flex h-16 w-16 flex-col items-center justify-center rounded-xl bg-white text-center shadow-lg"
+                            >
+
+                                <span class="text-xs font-bold uppercase text-blue-700">
+                                    {{ event.event_date|date:"M" }}
+                                </span>
+
+                                <span class="text-2xl font-black leading-none text-slate-900">
+                                    {{ event.event_date|date:"d" }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             CONTENT
+                        ====================================== -->
+
+                        <div class="flex flex-1 flex-col p-6">
+
+                            <div class="flex items-center gap-2 text-sm font-semibold text-blue-700">
+
+                                <i class="fa-solid fa-calendar-check"></i>
+
+                                Upcoming Event
+
+                            </div>
+
+
+                            <h3
+                                class="mt-3 text-xl font-extrabold leading-tight text-slate-900"
+                            >
+
+                                <a
+                                    href="{% url 'events:detail' event.slug %}"
+                                    class="transition hover:text-blue-700"
+                                >
+                                    {{ event.title }}
+                                </a>
+
+                            </h3>
+
+
+                            <!-- Date -->
+
+                            <div class="mt-4 flex items-start gap-3 text-sm text-slate-500">
+
+                                <i class="fa-regular fa-calendar mt-1 w-4 text-blue-700"></i>
+
+                                <span>
+                                    {{ event.event_date|date:"l, F d, Y" }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Time -->
+
+                            {% if event.start_time %}
+
+                                <div class="mt-2 flex items-start gap-3 text-sm text-slate-500">
+
+                                    <i class="fa-regular fa-clock mt-1 w-4 text-blue-700"></i>
+
+                                    <span>
+
+                                        {{ event.start_time|time:"g:i A" }}
+
+                                        {% if event.end_time %}
+                                            – {{ event.end_time|time:"g:i A" }}
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- Location -->
+
+                            {% if event.venue or event.location %}
+
+                                <div class="mt-2 flex items-start gap-3 text-sm text-slate-500">
+
+                                    <i class="fa-solid fa-location-dot mt-1 w-4 text-blue-700"></i>
+
+                                    <span>
+                                        {{ event.venue|default:event.location }}
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- Description -->
+
+                            {% if event.short_description %}
+
+                                <p class="mt-4 line-clamp-2 text-sm leading-6 text-slate-600">
+                                    {{ event.short_description }}
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- Footer -->
+
+                            <div class="mt-auto pt-6">
+
+                                <div class="border-t border-slate-100 pt-5">
+
+                                    <a
+                                        href="{% url 'events:detail' event.slug %}"
+                                        class="inline-flex items-center gap-2 font-bold text-blue-700 transition hover:text-blue-900"
+                                    >
+
+                                        View Event
+
+                                        <i class="fa-solid fa-arrow-right text-xs transition group-hover:translate-x-1"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="mt-12 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center">
+
+                <div
+                    class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50"
+                >
+
+                    <i class="fa-regular fa-calendar-days text-2xl text-blue-700"></i>
+
+                </div>
+
+
+                <h3 class="mt-5 text-xl font-black text-slate-900">
+                    Upcoming Events Coming Soon
+                </h3>
+
+
+                <p class="mx-auto mt-3 max-w-xl text-slate-600">
+                    New campaign activities, community engagements and
+                    meetings will be announced here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DYNAMIC CAMPAIGN UPDATES
+========================================================= -->
+
+<section class="campaign-section">
+
+    <div class="container-campaign">
+
+        <!-- =================================================
+             SECTION HEADER
+        ================================================== -->
+
+        <div
+            class="
+                flex
+                flex-col
+                justify-between
+                gap-5
+                md:flex-row
+                md:items-end
+            "
+        >
+
+            <div>
+
+                <span class="section-label">
+                    Stay Informed
+                </span>
+
+                <h2 class="section-title">
+                    Latest Campaign Updates
+                </h2>
+
+                <p class="section-description text-justify">
+                    Follow campaign activities, announcements,
+                    community engagements and important updates
+                    from UDUAK-ABASI 2027.
+                </p>
+
+            </div>
+
+
+            <!-- View All News -->
+
+            <a
+                href="{% url 'news:list' %}"
+                class="
+                    inline-flex
+                    shrink-0
+                    items-center
+                    gap-2
+                    font-bold
+                    text-campaign-blue
+                    transition
+                    hover:text-campaign-blue-dark
+                "
+            >
+
+                View All Updates
+
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                </svg>
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             NEWS GRID
+        ================================================== -->
+
+        <div
+            class="
+                mt-12
+                grid
+                gap-6
+                md:grid-cols-2
+                lg:grid-cols-3
+            "
+        >
+
+            {% for article in latest_news %}
+
+                <article
+                    class="
+                        group
+                        overflow-hidden
+                        rounded-3xl
+                        border
+                        border-slate-200
+                        bg-white
+                        shadow-sm
+                        transition
+                        duration-300
+                        hover:-translate-y-1
+                        hover:shadow-xl
+                    "
+                >
+
+                    <!-- =================================================
+                         FEATURED IMAGE
+                    ================================================== -->
+
+                    <div
+                        class="
+                            relative
+                            aspect-[16/10]
+                            overflow-hidden
+                            bg-slate-200
+                        "
+                    >
+
+                        {% if article.featured_image %}
+
+                            <img
+                                src="{{ article.featured_image.url }}"
+                                alt="{{ article.title }}"
+                                class="
+                                    campaign-image
+                                    transition
+                                    duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+
+                        {% else %}
+
+                            <div
+                                class="
+                                    flex
+                                    h-full
+                                    w-full
+                                    items-center
+                                    justify-center
+                                    bg-campaign-navy
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-newspaper
+                                        text-5xl
+                                        text-campaign-gold
+                                    "
+                                ></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Category -->
+
+                        {% if article.category %}
+
+                            <div
+                                class="
+                                    absolute
+                                    left-4
+                                    top-4
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        inline-flex
+                                        rounded-full
+                                        bg-white/95
+                                        px-3
+                                        py-1.5
+                                        text-xs
+                                        font-bold
+                                        uppercase
+                                        tracking-wider
+                                        text-campaign-blue
+                                        shadow-sm
+                                        backdrop-blur
+                                    "
+                                >
+                                    {{ article.category.name }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Video Badge -->
+
+                        {% if article.video or article.video_url %}
+
+                            <div
+                                class="
+                                    absolute
+                                    bottom-4
+                                    left-4
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        inline-flex
+                                        items-center
+                                        gap-2
+                                        rounded-full
+                                        bg-campaign-navy/90
+                                        px-3
+                                        py-1.5
+                                        text-xs
+                                        font-bold
+                                        text-white
+                                        backdrop-blur
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            fa-solid
+                                            fa-play
+                                            text-campaign-gold
+                                        "
+                                    ></i>
+
+                                    Video
+
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- =================================================
+                         NEWS CONTENT
+                    ================================================== -->
+
+                    <div class="p-6">
+
+                        <!-- Date -->
+
+                        <div
+                            class="
+                                flex
+                                items-center
+                                gap-2
+                                text-xs
+                                font-semibold
+                                uppercase
+                                tracking-wider
+                                text-slate-400
+                            "
+                        >
+
+                            <i class="fa-regular fa-calendar"></i>
+
+                            {% if article.published_at %}
+
+                                {{ article.published_at|date:"M d, Y" }}
+
+                            {% else %}
+
+                                {{ article.created_at|date:"M d, Y" }}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Title -->
+
+                        <h3
+                            class="
+                                mt-3
+                                text-xl
+                                font-extrabold
+                                leading-tight
+                                text-slate-900
+                                transition
+                                group-hover:text-campaign-blue
+                            "
+                        >
+
+                            <a
+                                href="{% url 'news:detail' article.slug %}"
+                            >
+                                {{ article.title }}
+                            </a>
+
+                        </h3>
+
+
+                        <!-- Excerpt -->
+
+                        {% if article.excerpt %}
+
+                            <p
+                                class="
+                                    mt-3
+                                    line-clamp-3
+                                    text-sm
+                                    leading-7
+                                    text-slate-600
+                                "
+                            >
+                                {{ article.excerpt }}
+                            </p>
+
+                        {% elif article.content %}
+
+                            <p
+                                class="
+                                    mt-3
+                                    line-clamp-3
+                                    text-sm
+                                    leading-7
+                                    text-slate-600
+                                    text-justify
+                                "
+                            >
+                                {{ article.content|striptags|truncatechars:150 }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- Footer -->
+
+                        <div
+                            class="
+                                mt-5
+                                flex
+                                items-center
+                                justify-between
+                                border-t
+                                border-slate-100
+                                pt-5
+                            "
+                        >
+
+                            <span
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-2
+                                    text-xs
+                                    font-medium
+                                    text-slate-400
+                                "
+                            >
+
+                                <i class="fa-regular fa-eye"></i>
+
+                                {{ article.views }} views
+
+                            </span>
+
+
+                            <a
+                                href="{% url 'news:detail' article.slug %}"
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-2
+                                    font-bold
+                                    text-campaign-blue
+                                    transition
+                                    hover:text-campaign-blue-dark
+                                "
+                            >
+
+                                Read More
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-arrow-right
+                                        text-xs
+                                    "
+                                ></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
+
+                <div
+                    class="
+                        col-span-full
+                        rounded-3xl
+                        border
+                        border-slate-200
+                        bg-slate-50
+                        px-6
+                        py-14
+                        text-center
+                    "
+                >
+
+                    <div
+                        class="
+                            mx-auto
+                            flex
+                            h-16
+                            w-16
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-blue-50
+                            text-campaign-blue
+                        "
+                    >
+
+                        <i
+                            class="
+                                fa-solid
+                                fa-newspaper
+                                text-2xl
+                            "
+                        ></i>
+
+                    </div>
+
+
+                    <h3
+                        class="
+                            mt-5
+                            text-xl
+                            font-extrabold
+                            text-slate-900
+                        "
+                    >
+                        Campaign Updates Coming Soon
+                    </h3>
+
+
+                    <p
+                        class="
+                            mx-auto
+                            mt-2
+                            max-w-xl
+                            text-slate-600
+                        "
+                    >
+                        Campaign news, announcements and community
+                        updates will be published here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CAMPAIGN MEDIA / GALLERY
+========================================================= -->
+<section class="campaign-section bg-slate-50">
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                flex
+                flex-col
+                gap-5
+                md:flex-row
+                md:items-end
+                md:justify-between
+            "
+        >
+
+            <div>
+
+                <span class="section-label">
+                    Campaign Moments
+                </span>
+
+                <h2 class="section-title">
+                    From the Field
+                </h2>
+
+                <p class="section-description">
+                    See the people, places and moments shaping
+                    the Uduak-Abasi 2027 campaign journey.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'media:album_list' %}"
+                class="btn-outline"
+            >
+                View Full Gallery
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+            </a>
+
+        </div>
+
+
+        {% if featured_albums %}
+
+            <div
+                class="
+                    mt-10
+                    grid
+                    gap-6
+                    md:grid-cols-2
+                    lg:grid-cols-3
+                "
+            >
+
+                {% for album in featured_albums %}
+
+                    <a
+                        href="{{ album.get_absolute_url }}"
+                        class="
+                            group
+                            overflow-hidden
+                            rounded-2xl
+                            bg-white
+                            shadow-sm
+                            ring-1
+                            ring-slate-200
+                            transition
+                            duration-300
+                            hover:-translate-y-1
+                            hover:shadow-xl
+                        "
+                    >
+
+                        <div
+                            class="
+                                relative
+                                aspect-[4/3]
+                                overflow-hidden
+                                bg-slate-200
+                            "
+                        >
+
+                            {% if album.cover_image %}
+
+                                <img
+                                    src="{{ album.cover_image.url }}"
+                                    alt="{{ album.title }}"
+                                    loading="lazy"
+                                    class="
+                                        h-full
+                                        w-full
+                                        object-cover
+                                        transition
+                                        duration-500
+                                        group-hover:scale-105
+                                    "
+                                >
+
+                            {% elif album.images.first %}
+
+                                <img
+                                    src="{{ album.images.first.image.url }}"
+                                    alt="{{ album.title }}"
+                                    loading="lazy"
+                                    class="
+                                        h-full
+                                        w-full
+                                        object-cover
+                                        transition
+                                        duration-500
+                                        group-hover:scale-105
+                                    "
+                                >
+
+                            {% endif %}
+
+
+                            <div
+                                class="
+                                    absolute
+                                    inset-0
+                                    bg-gradient-to-t
+                                    from-black/70
+                                    via-transparent
+                                    to-transparent
+                                "
+                            ></div>
+
+
+                            <div
+                                class="
+                                    absolute
+                                    bottom-4
+                                    left-4
+                                    right-4
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        text-xs
+                                        font-bold
+                                        uppercase
+                                        tracking-widest
+                                        text-campaign-gold
+                                    "
+                                >
+                                    {{ album.images.count }} Photos
+                                </span>
+
+                                <h3
+                                    class="
+                                        mt-1
+                                        text-lg
+                                        font-bold
+                                        text-white
+                                    "
+                                >
+                                    {{ album.title }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div
+                class="
+                    mt-10
+                    rounded-2xl
+                    bg-white
+                    p-10
+                    text-center
+                    ring-1
+                    ring-slate-200
+                "
+            >
+
+                <i
+                    class="
+                        fa-regular
+                        fa-images
+                        text-4xl
+                        text-slate-300
+                    "
+                ></i>
+
+                <p class="mt-4 text-slate-500">
+                    Campaign photographs will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     CAMPAIGN VIDEOS
+========================================================= -->
+
+<section class="campaign-section bg-white">
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                flex
+                flex-col
+                gap-5
+                md:flex-row
+                md:items-end
+                md:justify-between
+            "
+        >
+
+            <div>
+
+                <span class="section-label">
+                    Watch
+                </span>
+
+                <h2 class="section-title">
+                    Campaign Videos
+                </h2>
+
+                <p class="section-description">
+                    Watch speeches, engagements and updates
+                    from the campaign.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'media:videos' %}"
+                class="btn-outline"
+            >
+                View All Videos
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+            </a>
+
+        </div>
+
+
+        {% if featured_videos %}
+
+            <div
+                class="
+                    mt-10
+                    grid
+                    gap-6
+                    md:grid-cols-2
+                    lg:grid-cols-3
+                "
+            >
+
+                {% for video in featured_videos %}
+
+                    <a
+                        href="{{ video.get_absolute_url }}"
+                        class="
+                            group
+                            overflow-hidden
+                            rounded-2xl
+                            bg-white
+                            shadow-sm
+                            ring-1
+                            ring-slate-200
+                            transition
+                            duration-300
+                            hover:-translate-y-1
+                            hover:shadow-xl
+                        "
+                    >
+
+                        <div
+                            class="
+                                relative
+                                aspect-video
+                                overflow-hidden
+                                bg-campaign-navy
+                            "
+                        >
+
+                            {% if video.thumbnail %}
+
+                                <img
+                                    src="{{ video.thumbnail.url }}"
+                                    alt="{{ video.title }}"
+                                    loading="lazy"
+                                    class="
+                                        h-full
+                                        w-full
+                                        object-cover
+                                        transition
+                                        duration-500
+                                        group-hover:scale-105
+                                    "
+                                >
+
+                            {% endif %}
+
+
+                            <div
+                                class="
+                                    absolute
+                                    inset-0
+                                    flex
+                                    items-center
+                                    justify-center
+                                    bg-black/20
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        flex
+                                        h-14
+                                        w-14
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-campaign-gold
+                                        text-campaign-navy
+                                        shadow-xl
+                                        transition
+                                        duration-300
+                                        group-hover:scale-110
+                                    "
+                                >
+                                    <i class="fa-solid fa-play"></i>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="p-5">
+
+                            <p
+                                class="
+                                    text-xs
+                                    font-bold
+                                    uppercase
+                                    tracking-widest
+                                    text-campaign-blue
+                                "
+                            >
+                                {{ video.get_video_type_display }}
+                            </p>
+
+                            <h3
+                                class="
+                                    mt-2
+                                    line-clamp-2
+                                    font-bold
+                                    leading-6
+                                    text-slate-900
+                                    group-hover:text-campaign-blue
+                                "
+                            >
+                                {{ video.title }}
+                            </h3>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div
+                class="
+                    mt-10
+                    rounded-2xl
+                    bg-slate-50
+                    p-10
+                    text-center
+                "
+            >
+
+                <i
+                    class="
+                        fa-solid
+                        fa-video
+                        text-4xl
+                        text-slate-300
+                    "
+                ></i>
+
+                <p class="mt-4 text-slate-500">
+                    Campaign videos will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     JOIN CTA
+========================================================= -->
+
+<section
+    class="
+        campaign-cta
+        py-20
+        text-white
+        md:py-28
+    "
+>
+
+    <div class="container-campaign">
+
+        <div
+            class="
+                relative
+                z-10
+                mx-auto
+                max-w-4xl
+                text-center
+            "
+        >
+
+            <span
+                class="
+                    text-xs
+                    font-bold
+                    uppercase
+                    tracking-[0.2em]
+                    text-campaign-gold
+                "
+            >
+
+                {% if profile %}
+                    {{ profile.campaign_name }}
+                {% else %}
+                    UDUAK-ABASI 2027
+                {% endif %}
+
+            </span>
+
+
+            <h2
+                class="
+                    mt-4
+                    text-4xl
+                    font-black
+                    tracking-tight
+                    sm:text-5xl
+                    lg:text-6xl
+                "
+            >
+                Be Part of the Movement.
+            </h2>
+
+
+            <p
+                class="
+                    mx-auto
+                    mt-6
+                    max-w-2xl
+                    text-lg
+                    leading-8
+                    text-slate-300
+                "
+            >
+
+                Stay informed, participate in community
+                conversations and follow the journey of
+
+                {% if profile %}
+                    {{ profile.campaign_name }}.
+                {% else %}
+                    UDUAK-ABASI 2027.
+                {% endif %}
+
+            </p>
+
+
+            <div
+                class="
+                    mt-9
+                    flex
+                    flex-col
+                    justify-center
+                    gap-4
+                    sm:flex-row
+                "
+            >
+
+                <!-- Join link will be connected when
+                     the Supporters app is completed -->
+
+                <a
+                    href="#"
+                    class="btn-gold"
+                >
+                    Join Uduak-Abasi 2027
+                </a>
+
+
+                <a
+                    href="{% url 'core:contact' %}"
+                    class="btn-outline"
+                >
+                    Contact the Campaign
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

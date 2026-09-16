@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Latest News | {{ profile.campaign_name|default:"UDUAK-ABASI 2027" }}
+{% endblock %}
+
+{% block meta_description %}
+Latest campaign news, updates, activities and announcements from {{ profile.campaign_name|default:"UDUAK-ABASI 2027" }}.
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     PAGE HERO
+========================================================= -->
+
+<section class="relative overflow-hidden bg-slate-950 py-20 sm:py-24">
+
+
+<div class="absolute inset-0 bg-gradient-to-br from-blue-950/80 via-slate-950 to-slate-950"></div>
+
+<div class="relative container-campaign">
+
+    <div class="max-w-3xl">
+
+        <span class="section-label text-amber-400">
+            Campaign Updates
+        </span>
+
+        <h1 class="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Latest News
+        </h1>
+
+        <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+            Stay informed with the latest news, campaign activities,
+            announcements and updates from
+            {{ profile.campaign_name|default:"UDUAK-ABASI 2027" }}.
+        </p>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<!-- =========================================================
+     NEWS LIST
+========================================================= -->
+
+<section class="campaign-section bg-white">
+
+
+<div class="container-campaign">
+
+    {% if news_articles %}
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+            {% for article in news_articles %}
+
+                <article
+                    class="campaign-card group flex h-full flex-col overflow-hidden"
+                >
+
+                    <!-- =====================================
+                         FEATURED IMAGE
+                    ====================================== -->
+
+                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+
+                        {% if article.featured_image %}
+
+                            <img
+                                src="{{ article.featured_image.url }}"
+                                alt="{{ article.title }}"
+                                class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                loading="lazy"
+                            >
+
+                        {% else %}
+
+                            <div
+                                class="flex h-full w-full items-center justify-center bg-slate-100"
+                            >
+                                <i class="fa-regular fa-newspaper text-5xl text-slate-300"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================
+                             CONTENT TYPE
+                        ================================== -->
+
+                        <div class="absolute left-4 top-4">
+
+                            {% if article.content_type == "video" %}
+
+                                <span class="inline-flex items-center gap-2 rounded-full bg-blue-700 px-3 py-1.5 text-xs font-bold text-white shadow">
+                                    <i class="fa-solid fa-play"></i>
+                                    Video
+                                </span>
+
+                            {% elif article.content_type == "campaign" %}
+
+                                <span class="inline-flex items-center gap-2 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-bold text-slate-950 shadow">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                    Campaign Update
+                                </span>
+
+                            {% else %}
+
+                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-white shadow">
+                                    <i class="fa-regular fa-newspaper"></i>
+                                    Article
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         CONTENT
+                    ====================================== -->
+
+                    <div class="flex flex-1 flex-col p-6">
+
+                        <!-- Category + Date -->
+
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500">
+
+                            {% if article.category %}
+
+                                <span class="font-semibold text-blue-700">
+                                    {{ article.category.name }}
+                                </span>
+
+                            {% endif %}
+
+                            {% if article.published_at %}
+
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    {{ article.published_at|date:"M d, Y" }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Title -->
+
+                        <h2 class="mt-4 text-xl font-extrabold leading-tight text-slate-900 sm:text-2xl">
+
+                            <a
+                                href="{% url 'news:detail' article.slug %}"
+                                class="transition hover:text-blue-700"
+                            >
+                                {{ article.title }}
+                            </a>
+
+                        </h2>
+
+
+                        <!-- Excerpt -->
+
+                        {% if article.excerpt %}
+
+                            <p class="mt-4 line-clamp-3 text-base leading-7 text-slate-600">
+                                {{ article.excerpt }}
+                            </p>
+
+                        {% elif article.content %}
+
+                            <p class="mt-4 line-clamp-3 text-base leading-7 text-slate-600">
+                                {{ article.content|truncatechars:180 }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- =================================
+                             FOOTER
+                        ================================== -->
+
+                        <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-6">
+
+                            <span class="inline-flex items-center gap-2 text-sm text-slate-500">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                                {{ article.views }} views
+
+                            </span>
+
+
+                            <a
+                                href="{% url 'news:detail' article.slug %}"
+                                class="inline-flex items-center gap-2 font-bold text-blue-700 transition hover:text-blue-900"
+                            >
+
+                                Read More
+
+                                <i class="fa-solid fa-arrow-right text-xs transition group-hover:translate-x-1"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
+
+        {% if is_paginated %}
+
+            <div class="mt-14 flex items-center justify-center gap-2">
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}"
+                        class="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 px-4 text-sm font-bold text-slate-700 transition hover:border-blue-700 hover:text-blue-700"
+                    >
+                        <i class="fa-solid fa-chevron-left mr-2 text-xs"></i>
+                        Previous
+                    </a>
+
+                {% endif %}
+
+
+                <span
+                    class="inline-flex h-11 items-center justify-center rounded-lg bg-blue-700 px-5 text-sm font-bold text-white"
+                >
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        href="?page={{ page_obj.next_page_number }}"
+                        class="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 px-4 text-sm font-bold text-slate-700 transition hover:border-blue-700 hover:text-blue-700"
+                    >
+                        Next
+                        <i class="fa-solid fa-chevron-right ml-2 text-xs"></i>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div class="mx-auto max-w-2xl py-16 text-center">
+
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
+
+                <i class="fa-regular fa-newspaper text-3xl text-blue-700"></i>
+
+            </div>
+
+            <h2 class="mt-6 text-2xl font-black text-slate-900">
+                Campaign Updates Coming Soon
+            </h2>
+
+            <p class="mt-4 text-lg leading-8 text-slate-600">
+                We will be sharing the latest campaign activities,
+                announcements, events and news here.
+            </p>
+
+            <a
+                href="{% url 'core:home' %}"
+                class="btn-primary mt-8 inline-flex"
+            >
+                <i class="fa-solid fa-house mr-2"></i>
+                Back Home
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+</section>
+
+<!-- =========================================================
+     CTA
+========================================================= -->
+
+<section class="bg-slate-950 py-16">
+
+
+<div class="container-campaign">
+
+    <div class="flex flex-col items-center justify-between gap-8 text-center md:flex-row md:text-left">
+
+        <div>
+
+            <span class="section-label text-amber-400">
+                Stay Connected
+            </span>
+
+            <h2 class="mt-3 text-3xl font-black text-white sm:text-4xl">
+                Follow the Movement.
+            </h2>
+
+            <p class="mt-3 max-w-xl text-slate-400">
+                Stay informed about campaign activities and
+                opportunities to get involved.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'core:contact' %}"
+            class="btn-gold whitespace-nowrap"
+        >
+            Get Involved
+            <i class="fa-solid fa-arrow-right ml-2"></i>
+        </a>
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}

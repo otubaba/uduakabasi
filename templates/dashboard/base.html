@@ -1,0 +1,1235 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    {% block title %}
+        Campaign Dashboard | UDUAK-ABASI 2027
+    {% endblock %}
+</title>
+
+<meta
+    name="description"
+    content="UDUAK-ABASI 2027 Campaign Administration Dashboard"
+>
+
+<meta
+    name="theme-color"
+    content="#0f172a"
+>
+
+<!-- =====================================================
+     TAILWIND
+====================================================== -->
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+
+    tailwind.config = {
+
+        theme: {
+
+            extend: {
+
+                colors: {
+
+                    campaign: {
+                        navy: "#0f172a",
+                        blue: "#1d4ed8",
+                        darkblue: "#1e3a8a",
+                        gold: "#f59e0b",
+                        darkgold: "#d97706",
+                    },
+
+                },
+
+            },
+
+        },
+
+    };
+
+</script>
+
+
+<!-- =====================================================
+     CUSTOM CSS
+====================================================== -->
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/style.css' %}"
+>
+
+
+<!-- =====================================================
+     FONT AWESOME
+====================================================== -->
+
+<script
+    src="https://kit.fontawesome.com/c27acce84b.js"
+    crossorigin="anonymous"
+></script>
+
+
+{% block extra_head %}{% endblock %}
+
+
+</head>
+
+<body class="bg-slate-100 text-slate-900">
+
+<!-- =========================================================
+     MOBILE OVERLAY
+========================================================== -->
+
+<div
+    id="dashboard-overlay"
+    class="fixed inset-0 z-40 hidden bg-slate-950/60 backdrop-blur-sm lg:hidden"
+></div>
+
+<!-- =========================================================
+     DASHBOARD SIDEBAR
+========================================================== -->
+
+<aside
+    id="dashboard-sidebar"
+    class="
+        fixed
+        inset-y-0
+        left-0
+        z-50
+        flex
+        w-72
+        -translate-x-full
+        flex-col
+        bg-slate-950
+        text-white
+        shadow-2xl
+        transition-transform
+        duration-300
+        lg:translate-x-0
+    "
+>
+
+<!-- =====================================================
+     BRAND
+====================================================== -->
+
+<div
+    class="
+        flex
+        h-[76px]
+        shrink-0
+        items-center
+        border-b
+        border-white/10
+        px-5
+    "
+>
+
+    <a
+        href="{% url 'dashboard:home' %}"
+        class="flex w-full items-center gap-3"
+    >
+
+        <div
+            class="
+                flex
+                h-10
+                w-10
+                shrink-0
+                items-center
+                justify-center
+                rounded-xl
+                bg-amber-400
+                text-slate-950
+                shadow-lg
+            "
+        >
+
+            <i class="fa-solid fa-landmark text-base"></i>
+
+        </div>
+
+
+        <div class="min-w-0">
+
+            <p
+                class="
+                    truncate
+                    text-sm
+                    font-black
+                    tracking-wide
+                    text-white
+                "
+            >
+                UDUAK-ABASI
+            </p>
+
+            <p
+                class="
+                    mt-0.5
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-[0.18em]
+                    text-amber-400
+                "
+            >
+                Campaign 2027
+            </p>
+
+        </div>
+
+    </a>
+
+
+    <!-- MOBILE CLOSE -->
+
+    <button
+        id="dashboard-close"
+        type="button"
+        class="
+            ml-3
+            flex
+            h-9
+            w-9
+            shrink-0
+            items-center
+            justify-center
+            rounded-lg
+            text-slate-400
+            transition
+            hover:bg-white/10
+            hover:text-white
+            lg:hidden
+        "
+        aria-label="Close dashboard menu"
+    >
+
+        <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     SIDEBAR NAVIGATION
+====================================================== -->
+
+<nav class="flex-1 overflow-y-auto px-4 py-6">
+
+
+    <!-- =================================================
+         MAIN
+    ================================================== -->
+
+    <div class="mb-7">
+
+        <p
+            class="
+                mb-3
+                px-3
+                text-[10px]
+                font-extrabold
+                uppercase
+                tracking-[0.2em]
+                text-slate-500
+            "
+        >
+            Main
+        </p>
+
+
+        <!-- DASHBOARD -->
+
+        <a
+            href="{% url 'dashboard:home' %}"
+            class="
+                dashboard-nav-link
+                {% if request.resolver_match.url_name == 'home' %}
+                    active
+                {% endif %}
+            "
+        >
+
+            <span class="dashboard-nav-icon">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+            </span>
+
+            <span class="dashboard-nav-text">
+                Dashboard
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <!-- =================================================
+         CAMPAIGN
+    ================================================== -->
+
+    <div class="mb-7">
+
+        <p
+            class="
+                mb-3
+                px-3
+                text-[10px]
+                font-extrabold
+                uppercase
+                tracking-[0.2em]
+                text-slate-500
+            "
+        >
+            Campaign
+        </p>
+
+
+        <!-- =================================================
+             SUPPORTERS MANAGER
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.groups.all.0.name == "Supporters Manager" %}
+
+            <a
+                href="{% url 'supporters:dashboard' %}"
+                class="
+                    dashboard-nav-link
+                    {% if request.resolver_match.url_name == 'supporter_dashboard' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-users"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Supporters
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             NEWS MANAGER
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.groups.all.0.name == "News Manager" %}
+
+            <a
+                href="{% url 'dashboard:news_list' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.url_name == 'news_list' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'news_create' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'news_edit' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'news_delete' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-newspaper"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    News
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             EVENTS MANAGER
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.groups.all.0.name == "Events Manager" %}
+
+            <a
+                href="{% url 'dashboard:event_list' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.url_name == 'event_list' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'event_create' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'event_edit' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'event_delete' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Events
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             GALLERY / MEDIA MANAGER
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.groups.all.0.name == "Gallery Manager" %}
+
+            <a
+                href="{% url 'media:dashboard' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.app_name == 'media' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-photo-film"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Media
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             EMPOWERMENT MANAGER
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.groups.all.0.name == "Empowerment Manager" %}
+
+            <a
+                href="{% url 'empowerment:dashboard' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.app_name == 'empowerment' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Empowerment
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             SUPERUSER ONLY
+             AGENDA
+        ================================================== -->
+
+        {% if request.user.is_superuser %}
+
+            <a
+                href="{% url 'dashboard:agenda_list' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.url_name == 'agenda_list' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'agenda_create' %}
+                        active
+                    {% elif request.resolver_match.url_name == 'agenda_edit' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-list-check"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Agenda
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             SUPERUSER ONLY
+             STAFF MANAGEMENT
+        ================================================== -->
+
+        {% if request.user.is_superuser %}
+
+            <a
+                href="{% url 'accounts:staff_list' %}"
+                class="
+                    dashboard-nav-link
+
+                    {% if request.resolver_match.url_name == 'staff_list' %}
+                        active
+                    {% endif %}
+                "
+            >
+
+                <span class="dashboard-nav-icon">
+                    <i class="fa-solid fa-users-gear"></i>
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Staff Management
+                </span>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         WEBSITE
+    ================================================== -->
+
+    <div>
+
+        <p
+            class="
+                mb-3
+                px-3
+                text-[10px]
+                font-extrabold
+                uppercase
+                tracking-[0.2em]
+                text-slate-500
+            "
+        >
+            Website
+        </p>
+
+
+        <!-- =================================================
+             CAMPAIGN PROFILE
+             SUPERUSER ONLY
+        ================================================== -->
+
+        {% if request.user.is_superuser %}
+
+            <a
+                href="{% url 'admin:core_campaignprofile_changelist' %}"
+                class="dashboard-nav-link"
+            >
+
+                <span class="dashboard-nav-icon">
+
+                    <i class="fa-solid fa-user-tie"></i>
+
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Campaign Profile
+                </span>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             VIEW WEBSITE
+        ================================================== -->
+
+        <a
+            href="{% url 'core:home' %}"
+            target="_blank"
+            rel="noopener"
+            class="dashboard-nav-link"
+        >
+
+            <span class="dashboard-nav-icon">
+
+                <i class="fa-solid fa-globe"></i>
+
+            </span>
+
+            <span class="dashboard-nav-text">
+                View Website
+            </span>
+
+            <i
+                class="
+                    fa-solid
+                    fa-arrow-up-right-from-square
+                    ml-auto
+                    text-[10px]
+                    text-slate-500
+                "
+            ></i>
+
+        </a>
+
+
+        <!-- =================================================
+             DJANGO ADMIN
+             SUPERUSER ONLY
+        ================================================== -->
+
+        {% if request.user.is_superuser %}
+
+            <a
+                href="{% url 'admin:index' %}"
+                class="dashboard-nav-link"
+            >
+
+                <span class="dashboard-nav-icon">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                </span>
+
+                <span class="dashboard-nav-text">
+                    Django Admin
+                </span>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     USER AREA
+====================================================== -->
+
+<div
+    class="
+        shrink-0
+        border-t
+        border-white/10
+        bg-slate-950
+        p-3
+    "
+>
+
+    <div
+        class="
+            flex
+            items-center
+            gap-3
+            rounded-xl
+            bg-white/[0.04]
+            px-3
+            py-3
+        "
+    >
+
+        <!-- AVATAR -->
+
+        <div
+            class="
+                flex
+                h-9
+                w-9
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-blue-700
+                text-sm
+                font-black
+                text-white
+            "
+        >
+
+            {{ request.user.username|first|upper }}
+
+        </div>
+
+
+        <!-- USER DETAILS -->
+
+        <div class="min-w-0 flex-1">
+
+            <p
+                class="
+                    truncate
+                    text-xs
+                    font-bold
+                    text-white
+                "
+            >
+
+                {% if request.user.get_full_name %}
+                    {{ request.user.get_full_name }}
+                {% else %}
+                    {{ request.user.username }}
+                {% endif %}
+
+            </p>
+
+
+            <p
+                class="
+                    mt-0.5
+                    truncate
+                    text-[10px]
+                    text-amber-400
+                "
+            >
+
+                {% if request.user.is_superuser %}
+
+                    Super Administrator
+
+                {% elif request.user.groups.all.0.name %}
+
+                    {{ request.user.groups.all.0.name }}
+
+                {% else %}
+
+                    Staff
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SIGN OUT -->
+
+    <form method="post" action="{% url 'accounts:logout' %}">
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="
+                flex
+                w-full
+                items-center
+                gap-3
+                rounded-xl
+                px-3
+                py-2.5
+                text-xs
+                font-bold
+                text-slate-400
+                transition
+                hover:bg-red-500/10
+                hover:text-red-400
+            "
+        >
+
+            <span
+                class="
+                    flex
+                    h-7
+                    w-7
+                    items-center
+                    justify-center
+                    rounded-lg
+                    bg-white/5
+                "
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+            </span>
+
+            <span>
+                Sign Out
+            </span>
+
+        </button>
+
+    </form>
+
+</div>
+
+
+</aside>
+
+<!-- =========================================================
+     MAIN AREA
+========================================================== -->
+
+<div class="min-h-screen lg:pl-72">
+
+
+<!-- =====================================================
+     TOP BAR
+====================================================== -->
+
+<header
+    class="
+        sticky
+        top-0
+        z-30
+        flex
+        h-[76px]
+        items-center
+        justify-between
+        border-b
+        border-slate-200
+        bg-white/95
+        px-4
+        shadow-sm
+        backdrop-blur
+        sm:px-6
+        lg:px-8
+    "
+>
+
+    <!-- LEFT -->
+
+    <div class="flex items-center gap-4">
+
+        <button
+            id="dashboard-open"
+            type="button"
+            class="
+                flex
+                h-10
+                w-10
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                text-slate-700
+                shadow-sm
+                transition
+                hover:bg-slate-50
+                lg:hidden
+            "
+            aria-label="Open dashboard menu"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
+        <div>
+
+            <p
+                class="
+                    hidden
+                    text-[10px]
+                    font-black
+                    uppercase
+                    tracking-[0.18em]
+                    text-slate-400
+                    sm:block
+                "
+            >
+                UDUAK-ABASI 2027
+            </p>
+
+            <h1
+                class="
+                    text-base
+                    font-black
+                    text-slate-900
+                    sm:mt-0.5
+                    sm:text-lg
+                "
+            >
+
+                {% block page_title %}
+                    Dashboard
+                {% endblock %}
+
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT -->
+
+    <div class="flex items-center gap-2">
+
+
+        <!-- VIEW WEBSITE -->
+
+        <a
+            href="{% url 'core:home' %}"
+            target="_blank"
+            rel="noopener"
+            class="
+                hidden
+                items-center
+                gap-2
+                rounded-xl
+                border
+                border-slate-200
+                px-3
+                py-2
+                text-xs
+                font-bold
+                text-slate-600
+                transition
+                hover:bg-slate-50
+                md:flex
+            "
+        >
+
+            <i class="fa-solid fa-globe"></i>
+
+            Website
+
+        </a>
+
+
+        <!-- ADMIN -->
+
+        {% if request.user.is_superuser %}
+
+            <a
+                href="{% url 'admin:index' %}"
+                class="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-slate-200
+                    text-slate-600
+                    transition
+                    hover:bg-slate-50
+                "
+                title="Django Admin"
+            >
+
+                <i class="fa-solid fa-gear text-sm"></i>
+
+            </a>
+
+        {% endif %}
+
+
+        <!-- USER -->
+
+        <div
+            class="
+                hidden
+                items-center
+                gap-2.5
+                rounded-xl
+                border
+                border-slate-200
+                px-2.5
+                py-1.5
+                sm:flex
+            "
+        >
+
+            <div
+                class="
+                    flex
+                    h-8
+                    w-8
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-blue-700
+                    text-xs
+                    font-black
+                    text-white
+                "
+            >
+
+                {{ request.user.username|first|upper }}
+
+            </div>
+
+            <div class="max-w-28">
+
+                <p
+                    class="
+                        truncate
+                        text-xs
+                        font-bold
+                        text-slate-700
+                    "
+                >
+
+                    {{ request.user.username }}
+
+                </p>
+
+                <p class="truncate text-[10px] text-slate-400">
+
+                    {% if request.user.is_superuser %}
+
+                        Super Administrator
+
+                    {% elif request.user.groups.all.0.name %}
+
+                        {{ request.user.groups.all.0.name }}
+
+                    {% else %}
+
+                        Staff
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<main class="min-h-[calc(100vh-5rem)]">
+
+    {% block content %}{% endblock %}
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer
+    class="
+        border-t
+        border-slate-200
+        bg-white
+        px-6
+        py-5
+        lg:px-8
+    "
+>
+
+    <div
+        class="
+            flex
+            flex-col
+            gap-2
+            text-sm
+            text-slate-500
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+        "
+    >
+
+        <p>
+            © {% now "Y" %} UDUAK-ABASI 2027.
+        </p>
+
+        <p>
+            Campaign Administration Portal
+        </p>
+
+    </div>
+
+</footer>
+
+
+</div>
+
+<!-- =========================================================
+     DASHBOARD JAVASCRIPT
+========================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sidebar = document.getElementById(
+        "dashboard-sidebar"
+    );
+
+    const overlay = document.getElementById(
+        "dashboard-overlay"
+    );
+
+    const openButton = document.getElementById(
+        "dashboard-open"
+    );
+
+    const closeButton = document.getElementById(
+        "dashboard-close"
+    );
+
+
+    function openSidebar() {
+
+        if (!sidebar) {
+            return;
+        }
+
+        sidebar.classList.remove(
+            "-translate-x-full"
+        );
+
+        if (overlay) {
+
+            overlay.classList.remove(
+                "hidden"
+            );
+
+        }
+
+        document.body.classList.add(
+            "overflow-hidden"
+        );
+
+    }
+
+
+    function closeSidebar() {
+
+        if (!sidebar) {
+            return;
+        }
+
+        sidebar.classList.add(
+            "-translate-x-full"
+        );
+
+        if (overlay) {
+
+            overlay.classList.add(
+                "hidden"
+            );
+
+        }
+
+        document.body.classList.remove(
+            "overflow-hidden"
+        );
+
+    }
+
+
+    if (openButton) {
+
+        openButton.addEventListener(
+            "click",
+            openSidebar
+        );
+
+    }
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+    }
+
+
+    if (overlay) {
+
+        overlay.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(
+            "#dashboard-sidebar a"
+        )
+        .forEach(function (link) {
+
+            link.addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        window.innerWidth < 1024
+                    ) {
+
+                        closeSidebar();
+
+                    }
+
+                }
+            );
+
+        });
+
+});
+
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+
+</html>
