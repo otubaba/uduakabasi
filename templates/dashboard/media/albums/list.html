@@ -1,0 +1,482 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Media Albums
+{% endblock %}
+
+{% block page_title %}
+    Media & Gallery
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Media Albums
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage campaign galleries and photo albums.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+
+            <a
+                href="{% url 'dashboard:media_video_list' %}"
+                class="dashboard-nav-link"
+            >
+                <i class="fa-solid fa-video mr-2"></i>
+                Videos
+            </a>
+
+            <a
+                href="{% url 'dashboard:media_album_create' %}"
+                class="inline-flex items-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-plus mr-2"></i>
+                New Album
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STAT CARDS
+    ====================================================== -->
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+        <div class="campaign-card p-5">
+            <p class="text-sm text-slate-500">
+                Total Albums
+            </p>
+
+            <p class="mt-2 text-2xl font-bold text-slate-900">
+                {{ total_albums }}
+            </p>
+        </div>
+
+
+        <div class="campaign-card p-5">
+            <p class="text-sm text-slate-500">
+                Published
+            </p>
+
+            <p class="mt-2 text-2xl font-bold text-emerald-600">
+                {{ published_albums }}
+            </p>
+        </div>
+
+
+        <div class="campaign-card p-5">
+            <p class="text-sm text-slate-500">
+                Featured
+            </p>
+
+            <p class="mt-2 text-2xl font-bold text-amber-600">
+                {{ featured_albums }}
+            </p>
+        </div>
+
+
+        <div class="campaign-card p-5">
+            <p class="text-sm text-slate-500">
+                Total Images
+            </p>
+
+            <p class="mt-2 text-2xl font-bold text-slate-900">
+                {{ total_images }}
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <div class="campaign-card p-5">
+
+        <form
+            method="get"
+            class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"
+        >
+
+            <div>
+                <label class="form-label">
+                    Search
+                </label>
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ search_query }}"
+                    class="form-control"
+                    placeholder="Search albums..."
+                >
+            </div>
+
+
+            <div>
+                <label class="form-label">
+                    Published
+                </label>
+
+                <select
+                    name="published"
+                    class="form-control"
+                >
+                    <option value="">All</option>
+                    <option
+                        value="yes"
+                        {% if published_filter == "yes" %}selected{% endif %}
+                    >
+                        Published
+                    </option>
+
+                    <option
+                        value="no"
+                        {% if published_filter == "no" %}selected{% endif %}
+                    >
+                        Unpublished
+                    </option>
+                </select>
+            </div>
+
+
+            <div>
+                <label class="form-label">
+                    Featured
+                </label>
+
+                <select
+                    name="featured"
+                    class="form-control"
+                >
+                    <option value="">All</option>
+
+                    <option
+                        value="yes"
+                        {% if featured_filter == "yes" %}selected{% endif %}
+                    >
+                        Featured
+                    </option>
+
+                    <option
+                        value="no"
+                        {% if featured_filter == "no" %}selected{% endif %}
+                    >
+                        Not Featured
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="flex items-end gap-2">
+
+                <button
+                    type="submit"
+                    class="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-filter mr-2"></i>
+                    Filter
+                </button>
+
+                <a
+                    href="{% url 'dashboard:media_album_list' %}"
+                    class="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                    Clear
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALBUM TABLE
+    ====================================================== -->
+
+    <div class="campaign-card overflow-hidden">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead>
+                    <tr class="border-b border-slate-200">
+
+                        <th class="table-heading">
+                            Album
+                        </th>
+
+                        <th class="table-heading">
+                            Event
+                        </th>
+
+                        <th class="table-heading">
+                            Images
+                        </th>
+
+                        <th class="table-heading">
+                            Status
+                        </th>
+
+                        <th class="table-heading text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for album in albums %}
+
+                    <tr class="hover:bg-slate-50">
+
+                        <td class="table-cell">
+
+                            <div class="flex items-center gap-3">
+
+                                {% if album.cover_image %}
+
+                                    <img
+                                        src="{{ album.cover_image.url }}"
+                                        alt="{{ album.title }}"
+                                        class="h-14 w-20 rounded-lg object-cover"
+                                    >
+
+                                {% else %}
+
+                                    <div class="flex h-14 w-20 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                                        <i class="fa-solid fa-images"></i>
+                                    </div>
+
+                                {% endif %}
+
+                                <div>
+
+                                    <p class="font-semibold text-slate-900">
+                                        {{ album.title }}
+                                    </p>
+
+                                    {% if album.location %}
+                                        <p class="text-xs text-slate-500">
+                                            {{ album.location }}
+                                        </p>
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td class="table-cell">
+
+                            {% if album.event_date %}
+                                <div class="text-sm text-slate-700">
+                                    {{ album.event_date|date:"M d, Y" }}
+                                </div>
+                            {% else %}
+                                <span class="text-slate-400">
+                                    —
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+
+                        <td class="table-cell">
+
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+
+                                <i class="fa-solid fa-image mr-1"></i>
+
+                                {{ album.images.count }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="table-cell">
+
+                            <div class="flex flex-wrap gap-2">
+
+                                {% if album.published %}
+
+                                    <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                                        Published
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
+                                        Draft
+                                    </span>
+
+                                {% endif %}
+
+
+                                {% if album.featured %}
+
+                                    <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                                        Featured
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <td class="table-cell">
+
+                            <div class="flex justify-end gap-2">
+
+                                <a
+                                    href="{% url 'dashboard:media_album_images' album.pk %}"
+                                    class="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                                    title="Manage images"
+                                >
+                                    <i class="fa-solid fa-images"></i>
+                                </a>
+
+
+                                <a
+                                    href="{% url 'media:album_detail' album.slug %}"
+                                    target="_blank"
+                                    class="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                                    title="View public album"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+
+
+                                <a
+                                    href="{% url 'dashboard:media_album_edit' album.pk %}"
+                                    class="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                                    title="Edit"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+
+
+                                <a
+                                    href="{% url 'dashboard:media_album_delete' album.pk %}"
+                                    class="rounded-lg border border-red-200 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    title="Delete"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="px-6 py-16 text-center"
+                        >
+
+                            <div class="text-slate-400">
+
+                                <i class="fa-solid fa-images text-4xl"></i>
+
+                                <p class="mt-4 font-semibold text-slate-700">
+                                    No media albums found
+                                </p>
+
+                                <p class="mt-1 text-sm">
+                                    Create your first gallery album.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PAGINATION
+    ====================================================== -->
+
+    {% if is_paginated %}
+
+        <div class="flex items-center justify-between">
+
+            {% if page_obj.has_previous %}
+
+                <a
+                    href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&published={{ published_filter }}&featured={{ featured_filter }}"
+                    class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Previous
+                </a>
+
+            {% else %}
+
+                <span></span>
+
+            {% endif %}
+
+
+            <span class="text-sm text-slate-500">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+
+            {% if page_obj.has_next %}
+
+                <a
+                    href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&published={{ published_filter }}&featured={{ featured_filter }}"
+                    class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    Next
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

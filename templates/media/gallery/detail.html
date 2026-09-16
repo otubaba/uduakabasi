@@ -1,0 +1,898 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ album.title }} | Gallery | UDUAK-ABASI 2027
+{% endblock %}
+
+{% block content %}
+
+<section
+    class="
+        bg-slate-950
+        py-16
+        sm:py-20
+    "
+>
+
+    <div
+        class="
+            mx-auto
+            max-w-7xl
+            px-4
+            sm:px-6
+            lg:px-8
+        "
+    >
+
+
+        <!-- =====================================================
+             BREADCRUMB
+        ====================================================== -->
+
+        <nav
+            class="
+                mb-8
+                flex
+                flex-wrap
+                items-center
+                gap-2
+                text-sm
+                text-slate-400
+            "
+        >
+
+            <a
+                href="/"
+                class="transition hover:text-white"
+            >
+                Home
+            </a>
+
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+
+            <a
+                href="{% url 'media:album_list' %}"
+                class="transition hover:text-white"
+            >
+                Gallery
+            </a>
+
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+
+            <span class="text-slate-500">
+                {{ album.title }}
+            </span>
+
+        </nav>
+
+
+        <!-- =====================================================
+             ALBUM HEADER
+        ====================================================== -->
+
+        <div
+            class="
+                grid
+                gap-8
+                lg:grid-cols-[1fr_auto]
+                lg:items-end
+            "
+        >
+
+            <div>
+
+                <div
+                    class="
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-3
+                    "
+                >
+
+                    {% if album.featured %}
+
+                        <span
+                            class="
+                                inline-flex
+                                items-center
+                                rounded-full
+                                bg-amber-500/10
+                                px-3
+                                py-1.5
+                                text-xs
+                                font-black
+                                text-amber-400
+                                ring-1
+                                ring-inset
+                                ring-amber-500/20
+                            "
+                        >
+                            <i class="fa-solid fa-star mr-1.5"></i>
+                            Featured
+                        </span>
+
+                    {% endif %}
+
+
+                    <span
+                        class="
+                            inline-flex
+                            items-center
+                            rounded-full
+                            bg-white/5
+                            px-3
+                            py-1.5
+                            text-xs
+                            font-bold
+                            text-slate-300
+                            ring-1
+                            ring-inset
+                            ring-white/10
+                        "
+                    >
+                        <i class="fa-regular fa-images mr-1.5"></i>
+                        {{ images|length }}
+                        image{{ images|length|pluralize }}
+                    </span>
+
+                </div>
+
+
+                <h1
+                    class="
+                        mt-5
+                        text-4xl
+                        font-black
+                        tracking-tight
+                        text-white
+                        sm:text-5xl
+                    "
+                >
+                    {{ album.title }}
+                </h1>
+
+
+                {% if album.description %}
+
+                    <p
+                        class="
+                            mt-5
+                            max-w-3xl
+                            text-lg
+                            leading-8
+                            text-slate-400
+                        "
+                    >
+                        {{ album.description }}
+                    </p>
+
+                {% endif %}
+
+
+                <div
+                    class="
+                        mt-6
+                        flex
+                        flex-wrap
+                        gap-5
+                        text-sm
+                        text-slate-400
+                    "
+                >
+
+                    {% if album.event_date %}
+
+                        <span>
+                            <i
+                                class="
+                                    fa-regular
+                                    fa-calendar
+                                    mr-2
+                                    text-amber-400
+                                "
+                            ></i>
+                            {{ album.event_date|date:"F d, Y" }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if album.location %}
+
+                        <span>
+                            <i
+                                class="
+                                    fa-solid
+                                    fa-location-dot
+                                    mr-2
+                                    text-amber-400
+                                "
+                            ></i>
+                            {{ album.location }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{% url 'media:album_list' %}"
+                class="
+                    inline-flex
+                    h-11
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-white/10
+                    bg-white/5
+                    px-5
+                    text-sm
+                    font-bold
+                    text-white
+                    transition
+                    hover:bg-white/10
+                "
+            >
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Back to Gallery
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             IMAGE GRID
+        ====================================================== -->
+
+        {% if images %}
+
+        <div
+            class="
+                mt-12
+                grid
+                gap-5
+                sm:grid-cols-2
+                lg:grid-cols-3
+                xl:grid-cols-4
+            "
+            id="gallery-grid"
+        >
+
+            {% for image in images %}
+
+            <button
+                type="button"
+                class="
+                    gallery-item
+                    group
+                    relative
+                    overflow-hidden
+                    rounded-2xl
+                    bg-slate-900
+                    text-left
+                    ring-1
+                    ring-white/10
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-amber-400
+                "
+                data-image="{{ image.image.url }}"
+                data-caption="{{ image.caption|default:'' }}"
+                data-alt="{{ image.alt_text|default:album.title }}"
+            >
+
+                <div
+                    class="
+                        aspect-square
+                        overflow-hidden
+                    "
+                >
+
+                    <img
+                        src="{{ image.image.url }}"
+                        alt="{{ image.alt_text|default:album.title }}"
+                        loading="lazy"
+                        class="
+                            h-full
+                            w-full
+                            object-cover
+                            transition
+                            duration-500
+                            group-hover:scale-105
+                        "
+                    >
+
+                </div>
+
+
+                <!-- Hover overlay -->
+
+                <div
+                    class="
+                        absolute
+                        inset-0
+                        flex
+                        items-center
+                        justify-center
+                        bg-black/0
+                        transition
+                        duration-300
+                        group-hover:bg-black/40
+                    "
+                >
+
+                    <span
+                        class="
+                            flex
+                            h-12
+                            w-12
+                            scale-75
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-white
+                            text-slate-900
+                            opacity-0
+                            shadow-xl
+                            transition
+                            duration-300
+                            group-hover:scale-100
+                            group-hover:opacity-100
+                        "
+                    >
+                        <i class="fa-solid fa-expand"></i>
+                    </span>
+
+                </div>
+
+
+                {% if image.caption %}
+
+                    <div
+                        class="
+                            absolute
+                            inset-x-0
+                            bottom-0
+                            bg-gradient-to-t
+                            from-black/80
+                            to-transparent
+                            p-4
+                            pt-10
+                        "
+                    >
+                        <p
+                            class="
+                                line-clamp-2
+                                text-sm
+                                font-semibold
+                                text-white
+                            "
+                        >
+                            {{ image.caption }}
+                        </p>
+                    </div>
+
+                {% endif %}
+
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+            <div
+                class="
+                    mt-12
+                    rounded-3xl
+                    border
+                    border-dashed
+                    border-slate-700
+                    bg-slate-900
+                    px-6
+                    py-20
+                    text-center
+                "
+            >
+
+                <i
+                    class="
+                        fa-solid
+                        fa-images
+                        text-5xl
+                        text-slate-600
+                    "
+                ></i>
+
+                <h2
+                    class="
+                        mt-5
+                        text-xl
+                        font-black
+                        text-white
+                    "
+                >
+                    No images in this album
+                </h2>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             RELATED ALBUMS
+        ====================================================== -->
+
+        {% if related_albums %}
+
+        <div class="mt-20">
+
+            <div class="mb-8">
+
+                <p
+                    class="
+                        text-sm
+                        font-bold
+                        uppercase
+                        tracking-widest
+                        text-amber-400
+                    "
+                >
+                    Continue Exploring
+                </p>
+
+                <h2
+                    class="
+                        mt-1
+                        text-2xl
+                        font-black
+                        text-white
+                    "
+                >
+                    More Gallery Moments
+                </h2>
+
+            </div>
+
+
+            <div
+                class="
+                    grid
+                    gap-5
+                    sm:grid-cols-2
+                    lg:grid-cols-4
+                "
+            >
+
+                {% for related in related_albums %}
+
+                <a
+                    href="{% url 'media:album_detail' related.slug %}"
+                    class="
+                        group
+                        overflow-hidden
+                        rounded-2xl
+                        bg-white
+                    "
+                >
+
+                    <div class="aspect-[4/3] overflow-hidden">
+
+                        {% if related.cover_image %}
+
+                            <img
+                                src="{{ related.cover_image.url }}"
+                                alt="{{ related.title }}"
+                                class="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition
+                                    duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+
+                        {% elif related.images.first %}
+
+                            <img
+                                src="{{ related.images.first.image.url }}"
+                                alt="{{ related.title }}"
+                                class="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition
+                                    duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="p-4">
+
+                        <h3
+                            class="
+                                font-black
+                                text-slate-900
+                                group-hover:text-amber-600
+                            "
+                        >
+                            {{ related.title }}
+                        </h3>
+
+                        <p
+                            class="
+                                mt-1
+                                text-xs
+                                font-semibold
+                                text-slate-400
+                            "
+                        >
+                            {{ related.image_count }}
+                            image{{ related.image_count|pluralize }}
+                        </p>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     LIGHTBOX
+========================================================= -->
+
+<div
+    id="public-lightbox"
+    class="
+        fixed
+        inset-0
+        z-[100]
+        hidden
+        items-center
+        justify-center
+        bg-black/95
+        p-4
+        sm:p-8
+    "
+>
+
+    <button
+        type="button"
+        id="lightbox-close"
+        class="
+            absolute
+            right-5
+            top-5
+            flex
+            h-11
+            w-11
+            items-center
+            justify-center
+            rounded-full
+            bg-white/10
+            text-xl
+            text-white
+            transition
+            hover:bg-white/20
+        "
+        aria-label="Close image"
+    >
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+
+    <button
+        type="button"
+        id="lightbox-prev"
+        class="
+            absolute
+            left-4
+            top-1/2
+            flex
+            h-11
+            w-11
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            bg-white/10
+            text-white
+            transition
+            hover:bg-white/20
+            sm:left-8
+        "
+        aria-label="Previous image"
+    >
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+
+    <div
+        class="
+            flex
+            max-h-full
+            max-w-6xl
+            flex-col
+            items-center
+        "
+    >
+
+        <img
+            id="lightbox-image"
+            src=""
+            alt=""
+            class="
+                max-h-[75vh]
+                max-w-full
+                rounded-xl
+                object-contain
+                shadow-2xl
+            "
+        >
+
+        <p
+            id="lightbox-caption"
+            class="
+                mt-5
+                max-w-3xl
+                text-center
+                text-sm
+                font-medium
+                text-slate-300
+            "
+        ></p>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="lightbox-next"
+        class="
+            absolute
+            right-4
+            top-1/2
+            flex
+            h-11
+            w-11
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            bg-white/10
+            text-white
+            transition
+            hover:bg-white/20
+            sm:right-8
+        "
+        aria-label="Next image"
+    >
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+     LIGHTBOX JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const items = Array.from(
+        document.querySelectorAll(".gallery-item")
+    );
+
+    const lightbox = document.getElementById(
+        "public-lightbox"
+    );
+
+    const lightboxImage = document.getElementById(
+        "lightbox-image"
+    );
+
+    const lightboxCaption = document.getElementById(
+        "lightbox-caption"
+    );
+
+    const closeButton = document.getElementById(
+        "lightbox-close"
+    );
+
+    const previousButton = document.getElementById(
+        "lightbox-prev"
+    );
+
+    const nextButton = document.getElementById(
+        "lightbox-next"
+    );
+
+    let currentIndex = 0;
+
+
+    function openLightbox(index) {
+
+        if (!items.length) {
+            return;
+        }
+
+        currentIndex = index;
+
+        const item = items[currentIndex];
+
+        lightboxImage.src =
+            item.dataset.image;
+
+        lightboxImage.alt =
+            item.dataset.alt || "";
+
+        lightboxCaption.textContent =
+            item.dataset.caption || "";
+
+        lightbox.classList.remove("hidden");
+
+        lightbox.classList.add("flex");
+
+        document.body.classList.add(
+            "overflow-hidden"
+        );
+    }
+
+
+    function closeLightbox() {
+
+        lightbox.classList.add("hidden");
+
+        lightbox.classList.remove("flex");
+
+        lightboxImage.src = "";
+
+        document.body.classList.remove(
+            "overflow-hidden"
+        );
+    }
+
+
+    function showPrevious() {
+
+        currentIndex =
+            (
+                currentIndex -
+                1 +
+                items.length
+            ) %
+            items.length;
+
+        openLightbox(currentIndex);
+    }
+
+
+    function showNext() {
+
+        currentIndex =
+            (
+                currentIndex +
+                1
+            ) %
+            items.length;
+
+        openLightbox(currentIndex);
+    }
+
+
+    items.forEach(
+        function (item, index) {
+
+            item.addEventListener(
+                "click",
+                function () {
+                    openLightbox(index);
+                }
+            );
+
+        }
+    );
+
+
+    closeButton.addEventListener(
+        "click",
+        closeLightbox
+    );
+
+
+    previousButton.addEventListener(
+        "click",
+        showPrevious
+    );
+
+
+    nextButton.addEventListener(
+        "click",
+        showNext
+    );
+
+
+    lightbox.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === lightbox
+            ) {
+                closeLightbox();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                lightbox.classList.contains(
+                    "hidden"
+                )
+            ) {
+                return;
+            }
+
+
+            if (
+                event.key === "Escape"
+            ) {
+                closeLightbox();
+            }
+
+
+            if (
+                event.key === "ArrowLeft"
+            ) {
+                showPrevious();
+            }
+
+
+            if (
+                event.key === "ArrowRight"
+            ) {
+                showNext();
+            }
+
+        }
+    );
+
+});
+
+</script>
+
+{% endblock %}

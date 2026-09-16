@@ -1,0 +1,829 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    {{ video.title }} | Uduak-Abasi 2027
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =========================================================
+     VIDEO HEADER
+========================================================= -->
+
+<section
+    class="
+        bg-campaign-navy
+        py-10
+        sm:py-14
+    "
+>
+
+    <div class="container-campaign">
+
+        <div class="mx-auto max-w-6xl">
+
+            <!-- BACK LINK -->
+
+            <a
+                href="{% url 'media:videos' %}"
+                class="
+                    inline-flex
+                    items-center
+                    text-sm
+                    font-semibold
+                    text-slate-300
+                    transition
+                    hover:text-campaign-gold
+                "
+            >
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Back to Videos
+            </a>
+
+
+            <!-- BREADCRUMB -->
+
+            <div
+                class="
+                    mt-5
+                    flex
+                    flex-wrap
+                    items-center
+                    gap-2
+                    text-xs
+                    font-medium
+                    text-slate-400
+                "
+            >
+
+                <a
+                    href="{% url 'media:videos' %}"
+                    class="hover:text-white"
+                >
+                    Videos
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-[9px]"></i>
+
+                <span class="text-slate-300">
+                    {{ video.title }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     VIDEO CONTENT
+========================================================= -->
+
+<section class="campaign-section bg-white">
+
+    <div class="container-campaign">
+
+        <div class="mx-auto max-w-6xl">
+
+
+            <!-- =================================================
+                 VIDEO PLAYER
+            ================================================= -->
+
+            <div
+                class="
+                    overflow-hidden
+                    rounded-2xl
+                    bg-black
+                    shadow-2xl
+                    ring-1
+                    ring-slate-900/10
+                "
+            >
+
+                {% if embed_url %}
+
+                    <div class="relative aspect-video">
+
+                        <iframe
+                            src="{{ embed_url }}"
+                            title="{{ video.title }}"
+                            class="
+                                absolute
+                                inset-0
+                                h-full
+                                w-full
+                            "
+                            frameborder="0"
+                            loading="lazy"
+                            allow="
+                                accelerometer;
+                                autoplay;
+                                clipboard-write;
+                                encrypted-media;
+                                gyroscope;
+                                picture-in-picture;
+                                web-share
+                            "
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen
+                        ></iframe>
+
+                    </div>
+
+
+                {% elif video.video_type == "external" and video.video_url %}
+
+                    <div class="relative aspect-video">
+
+                        <video
+                            controls
+                            preload="metadata"
+                            class="
+                                h-full
+                                w-full
+                                bg-black
+                                object-contain
+                            "
+                            {% if video.thumbnail %}
+                                poster="{{ video.thumbnail.url }}"
+                            {% endif %}
+                        >
+
+                            <source
+                                src="{{ video.video_url }}"
+                                type="video/mp4"
+                            >
+
+                            Your browser does not support HTML5 video.
+
+                        </video>
+
+                    </div>
+
+
+                {% else %}
+
+                    <!-- VIDEO UNAVAILABLE -->
+
+                    <div
+                        class="
+                            flex
+                            aspect-video
+                            items-center
+                            justify-center
+                            bg-slate-950
+                            px-6
+                            text-center
+                        "
+                    >
+
+                        <div class="max-w-md">
+
+                            <div
+                                class="
+                                    mx-auto
+                                    flex
+                                    h-16
+                                    w-16
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    bg-campaign-gold/10
+                                    text-campaign-gold
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-circle-exclamation
+                                        text-2xl
+                                    "
+                                ></i>
+
+                            </div>
+
+
+                            <h2
+                                class="
+                                    mt-5
+                                    text-xl
+                                    font-black
+                                    text-white
+                                "
+                            >
+                                Video unavailable
+                            </h2>
+
+
+                            <p
+                                class="
+                                    mt-2
+                                    text-sm
+                                    leading-6
+                                    text-slate-400
+                                "
+                            >
+                                This video could not be displayed
+                                directly on this page.
+                            </p>
+
+
+                            {% if video.video_url %}
+
+                                <a
+                                    href="{{ video.video_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="
+                                        mt-6
+                                        inline-flex
+                                        items-center
+                                        rounded-xl
+                                        bg-campaign-gold
+                                        px-5
+                                        py-3
+                                        text-sm
+                                        font-black
+                                        text-campaign-navy
+                                        shadow-lg
+                                        transition
+                                        hover:-translate-y-0.5
+                                        hover:bg-yellow-400
+                                    "
+                                >
+                                    Watch Video
+
+                                    <i
+                                        class="
+                                            fa-solid
+                                            fa-arrow-up-right-from-square
+                                            ml-2
+                                        "
+                                    ></i>
+
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- =================================================
+                 VIDEO INFORMATION
+            ================================================= -->
+
+            <div class="mt-8">
+
+                <!-- BADGES -->
+
+                <div class="flex flex-wrap items-center gap-2">
+
+                    <span
+                        class="
+                            inline-flex
+                            items-center
+                            rounded-full
+                            bg-campaign-blue/10
+                            px-3
+                            py-1.5
+                            text-xs
+                            font-black
+                            uppercase
+                            tracking-wider
+                            text-campaign-blue
+                        "
+                    >
+                        <i class="fa-solid fa-video mr-1.5"></i>
+
+                        {{ video.get_video_type_display }}
+
+                    </span>
+
+
+                    {% if video.featured %}
+
+                        <span
+                            class="
+                                inline-flex
+                                items-center
+                                rounded-full
+                                bg-campaign-gold/15
+                                px-3
+                                py-1.5
+                                text-xs
+                                font-black
+                                uppercase
+                                tracking-wider
+                                text-amber-700
+                            "
+                        >
+
+                            <i class="fa-solid fa-star mr-1.5"></i>
+
+                            Featured
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- TITLE -->
+
+                <h1
+                    class="
+                        mt-4
+                        max-w-4xl
+                        text-3xl
+                        font-black
+                        leading-tight
+                        tracking-tight
+                        text-slate-900
+                        sm:text-4xl
+                        lg:text-5xl
+                    "
+                >
+                    {{ video.title }}
+                </h1>
+
+
+
+                <!-- META -->
+
+                <div
+                    class="
+                        mt-5
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-x-5
+                        gap-y-3
+                        text-sm
+                        text-slate-500
+                    "
+                >
+
+                    {% if video.published_at %}
+
+                        <span class="inline-flex items-center">
+
+                            <i
+                                class="
+                                    fa-regular
+                                    fa-calendar
+                                    mr-2
+                                    text-campaign-blue
+                                "
+                            ></i>
+
+                            {{ video.published_at|date:"F j, Y" }}
+
+                        </span>
+
+                    {% endif %}
+
+
+                    <span class="inline-flex items-center">
+
+                        <i
+                            class="
+                                fa-regular
+                                fa-eye
+                                mr-2
+                                text-campaign-blue
+                            "
+                        ></i>
+
+                        {{ video.views }} view{{ video.views|pluralize }}
+
+                    </span>
+
+
+                    {% if video.duration %}
+
+                        <span class="inline-flex items-center">
+
+                            <i
+                                class="
+                                    fa-regular
+                                    fa-clock
+                                    mr-2
+                                    text-campaign-blue
+                                "
+                            ></i>
+
+                            {{ video.duration }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- DIVIDER -->
+
+                <div class="mt-7 h-px bg-slate-200"></div>
+
+
+
+                <!-- DESCRIPTION -->
+
+                {% if video.description %}
+
+                    <div
+                        class="
+                            mt-7
+                            max-w-4xl
+                            text-base
+                            leading-8
+                            text-slate-600
+                            sm:text-lg
+                        "
+                    >
+
+                        {{ video.description|linebreaks }}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- VIDEO ACTIONS -->
+
+                <div
+                    class="
+                        mt-8
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-3
+                    "
+                >
+
+                    {% if video.video_url %}
+
+                        <a
+                            href="{{ video.video_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="
+                                inline-flex
+                                items-center
+                                rounded-xl
+                                border
+                                border-slate-200
+                                bg-white
+                                px-4
+                                py-2.5
+                                text-sm
+                                font-bold
+                                text-slate-700
+                                shadow-sm
+                                transition
+                                hover:border-campaign-blue
+                                hover:text-campaign-blue
+                            "
+                        >
+
+                            <i
+                                class="
+                                    fa-solid
+                                    fa-arrow-up-right-from-square
+                                    mr-2
+                                "
+                            ></i>
+
+                            Open Original Video
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RELATED VIDEOS
+========================================================= -->
+
+{% if related_videos %}
+
+<section
+    class="
+        campaign-section
+        bg-slate-50
+    "
+>
+
+    <div class="container-campaign">
+
+        <div class="mb-10">
+
+            <span class="section-label">
+                Keep Watching
+            </span>
+
+            <div
+                class="
+                    mt-2
+                    flex
+                    flex-col
+                    gap-4
+                    sm:flex-row
+                    sm:items-end
+                    sm:justify-between
+                "
+            >
+
+                <h2 class="section-title">
+                    More Videos
+                </h2>
+
+
+                <a
+                    href="{% url 'media:videos' %}"
+                    class="
+                        inline-flex
+                        items-center
+                        text-sm
+                        font-bold
+                        text-campaign-blue
+                        transition
+                        hover:text-campaign-navy
+                    "
+                >
+                    View All Videos
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-arrow-right
+                            ml-2
+                        "
+                    ></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <div
+            class="
+                grid
+                gap-6
+                sm:grid-cols-2
+                lg:grid-cols-3
+            "
+        >
+
+            {% for related in related_videos %}
+
+                <a
+                    href="{{ related.get_absolute_url }}"
+                    class="
+                        group
+                        overflow-hidden
+                        rounded-2xl
+                        bg-white
+                        shadow-sm
+                        ring-1
+                        ring-slate-200
+                        transition
+                        duration-300
+                        hover:-translate-y-1
+                        hover:shadow-xl
+                    "
+                >
+
+                    <!-- THUMBNAIL -->
+
+                    <div
+                        class="
+                            relative
+                            aspect-video
+                            overflow-hidden
+                            bg-campaign-navy
+                        "
+                    >
+
+                        {% if related.thumbnail %}
+
+                            <img
+                                src="{{ related.thumbnail.url }}"
+                                alt="{{ related.title }}"
+                                loading="lazy"
+                                class="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition
+                                    duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+
+                        {% else %}
+
+                            <div
+                                class="
+                                    flex
+                                    h-full
+                                    w-full
+                                    items-center
+                                    justify-center
+                                    bg-campaign-navy
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-video
+                                        text-4xl
+                                        text-white/30
+                                    "
+                                ></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- DARK OVERLAY -->
+
+                        <div
+                            class="
+                                absolute
+                                inset-0
+                                bg-gradient-to-t
+                                from-black/60
+                                via-black/10
+                                to-transparent
+                            "
+                        ></div>
+
+
+                        <!-- PLAY BUTTON -->
+
+                        <div
+                            class="
+                                absolute
+                                inset-0
+                                flex
+                                items-center
+                                justify-center
+                            "
+                        >
+
+                            <span
+                                class="
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    bg-white
+                                    text-campaign-blue
+                                    shadow-xl
+                                    transition
+                                    duration-300
+                                    group-hover:scale-110
+                                "
+                            >
+
+                                <i
+                                    class="
+                                        fa-solid
+                                        fa-play
+                                        ml-0.5
+                                    "
+                                ></i>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DURATION -->
+
+                        {% if related.duration %}
+
+                            <span
+                                class="
+                                    absolute
+                                    bottom-3
+                                    right-3
+                                    rounded-md
+                                    bg-black/75
+                                    px-2
+                                    py-1
+                                    text-[11px]
+                                    font-bold
+                                    text-white
+                                "
+                            >
+                                {{ related.duration }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- CARD CONTENT -->
+
+                    <div class="p-5">
+
+                        <div
+                            class="
+                                flex
+                                items-center
+                                gap-3
+                                text-xs
+                                text-slate-400
+                            "
+                        >
+
+                            {% if related.published_at %}
+
+                                <span>
+                                    {{ related.published_at|date:"M j, Y" }}
+                                </span>
+
+                            {% endif %}
+
+
+                            <span>
+                                {{ related.views }}
+                                view{{ related.views|pluralize }}
+                            </span>
+
+                        </div>
+
+
+                        <h3
+                            class="
+                                mt-3
+                                line-clamp-2
+                                font-black
+                                leading-6
+                                text-slate-900
+                                transition
+                                group-hover:text-campaign-blue
+                            "
+                        >
+                            {{ related.title }}
+                        </h3>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+{% endblock %}

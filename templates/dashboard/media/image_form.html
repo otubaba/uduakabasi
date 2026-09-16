@@ -1,0 +1,227 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Edit Photo{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-3xl space-y-6">
+
+    <!-- Header -->
+
+    <div>
+
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+
+            <a
+                href="{% url 'media:dashboard' %}"
+                class="transition hover:text-slate-900"
+            >
+                Media
+            </a>
+
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+
+            <a
+                href="{% url 'media:album_manage' image.album.pk %}"
+                class="transition hover:text-slate-900"
+            >
+                {{ image.album.title }}
+            </a>
+
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+
+            <span>Edit Photo</span>
+
+        </div>
+
+
+        <h1 class="mt-2 text-2xl font-bold text-slate-900">
+            Edit Photo
+        </h1>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Update the photo information and display settings.
+        </p>
+
+    </div>
+
+
+    <!-- Form -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+            class="space-y-6 p-6"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- Current Image -->
+
+            <div>
+
+                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                    Current Photo
+                </label>
+
+                <div class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+
+                    <img
+                        src="{{ image.image.url }}"
+                        alt="{{ image.alt_text|default:image.caption|default:image.album.title }}"
+                        class="max-h-80 w-full object-contain"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- New Image -->
+
+            <div>
+
+                <label
+                    for="{{ form.image.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Replace Photo
+                </label>
+
+                {{ form.image }}
+
+                {% if form.image.help_text %}
+                    <p class="mt-1 text-xs text-slate-500">
+                        {{ form.image.help_text }}
+                    </p>
+                {% endif %}
+
+                {% if form.image.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {{ form.image.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Caption -->
+
+            <div>
+
+                <label
+                    for="{{ form.caption.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Caption
+                </label>
+
+                {{ form.caption }}
+
+                {% if form.caption.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {{ form.caption.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Alt Text -->
+
+            <div>
+
+                <label
+                    for="{{ form.alt_text.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Alt Text
+                </label>
+
+                {{ form.alt_text }}
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Describe the image for accessibility and screen readers.
+                </p>
+
+                {% if form.alt_text.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {{ form.alt_text.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Display Order -->
+
+            <div>
+
+                <label
+                    for="{{ form.display_order.id_for_label }}"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                >
+                    Display Order
+                </label>
+
+                {{ form.display_order }}
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Lower numbers appear first.
+                </p>
+
+                {% if form.display_order.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {{ form.display_order.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Form Errors -->
+
+            {% if form.non_field_errors %}
+
+                <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Actions -->
+
+            <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-between">
+
+                <a
+                    href="{% url 'media:album_manage' image.album.pk %}"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-check"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

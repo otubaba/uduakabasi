@@ -1,0 +1,397 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Manage Albums{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+
+                <a
+                    href="{% url 'media:dashboard' %}"
+                    class="transition hover:text-slate-900"
+                >
+                    Media
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+                <span>Albums</span>
+
+            </div>
+
+
+            <h1 class="mt-2 text-2xl font-bold text-slate-900">
+                Manage Albums
+            </h1>
+
+
+            <p class="mt-1 text-sm text-slate-500">
+                View, edit and manage all campaign photo albums.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'media:album_create' %}"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+        >
+            <i class="fa-solid fa-folder-plus"></i>
+            New Album
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH & FILTERS
+    ====================================================== -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+        <form
+            method="get"
+            class="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]"
+        >
+
+            <!-- Search -->
+
+            <div class="relative">
+
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="Search albums..."
+                    class="form-control w-full pl-9"
+                >
+
+            </div>
+
+
+            <!-- Status -->
+
+            <select
+                name="status"
+                class="form-control"
+            >
+
+                <option value="">
+                    All statuses
+                </option>
+
+                <option
+                    value="published"
+                    {% if request.GET.status == "published" %}selected{% endif %}
+                >
+                    Published
+                </option>
+
+                <option
+                    value="draft"
+                    {% if request.GET.status == "draft" %}selected{% endif %}
+                >
+                    Draft
+                </option>
+
+            </select>
+
+
+            <!-- Filter -->
+
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-filter"></i>
+                Filter
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALBUMS
+    ====================================================== -->
+
+    {% if albums %}
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+
+            {% for album in albums %}
+
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+
+                    <!-- Cover -->
+
+                    <div class="relative aspect-[16/9] overflow-hidden bg-slate-100">
+
+                        {% if album.cover_image %}
+
+                            <img
+                                src="{{ album.cover_image.url }}"
+                                alt="{{ album.title }}"
+                                class="h-full w-full object-cover"
+                            >
+
+                        {% elif album.images.first %}
+
+                            <img
+                                src="{{ album.images.first.image.url }}"
+                                alt="{{ album.title }}"
+                                class="h-full w-full object-cover"
+                            >
+
+                        {% else %}
+
+                            <div class="flex h-full w-full items-center justify-center text-slate-300">
+
+                                <i class="fa-solid fa-images text-4xl"></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Featured -->
+
+                        {% if album.featured %}
+
+                            <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+
+                                <i class="fa-solid fa-star"></i>
+                                Featured
+
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- Status -->
+
+                        <div class="absolute right-3 top-3">
+
+                            {% if album.published %}
+
+                                <span class="rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                                    Published
+                                </span>
+
+                            {% else %}
+
+                                <span class="rounded-full bg-slate-700 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                                    Draft
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Content -->
+
+                    <div class="p-5">
+
+                        <h2 class="truncate text-base font-semibold text-slate-900">
+                            {{ album.title }}
+                        </h2>
+
+
+                        <p class="mt-1 text-sm text-slate-500">
+
+                            {{ album.image_count }}
+                            photo{{ album.image_count|pluralize }}
+
+                            {% if album.event_date %}
+
+                                <span class="mx-1 text-slate-300">
+                                    ·
+                                </span>
+
+                                {{ album.event_date|date:"M d, Y" }}
+
+                            {% endif %}
+
+                        </p>
+
+
+                        {% if album.location %}
+
+                            <p class="mt-2 flex items-center gap-2 truncate text-xs text-slate-500">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                {{ album.location }}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- Actions -->
+
+                        <div class="mt-5 flex items-center gap-2">
+
+                            <a
+                                href="{% url 'media:album_manage' album.pk %}"
+                                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                            >
+                                <i class="fa-solid fa-folder-open"></i>
+                                Manage
+                            </a>
+
+
+                            <a
+                                href="{% url 'media:album_edit' album.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
+                                title="Edit album"
+                            >
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </a>
+
+
+                            <a
+                                href="{% url 'media:album_delete' album.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-500 transition hover:bg-red-50 hover:text-red-600"
+                                title="Delete album"
+                            >
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
+
+        {% if is_paginated %}
+
+            <div class="flex items-center justify-center gap-2 pt-2">
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                        <i class="fa-solid fa-chevron-left"></i>
+                        Previous
+                    </a>
+
+                {% endif %}
+
+
+                <span class="rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-600">
+
+                    Page {{ page_obj.number }}
+                    of
+                    {{ page_obj.paginator.num_pages }}
+
+                </span>
+
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                        Next
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    {% else %}
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white px-5 py-16 text-center shadow-sm">
+
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+
+                <i class="fa-solid fa-images text-2xl"></i>
+
+            </div>
+
+
+            <h2 class="mt-5 text-lg font-semibold text-slate-900">
+                No albums found
+            </h2>
+
+
+            <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+
+                {% if request.GET.q or request.GET.status %}
+
+                    No albums match your current search or filter.
+
+                {% else %}
+
+                    You haven't created any photo albums yet.
+
+                {% endif %}
+
+            </p>
+
+
+            {% if request.GET.q or request.GET.status %}
+
+                <a
+                    href="{% url 'media:album_list' %}"
+                    class="mt-5 inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Clear Filters
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{% url 'media:album_create' %}"
+                    class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-folder-plus"></i>
+                    Create First Album
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1662 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Manage Images — {{ album.title }}
+{% endblock %}
+
+{% block page_title %}
+    Manage Album Images
+{% endblock %}
+
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =========================================================
+         BREADCRUMB
+    ========================================================== -->
+
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+
+        <a
+            href="{% url 'dashboard:media_album_list' %}"
+            class="text-slate-500 hover:text-slate-900 transition"
+        >
+            Media
+        </a>
+
+        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+
+        <span class="font-semibold text-slate-700">
+            {{ album.title }}
+        </span>
+
+    </div>
+
+
+    <!-- =========================================================
+         ALBUM HEADER
+    ========================================================== -->
+
+    <div class="campaign-card overflow-hidden">
+
+        <div class="p-6">
+
+            <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
+                <div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+
+                        <h1 class="text-2xl font-black text-slate-900">
+                            {{ album.title }}
+                        </h1>
+
+                        {% if album.featured %}
+                            <span
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-full
+                                    bg-amber-100
+                                    px-3
+                                    py-1
+                                    text-xs
+                                    font-bold
+                                    text-amber-700
+                                "
+                            >
+                                <i class="fa-solid fa-star"></i>
+                                Featured
+                            </span>
+                        {% endif %}
+
+                        {% if album.published %}
+                            <span
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-full
+                                    bg-emerald-100
+                                    px-3
+                                    py-1
+                                    text-xs
+                                    font-bold
+                                    text-emerald-700
+                                "
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                                Published
+                            </span>
+                        {% else %}
+                            <span
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-full
+                                    bg-slate-100
+                                    px-3
+                                    py-1
+                                    text-xs
+                                    font-bold
+                                    text-slate-600
+                                "
+                            >
+                                <i class="fa-solid fa-eye-slash"></i>
+                                Draft
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if album.description %}
+                        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
+                            {{ album.description }}
+                        </p>
+                    {% endif %}
+
+
+                    <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-500">
+
+                        {% if album.event_date %}
+                            <span class="inline-flex items-center gap-2">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ album.event_date|date:"M d, Y" }}
+                            </span>
+                        {% endif %}
+
+                        {% if album.location %}
+                            <span class="inline-flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot"></i>
+                                {{ album.location }}
+                            </span>
+                        {% endif %}
+
+                        <span class="inline-flex items-center gap-2">
+                            <i class="fa-regular fa-images"></i>
+                            {{ image_count }} image{{ image_count|pluralize }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="flex flex-wrap gap-3">
+
+                    <a
+                        href="{% url 'dashboard:media_bulk_image_upload' album.pk %}"
+                        class="
+                            inline-flex
+                            items-center
+                            gap-2
+                            rounded-xl
+                            bg-slate-900
+                            px-4
+                            py-2.5
+                            text-sm
+                            font-bold
+                            text-white
+                            shadow-sm
+                            transition
+                            hover:bg-slate-800
+                        "
+                    >
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        Upload Multiple
+                    </a>
+
+
+                    <a
+                        href="{% url 'dashboard:media_album_edit' album.pk %}"
+                        class="
+                            inline-flex
+                            items-center
+                            gap-2
+                            rounded-xl
+                            border
+                            border-slate-200
+                            bg-white
+                            px-4
+                            py-2.5
+                            text-sm
+                            font-bold
+                            text-slate-700
+                            transition
+                            hover:bg-slate-50
+                        "
+                    >
+                        <i class="fa-solid fa-pen"></i>
+                        Edit Album
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         BULK SELECTION TOOLBAR
+    ========================================================== -->
+
+    {% if images %}
+
+        <div
+            id="bulk-toolbar"
+            class="
+                campaign-card
+                hidden
+                overflow-hidden
+                border
+                border-red-200
+                bg-red-50
+            "
+        >
+
+            <form
+                id="bulk-delete-form"
+                method="post"
+                action="{% url 'dashboard:media_bulk_image_delete' album.pk %}"
+            >
+
+                {% csrf_token %}
+
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        gap-4
+                        p-4
+                        sm:flex-row
+                        sm:items-center
+                        sm:justify-between
+                    "
+                >
+
+                    <div class="flex items-center gap-3">
+
+                        <div
+                            class="
+                                flex
+                                h-10
+                                w-10
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-xl
+                                bg-red-100
+                                text-red-600
+                            "
+                        >
+                            <i class="fa-solid fa-images"></i>
+                        </div>
+
+
+                        <div>
+
+                            <p class="font-bold text-slate-900">
+                                <span id="selected-count">0</span>
+                                image(s) selected
+                            </p>
+
+                            <p class="text-xs text-slate-500">
+                                Select images you want to remove.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex flex-wrap gap-2">
+
+                        <button
+                            type="button"
+                            id="clear-selection"
+                            class="
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded-xl
+                                border
+                                border-slate-200
+                                bg-white
+                                px-4
+                                py-2.5
+                                text-sm
+                                font-bold
+                                text-slate-700
+                                transition
+                                hover:bg-slate-50
+                            "
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                            Clear
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            id="bulk-delete-button"
+                            class="
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded-xl
+                                bg-red-600
+                                px-4
+                                py-2.5
+                                text-sm
+                                font-bold
+                                text-white
+                                transition
+                                hover:bg-red-700
+                            "
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                            Delete Selected
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         SELECT ALL TOOLBAR
+    ========================================================== -->
+
+    {% if images %}
+
+        <div
+            class="
+                flex
+                flex-col
+                gap-3
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                p-4
+                shadow-sm
+                sm:flex-row
+                sm:items-center
+                sm:justify-between
+            "
+        >
+
+            <label
+                class="
+                    inline-flex
+                    cursor-pointer
+                    items-center
+                    gap-3
+                    text-sm
+                    font-bold
+                    text-slate-700
+                "
+            >
+
+                <input
+                    type="checkbox"
+                    id="select-all-images"
+                    class="
+                        h-5
+                        w-5
+                        rounded
+                        border-slate-300
+                        text-slate-900
+                        focus:ring-slate-900
+                    "
+                >
+
+                Select all images
+
+            </label>
+
+
+            <p class="text-xs text-slate-500">
+
+                Drag images to change their display order.
+
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         IMAGE GRID
+    ========================================================== -->
+
+    {% if images %}
+
+        <div
+            id="image-grid"
+            class="
+                grid
+                grid-cols-1
+                gap-5
+                sm:grid-cols-2
+                xl:grid-cols-3
+                2xl:grid-cols-4
+            "
+        >
+
+            {% for image in images %}
+
+                <article
+                    class="
+                        image-card
+                        group
+                        relative
+                        overflow-hidden
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        bg-white
+                        shadow-sm
+                        transition
+                        hover:-translate-y-0.5
+                        hover:shadow-lg
+                    "
+                    draggable="true"
+                    data-image-id="{{ image.pk }}"
+                >
+
+                    <div
+                        class="
+                            selection-indicator
+                            pointer-events-none
+                            absolute
+                            inset-0
+                            z-10
+                            hidden
+                            rounded-2xl
+                            border-2
+                            border-slate-900
+                        "
+                    ></div>
+
+
+                    <!-- IMAGE -->
+
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+
+                        {% if image.image %}
+
+                            <img
+                                src="{{ image.image.url }}"
+                                alt="{{ image.alt_text|default:image.caption|default:album.title }}"
+                                class="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition
+                                    duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+
+                        {% else %}
+
+                            <div
+                                class="
+                                    flex
+                                    h-full
+                                    items-center
+                                    justify-center
+                                    text-slate-400
+                                "
+                            >
+                                <i class="fa-regular fa-image text-4xl"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- CHECKBOX -->
+
+                        <div class="absolute left-3 top-3 z-20">
+
+                            <label
+                                class="
+                                    flex
+                                    h-9
+                                    w-9
+                                    cursor-pointer
+                                    items-center
+                                    justify-center
+                                    rounded-xl
+                                    bg-white/95
+                                    shadow-lg
+                                    backdrop-blur
+                                "
+                                title="Select image"
+                            >
+
+                                <input
+                                    type="checkbox"
+                                    name="image_ids"
+                                    value="{{ image.pk }}"
+                                    form="bulk-delete-form"
+                                    class="
+                                        image-checkbox
+                                        h-5
+                                        w-5
+                                        rounded
+                                        border-slate-300
+                                        text-slate-900
+                                        focus:ring-slate-900
+                                    "
+                                >
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- DRAG HANDLE -->
+
+                        <div
+                            class="
+                                absolute
+                                right-3
+                                top-3
+                                flex
+                                h-9
+                                w-9
+                                cursor-grab
+                                items-center
+                                justify-center
+                                rounded-xl
+                                bg-black/60
+                                text-white
+                                shadow-lg
+                                backdrop-blur
+                                active:cursor-grabbing
+                            "
+                            title="Drag to reorder"
+                        >
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+
+
+                        <!-- ORDER -->
+
+                        <div
+                            class="
+                                image-order-number
+                                absolute
+                                bottom-3
+                                right-3
+                                flex
+                                h-8
+                                min-w-8
+                                items-center
+                                justify-center
+                                rounded-lg
+                                bg-black/70
+                                px-2
+                                text-xs
+                                font-black
+                                text-white
+                            "
+                        >
+                            #{{ forloop.counter }}
+                        </div>
+
+
+                        <!-- COVER BADGE -->
+
+                        {% if album.cover_image_source_id == image.pk %}
+
+                            <div
+                                class="
+                                    absolute
+                                    bottom-3
+                                    left-3
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-lg
+                                    bg-amber-500
+                                    px-2.5
+                                    py-1.5
+                                    text-xs
+                                    font-black
+                                    text-white
+                                    shadow-lg
+                                "
+                            >
+                                <i class="fa-solid fa-star"></i>
+                                Cover Image
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <!-- CONTENT -->
+
+                    <div class="p-4">
+
+                        <div class="mb-4 space-y-2">
+
+                            {% if image.caption %}
+
+                                <h3
+                                    class="
+                                        line-clamp-2
+                                        text-sm
+                                        font-black
+                                        text-slate-900
+                                    "
+                                >
+                                    {{ image.caption }}
+                                </h3>
+
+                            {% else %}
+
+                                <h3
+                                    class="
+                                        text-sm
+                                        font-black
+                                        text-slate-400
+                                    "
+                                >
+                                    No caption
+                                </h3>
+
+                            {% endif %}
+
+
+                            {% if image.alt_text %}
+
+                                <p class="line-clamp-2 text-xs leading-5 text-slate-500">
+                                    {{ image.alt_text }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- META -->
+
+                        <div
+                            class="
+                                mb-4
+                                flex
+                                items-center
+                                justify-between
+                                text-xs
+                                text-slate-400
+                            "
+                        >
+
+                            <span>
+                                <i class="fa-regular fa-calendar mr-1"></i>
+                                {{ image.created_at|date:"M d, Y" }}
+                            </span>
+
+                            <span>
+                                Order {{ image.display_order }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="flex flex-wrap gap-2">
+
+                            <!-- PREVIEW -->
+
+                            <button
+                                type="button"
+                                class="
+                                    inline-flex
+                                    h-9
+                                    w-9
+                                    items-center
+                                    justify-center
+                                    rounded-lg
+                                    border
+                                    border-slate-200
+                                    bg-white
+                                    text-slate-600
+                                    transition
+                                    hover:bg-slate-50
+                                    hover:text-slate-900
+                                "
+                                title="Preview"
+                                onclick="
+                                    openImagePreview(
+                                        '{{ image.image.url|escapejs }}',
+                                        '{{ image.alt_text|default:image.caption|default:album.title|escapejs }}'
+                                    )
+                                "
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+
+
+                            <!-- EDIT -->
+
+                            <a
+                                href="{% url 'dashboard:media_image_edit' image.pk %}"
+                                class="
+                                    inline-flex
+                                    h-9
+                                    w-9
+                                    items-center
+                                    justify-center
+                                    rounded-lg
+                                    border
+                                    border-slate-200
+                                    bg-white
+                                    text-slate-600
+                                    transition
+                                    hover:bg-slate-50
+                                    hover:text-slate-900
+                                "
+                                title="Edit image"
+                            >
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+
+
+                            <!-- SET COVER -->
+
+                            {% if album.cover_image_source_id != image.pk %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'dashboard:media_image_set_cover' image.pk %}"
+                                    class="contents"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            inline-flex
+                                            h-9
+                                            w-9
+                                            items-center
+                                            justify-center
+                                            rounded-lg
+                                            border
+                                            border-amber-200
+                                            bg-amber-50
+                                            text-amber-600
+                                            transition
+                                            hover:bg-amber-100
+                                        "
+                                        title="Set as album cover"
+                                        onclick="
+                                            return confirm(
+                                                'Set this image as the album cover?'
+                                            );
+                                        "
+                                    >
+                                        <i class="fa-solid fa-star"></i>
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                method="post"
+                                action="{% url 'dashboard:media_image_delete' image.pk %}"
+                                class="contents"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="
+                                        inline-flex
+                                        h-9
+                                        w-9
+                                        items-center
+                                        justify-center
+                                        rounded-lg
+                                        border
+                                        border-red-200
+                                        bg-red-50
+                                        text-red-600
+                                        transition
+                                        hover:bg-red-100
+                                    "
+                                    title="Delete image"
+                                    onclick="
+                                        return confirm(
+                                            'Delete this image? This action cannot be undone.'
+                                        );
+                                    "
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <div
+            class="
+                campaign-card
+                flex
+                flex-col
+                items-center
+                justify-center
+                px-6
+                py-20
+                text-center
+            "
+        >
+
+            <div
+                class="
+                    flex
+                    h-20
+                    w-20
+                    items-center
+                    justify-center
+                    rounded-3xl
+                    bg-slate-100
+                    text-slate-400
+                "
+            >
+                <i class="fa-regular fa-images text-3xl"></i>
+            </div>
+
+
+            <h2 class="mt-6 text-xl font-black text-slate-900">
+                No images yet
+            </h2>
+
+
+            <p class="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                Upload images to this album to start building your gallery.
+            </p>
+
+
+            <a
+                href="{% url 'dashboard:media_bulk_image_upload' album.pk %}"
+                class="
+                    mt-6
+                    inline-flex
+                    items-center
+                    gap-2
+                    rounded-xl
+                    bg-slate-900
+                    px-5
+                    py-3
+                    text-sm
+                    font-bold
+                    text-white
+                    transition
+                    hover:bg-slate-800
+                "
+            >
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload Images
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =============================================================
+     IMAGE PREVIEW MODAL
+============================================================== -->
+
+<div
+    id="image-preview-modal"
+    class="
+        fixed
+        inset-0
+        z-[100]
+        hidden
+        items-center
+        justify-center
+        bg-black/90
+        p-4
+    "
+>
+
+    <button
+        type="button"
+        onclick="closeImagePreview()"
+        class="
+            absolute
+            right-5
+            top-5
+            z-20
+            flex
+            h-11
+            w-11
+            items-center
+            justify-center
+            rounded-full
+            bg-white/10
+            text-xl
+            text-white
+            transition
+            hover:bg-white/20
+        "
+        title="Close preview"
+    >
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+
+    <div class="max-h-full max-w-6xl">
+
+        <img
+            id="preview-image"
+            src=""
+            alt=""
+            class="
+                max-h-[90vh]
+                max-w-full
+                rounded-xl
+                object-contain
+                shadow-2xl
+            "
+        >
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const checkboxes = document.querySelectorAll(
+            ".image-checkbox"
+        );
+
+        const selectAll = document.getElementById(
+            "select-all-images"
+        );
+
+        const bulkToolbar = document.getElementById(
+            "bulk-toolbar"
+        );
+
+        const selectedCount = document.getElementById(
+            "selected-count"
+        );
+
+        const clearSelection = document.getElementById(
+            "clear-selection"
+        );
+
+        const bulkDeleteForm = document.getElementById(
+            "bulk-delete-form"
+        );
+
+        const bulkDeleteButton = document.getElementById(
+            "bulk-delete-button"
+        );
+
+
+        function updateSelection() {
+
+            const selected = document.querySelectorAll(
+                ".image-checkbox:checked"
+            );
+
+            const count = selected.length;
+
+
+            if (selectedCount) {
+
+                selectedCount.textContent = count;
+
+            }
+
+
+            /*
+            * Highlight selected image cards
+            */
+
+            document.querySelectorAll(
+                ".image-card"
+            ).forEach(
+                function (card) {
+
+                    const checkbox =
+                        card.querySelector(
+                            ".image-checkbox"
+                        );
+
+                    const indicator =
+                        card.querySelector(
+                            ".selection-indicator"
+                        );
+
+
+                    if (
+                        checkbox &&
+                        checkbox.checked
+                    ) {
+
+                        card.classList.add(
+                            "ring-2",
+                            "ring-slate-900"
+                        );
+
+                        if (indicator) {
+
+                            indicator.classList.remove(
+                                "hidden"
+                            );
+
+                        }
+
+                    } else {
+
+                        card.classList.remove(
+                            "ring-2",
+                            "ring-slate-900"
+                        );
+
+                        if (indicator) {
+
+                            indicator.classList.add(
+                                "hidden"
+                            );
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+            /*
+            * Show / hide bulk toolbar
+            */
+
+            if (bulkToolbar) {
+
+                if (count > 0) {
+
+                    bulkToolbar.classList.remove(
+                        "hidden"
+                    );
+
+                } else {
+
+                    bulkToolbar.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+            }
+
+
+            /*
+            * Select-all state
+            */
+
+            if (selectAll) {
+
+                selectAll.checked = (
+                    count === checkboxes.length &&
+                    checkboxes.length > 0
+                );
+
+                selectAll.indeterminate = (
+                    count > 0 &&
+                    count < checkboxes.length
+                );
+
+            }
+
+        }
+
+        checkboxes.forEach(
+            function (checkbox) {
+
+                checkbox.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.stopPropagation();
+
+                    }
+                );
+
+
+                checkbox.addEventListener(
+                    "change",
+                    updateSelection
+                );
+
+            }
+        );
+
+
+        if (selectAll) {
+
+            selectAll.addEventListener(
+                "change",
+                function () {
+
+                    checkboxes.forEach(
+                        function (checkbox) {
+
+                            checkbox.checked =
+                                selectAll.checked;
+
+                        }
+                    );
+
+                    updateSelection();
+
+                }
+            );
+
+        }
+
+
+        if (clearSelection) {
+
+            clearSelection.addEventListener(
+                "click",
+                function () {
+
+                    checkboxes.forEach(
+                        function (checkbox) {
+
+                            checkbox.checked = false;
+
+                        }
+                    );
+
+                    updateSelection();
+
+                }
+            );
+
+        }
+
+
+        if (bulkDeleteForm) {
+
+            bulkDeleteForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    const selected =
+                        document.querySelectorAll(
+                            ".image-checkbox:checked"
+                        );
+
+                    if (selected.length === 0) {
+
+                        event.preventDefault();
+
+                        return;
+
+                    }
+
+
+                    const confirmed = confirm(
+                        `Delete ${selected.length} selected image(s)?\n\nIf the album cover is selected, another remaining image will automatically become the new cover.\n\nThis action cannot be undone.`
+                    );
+
+
+                    if (!confirmed) {
+
+                        event.preventDefault();
+
+                        return;
+
+                    }
+
+
+                    if (bulkDeleteButton) {
+
+                        bulkDeleteButton.disabled = true;
+
+                        bulkDeleteButton.innerHTML =
+                            '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+/* =============================================================
+   IMAGE PREVIEW
+============================================================= */
+
+function openImagePreview(
+    imageUrl,
+    altText
+) {
+
+    const modal = document.getElementById(
+        "image-preview-modal"
+    );
+
+    const image = document.getElementById(
+        "preview-image"
+    );
+
+    if (!modal || !image) {
+        return;
+    }
+
+    image.src = imageUrl;
+    image.alt = altText || "";
+
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    document.body.classList.add("overflow-hidden");
+
+}
+
+
+function closeImagePreview() {
+
+    const modal = document.getElementById(
+        "image-preview-modal"
+    );
+
+    const image = document.getElementById(
+        "preview-image"
+    );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+
+    document.body.classList.remove(
+        "overflow-hidden"
+    );
+
+    if (image) {
+        image.src = "";
+    }
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+
+            closeImagePreview();
+
+        }
+
+    }
+);
+
+
+document.getElementById(
+    "image-preview-modal"
+)?.addEventListener(
+    "click",
+    function (event) {
+
+        if (event.target === this) {
+
+            closeImagePreview();
+
+        }
+
+    }
+);
+
+
+/* =============================================================
+   DRAG & DROP REORDER
+============================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const grid = document.getElementById(
+            "image-grid"
+        );
+
+        if (!grid) {
+            return;
+        }
+
+
+        let draggedItem = null;
+
+
+        grid.querySelectorAll(
+            ".image-card"
+        ).forEach(
+            function (card) {
+
+                card.addEventListener(
+                    "dragstart",
+                    function (event) {
+
+                        draggedItem = this;
+
+                        this.classList.add(
+                            "opacity-50",
+                            "scale-[0.98]"
+                        );
+
+                        this.classList.add(
+                            "ring-2",
+                            "ring-slate-400"
+                        );
+
+                        event.dataTransfer.effectAllowed =
+                            "move";
+
+                    }
+                );
+
+
+                card.addEventListener(
+                    "dragend",
+                    function () {
+
+                        this.classList.remove(
+                            "opacity-50",
+                            "scale-[0.98]",
+                            "ring-2",
+                            "ring-slate-400"
+                        );
+
+                        document.querySelectorAll(
+                            ".image-card"
+                        ).forEach(
+                            function (item) {
+
+                                item.classList.remove(
+                                    "ring-2",
+                                    "ring-slate-400"
+                                );
+
+                            }
+                        );
+
+                        draggedItem = null;
+
+                    }
+                );
+
+
+                card.addEventListener(
+                    "dragover",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        if (
+                            draggedItem &&
+                            draggedItem !== this
+                        ) {
+
+                            this.classList.add(
+                                "ring-2",
+                                "ring-slate-400"
+                            );
+
+                        }
+
+                    }
+                );
+
+                card.addEventListener(
+                    "dragleave",
+                    function () {
+
+                        this.classList.remove(
+                            "ring-2",
+                            "ring-slate-400"
+                        );
+
+                    }
+                );
+
+                card.addEventListener(
+                    "drop",
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        if (
+                            !draggedItem ||
+                            draggedItem === this
+                        ) {
+                            return;
+                        }
+
+
+                        const cards =
+                            Array.from(
+                                grid.children
+                            );
+
+                        const draggedIndex =
+                            cards.indexOf(
+                                draggedItem
+                            );
+
+                        const targetIndex =
+                            cards.indexOf(
+                                this
+                            );
+
+
+                        if (
+                            draggedIndex <
+                            targetIndex
+                        ) {
+
+                            grid.insertBefore(
+                                draggedItem,
+                                this.nextSibling
+                            );
+
+                        } else {
+
+                            grid.insertBefore(
+                                draggedItem,
+                                this
+                            );
+
+                        }
+
+
+                        saveImageOrder();
+
+                    }
+                );
+
+            }
+        );
+
+        function updateImageNumbers() {
+
+            const cards =
+                grid.querySelectorAll(
+                    ".image-card"
+                );
+
+
+            cards.forEach(
+                function (card, index) {
+
+                    const orderElement =
+                        card.querySelector(
+                            ".image-order-number"
+                        );
+
+                    if (orderElement) {
+
+                        orderElement.textContent =
+                            `#${index + 1}`;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        function saveImageOrder() {
+
+            const imageIds =
+                Array.from(
+                    grid.querySelectorAll(
+                        ".image-card"
+                    )
+                ).map(
+                    function (card) {
+
+                        return card.dataset.imageId;
+
+                    }
+                );
+
+
+            const orderUrl =
+                "{% url 'dashboard:media_image_reorder' album.pk %}";
+
+
+            fetch(
+                orderUrl,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "X-CSRFToken":
+                            getCookie("csrftoken"),
+                    },
+
+                    body: JSON.stringify(
+                        {
+                            image_ids: imageIds
+                        }
+                    )
+                }
+            )
+            .then(
+                response => {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Request failed."
+                        );
+
+                    }
+
+                    return response.json();
+
+                }
+            )
+            .then(
+                data => {
+
+                    if (!data.success) {
+
+                        alert(
+                            data.message ||
+                            "Unable to save image order."
+                        );
+
+                    }
+
+                }
+            )
+            .catch(
+                function () {
+
+                    alert(
+                        "Unable to save image order. Please refresh and try again."
+                    );
+
+                }
+            );
+
+        }
+
+        function getCookie(name) {
+
+            const cookies =
+                document.cookie.split(";");
+
+
+            for (
+                let cookie of cookies
+            ) {
+
+                cookie =
+                    cookie.trim();
+
+
+                if (
+                    cookie.startsWith(
+                        name + "="
+                    )
+                ) {
+
+                    return decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}

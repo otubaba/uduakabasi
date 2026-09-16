@@ -1,0 +1,66 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Delete Image
+{% endblock %}
+
+{% block page_title %}
+    Delete Image
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-xl">
+
+    <div class="campaign-card p-8 text-center">
+
+        {% if object.image %}
+
+            <img
+                src="{{ object.image.url }}"
+                alt="{{ object.alt_text }}"
+                class="mx-auto mb-6 h-48 w-full max-w-md rounded-xl object-cover"
+            >
+
+        {% endif %}
+
+
+        <h1 class="text-xl font-bold text-slate-900">
+            Delete this image?
+        </h1>
+
+
+        <p class="mt-2 text-sm text-slate-500">
+            This image will be permanently removed from
+            <strong>{{ object.album.title }}</strong>.
+        </p>
+
+
+        <form
+            method="post"
+            class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center"
+        >
+
+            {% csrf_token %}
+
+            <a
+                href="{% url 'dashboard:media_album_images' object.album.pk %}"
+                class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white"
+            >
+                Delete Image
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

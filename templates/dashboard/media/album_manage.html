@@ -1,0 +1,438 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Manage Album{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+
+                <a
+                    href="{% url 'media:dashboard' %}"
+                    class="transition hover:text-slate-900"
+                >
+                    Media
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+                <span>Album</span>
+
+            </div>
+
+            <h1 class="mt-2 text-2xl font-bold text-slate-900">
+                {{ object.title }}
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage this album and its campaign photos.
+            </p>
+        </div>
+
+
+        <div class="flex flex-wrap gap-2">
+
+            <a
+                href="{% url 'media:image_upload' object.pk %}"
+                class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload Photos
+            </a>
+
+            <a
+                href="{% url 'media:album_delete' object.pk %}"
+                class="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALBUM INFORMATION
+    ====================================================== -->
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Album Details -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-2">
+
+            <div class="border-b border-slate-200 px-6 py-5">
+
+                <div class="flex items-center justify-between gap-4">
+
+                    <div>
+                        <h2 class="font-semibold text-slate-900">
+                            Album Information
+                        </h2>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Basic album details
+                        </p>
+                    </div>
+
+                    <a
+                        href="{% url 'media:album_edit' object.pk %}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
+                        <i class="fa-solid fa-pen"></i>
+                        Edit
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-5 p-6 sm:grid-cols-2">
+
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Title
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium text-slate-900">
+                        {{ object.title }}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Event Date
+                    </p>
+
+                    <p class="mt-1 text-sm text-slate-700">
+                        {% if object.event_date %}
+                            {{ object.event_date|date:"M d, Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Location
+                    </p>
+
+                    <p class="mt-1 text-sm text-slate-700">
+                        {% if object.location %}
+                            {{ object.location }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </p>
+                </div>
+
+
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Photos
+                    </p>
+
+                    <p class="mt-1 text-sm font-semibold text-slate-900">
+                        {{ object.images.count }}
+                    </p>
+                </div>
+
+
+                <div class="sm:col-span-2">
+
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Description
+                    </p>
+
+                    <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">
+
+                        {% if object.description %}
+                            {{ object.description }}
+                        {% else %}
+                            No description provided.
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+            <div class="border-b border-slate-200 px-6 py-5">
+
+                <h2 class="font-semibold text-slate-900">
+                    Album Status
+                </h2>
+
+            </div>
+
+
+            <div class="space-y-5 p-6">
+
+                <!-- Publication -->
+
+                <div>
+
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Publication
+                    </p>
+
+                    <div class="mt-2">
+
+                        {% if object.published %}
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                Published
+                            </span>
+
+                        {% else %}
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                                <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                                Draft
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Featured -->
+
+                <div>
+
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Featured
+                    </p>
+
+                    <div class="mt-2">
+
+                        {% if object.featured %}
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
+                                <i class="fa-solid fa-star"></i>
+                                Featured Album
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-sm text-slate-500">
+                                Not featured
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Display Order -->
+
+                <div>
+
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                        Display Order
+                    </p>
+
+                    <p class="mt-1 text-sm font-medium text-slate-900">
+                        {{ object.display_order }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PHOTOS
+    ====================================================== -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <!-- Photos Header -->
+
+        <div class="flex flex-col gap-3 border-b border-slate-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <h2 class="font-semibold text-slate-900">
+                    Album Photos
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    {{ object.images.count }}
+                    photo{{ object.images.count|pluralize }}
+                    in this album
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'media:image_upload' object.pk %}"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Add Photos
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             PHOTO GRID
+        ================================================== -->
+
+        <div class="p-6">
+
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+
+                {% for image in object.images.all %}
+
+                    <div class="group overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-sm">
+
+                        <!-- Image -->
+
+                        <div class="relative aspect-square overflow-hidden bg-slate-100">
+
+                            {% if image.image %}
+
+                                <img
+                                    src="{{ image.image.url }}"
+                                    alt="{{ image.alt_text|default:image.caption|default:object.title }}"
+                                    class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                >
+
+                            {% else %}
+
+                                <div class="flex h-full items-center justify-center text-slate-400">
+                                    <i class="fa-solid fa-image text-2xl"></i>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Photo Information -->
+
+                        <div class="p-3">
+
+                            {% if image.caption %}
+
+                                <p
+                                    class="truncate text-xs font-medium text-slate-700"
+                                    title="{{ image.caption }}"
+                                >
+                                    {{ image.caption }}
+                                </p>
+
+                            {% else %}
+
+                                <p class="text-xs text-slate-400">
+                                    No caption
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- Photo Actions -->
+
+                            <div class="mt-3 flex gap-2">
+
+                                <!-- Edit -->
+
+                                <a
+                                    href="{% url 'media:image_edit' image.pk %}"
+                                    class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-2 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                                    title="Edit photo"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                    Edit
+                                </a>
+
+
+                                <!-- Delete -->
+
+                                <a
+                                    href="{% url 'media:image_delete' image.pk %}"
+                                    class="inline-flex items-center justify-center rounded-lg border border-red-200 px-2.5 py-2 text-xs font-medium text-red-600 transition hover:bg-red-50"
+                                    title="Delete photo"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <!-- Empty State -->
+
+                    <div class="col-span-full px-6 py-16 text-center">
+
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                            <i class="fa-solid fa-images text-2xl"></i>
+                        </div>
+
+                        <h3 class="mt-4 font-semibold text-slate-900">
+                            No photos yet
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Upload campaign photos to this album.
+                        </p>
+
+                        <a
+                            href="{% url 'media:image_upload' object.pk %}"
+                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                        >
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            Upload Photos
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

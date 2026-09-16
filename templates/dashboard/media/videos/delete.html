@@ -1,0 +1,71 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Delete Video
+{% endblock %}
+
+{% block page_title %}
+    Delete Video
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-xl">
+
+    <div class="campaign-card p-8 text-center">
+
+        {% if object.thumbnail %}
+
+            <img
+                src="{{ object.thumbnail.url }}"
+                alt="{{ object.title }}"
+                class="mx-auto mb-6 h-40 w-full rounded-xl object-cover"
+            >
+
+        {% endif %}
+
+
+        <h1 class="text-xl font-bold text-slate-900">
+            Delete this video?
+        </h1>
+
+
+        <p class="mt-2 text-sm text-slate-500">
+
+            You are about to permanently delete
+
+            <strong class="text-slate-900">
+                {{ object.title }}
+            </strong>.
+
+        </p>
+
+
+        <form
+            method="post"
+            class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center"
+        >
+
+            {% csrf_token %}
+
+            <a
+                href="{% url 'dashboard:media_video_list' %}"
+                class="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white"
+            >
+                Delete Video
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

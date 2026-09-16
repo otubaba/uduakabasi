@@ -1,0 +1,1527 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Upload Images — {{ album.title }}
+{% endblock %}
+
+{% block page_title %}
+    Upload Images
+{% endblock %}
+
+
+{% block content %}
+
+<div class="space-y-6">
+
+
+    <!-- =========================================================
+         BREADCRUMB
+    ========================================================== -->
+
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+
+        <a
+            href="{% url 'dashboard:media_album_list' %}"
+            class="text-slate-500 transition hover:text-slate-900"
+        >
+            Media
+        </a>
+
+        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+
+        <a
+            href="{% url 'dashboard:media_album_images' album.pk %}"
+            class="text-slate-500 transition hover:text-slate-900"
+        >
+            {{ album.title }}
+        </a>
+
+        <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+
+        <span class="font-semibold text-slate-700">
+            Upload Images
+        </span>
+
+    </div>
+
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+
+        <div>
+
+            <div
+                class="
+                    inline-flex
+                    items-center
+                    gap-2
+                    rounded-full
+                    bg-slate-100
+                    px-3
+                    py-1.5
+                    text-xs
+                    font-bold
+                    text-slate-600
+                "
+            >
+                <i class="fa-regular fa-images"></i>
+                {{ album.title }}
+            </div>
+
+            <h1
+                class="
+                    mt-3
+                    text-2xl
+                    font-black
+                    tracking-tight
+                    text-slate-900
+                    sm:text-3xl
+                "
+            >
+                Upload Gallery Images
+            </h1>
+
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                Add multiple images to this album at once. You can arrange,
+                edit and select the album cover after uploading.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ALBUM INFORMATION
+    ========================================================== -->
+
+    <div
+        class="
+            campaign-card
+            overflow-hidden
+        "
+    >
+
+        <div
+            class="
+                flex
+                flex-col
+                gap-4
+                p-5
+                sm:flex-row
+                sm:items-center
+            "
+        >
+
+            {% if album.cover_image %}
+
+                <div
+                    class="
+                        h-20
+                        w-28
+                        shrink-0
+                        overflow-hidden
+                        rounded-xl
+                        bg-slate-100
+                    "
+                >
+
+                    <img
+                        src="{{ album.cover_image.url }}"
+                        alt="{{ album.title }}"
+                        class="h-full w-full object-cover"
+                    >
+
+                </div>
+
+            {% else %}
+
+                <div
+                    class="
+                        flex
+                        h-20
+                        w-28
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-slate-100
+                        text-slate-400
+                    "
+                >
+                    <i class="fa-regular fa-images text-2xl"></i>
+                </div>
+
+            {% endif %}
+
+
+            <div class="min-w-0">
+
+                <h2 class="truncate text-lg font-black text-slate-900">
+                    {{ album.title }}
+                </h2>
+
+                <div
+                    class="
+                        mt-1
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-x-4
+                        gap-y-1
+                        text-xs
+                        text-slate-500
+                    "
+                >
+
+                    {% if album.event_date %}
+
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar"></i>
+                            {{ album.event_date|date:"M d, Y" }}
+                        </span>
+
+                    {% endif %}
+
+
+                    {% if album.location %}
+
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{ album.location }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         UPLOAD FORM
+    ========================================================== -->
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        id="bulk-upload-form"
+        class="space-y-6"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =====================================================
+             ERROR MESSAGES
+        ====================================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div
+                class="
+                    rounded-xl
+                    border
+                    border-red-200
+                    bg-red-50
+                    p-4
+                "
+            >
+
+                <div class="flex gap-3">
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-circle-exclamation
+                            mt-0.5
+                            text-red-600
+                        "
+                    ></i>
+
+                    <div class="space-y-1">
+
+                        {% for error in form.non_field_errors %}
+
+                            <p class="text-sm font-semibold text-red-700">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if form.images.errors %}
+
+            <div
+                class="
+                    rounded-xl
+                    border
+                    border-red-200
+                    bg-red-50
+                    p-4
+                "
+            >
+
+                <div class="flex gap-3">
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-circle-exclamation
+                            mt-0.5
+                            text-red-600
+                        "
+                    ></i>
+
+                    <div class="space-y-1">
+
+                        {% for error in form.images.errors %}
+
+                            <p class="text-sm font-semibold text-red-700">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             UPLOAD DROPZONE
+        ====================================================== -->
+
+        <div class="campaign-card overflow-hidden">
+
+            <div class="p-5 sm:p-6">
+
+                <div
+                    id="upload-dropzone"
+                    class="
+                        relative
+                        cursor-pointer
+                        rounded-2xl
+                        border-2
+                        border-dashed
+                        border-slate-300
+                        bg-slate-50
+                        px-5
+                        py-12
+                        text-center
+                        transition
+                        hover:border-slate-500
+                        hover:bg-slate-100
+                    "
+                >
+
+                    <!-- Hidden Django field -->
+
+                    <div class="hidden">
+
+                        {{ form.images }}
+
+                    </div>
+
+
+                    <!-- Upload icon -->
+
+                    <div
+                        class="
+                            mx-auto
+                            flex
+                            h-16
+                            w-16
+                            items-center
+                            justify-center
+                            rounded-2xl
+                            bg-white
+                            text-slate-700
+                            shadow-sm
+                        "
+                    >
+
+                        <i
+                            class="
+                                fa-solid
+                                fa-cloud-arrow-up
+                                text-2xl
+                            "
+                        ></i>
+
+                    </div>
+
+
+                    <h2
+                        class="
+                            mt-5
+                            text-lg
+                            font-black
+                            text-slate-900
+                        "
+                    >
+                        Drop your images here
+                    </h2>
+
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Drag and drop multiple images or click to browse.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="browse-button"
+                        class="
+                            mt-5
+                            inline-flex
+                            items-center
+                            gap-2
+                            rounded-xl
+                            bg-slate-900
+                            px-5
+                            py-3
+                            text-sm
+                            font-bold
+                            text-white
+                            transition
+                            hover:bg-slate-800
+                        "
+                    >
+                        <i class="fa-solid fa-folder-open"></i>
+                        Choose Images
+                    </button>
+
+
+                    <p class="mt-4 text-xs text-slate-400">
+                        JPG, PNG, WEBP or GIF
+                        <span class="mx-1">•</span>
+                        Maximum 5MB per image
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SELECTED IMAGE SUMMARY
+        ====================================================== -->
+
+        <div
+            id="selected-summary"
+            class="
+                hidden
+                campaign-card
+                overflow-hidden
+            "
+        >
+
+            <div
+                class="
+                    flex
+                    flex-col
+                    gap-4
+                    border-b
+                    border-slate-100
+                    p-5
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                "
+            >
+
+                <div>
+
+                    <h2 class="font-black text-slate-900">
+                        Selected Images
+                    </h2>
+
+                    <p
+                        id="selected-summary-text"
+                        class="mt-1 text-xs text-slate-500"
+                    >
+                        0 images selected
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="clear-all-button"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-xl
+                        border
+                        border-slate-200
+                        bg-white
+                        px-4
+                        py-2.5
+                        text-sm
+                        font-bold
+                        text-slate-700
+                        transition
+                        hover:bg-slate-50
+                    "
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                    Clear All
+                </button>
+
+            </div>
+
+
+            <!-- Preview grid -->
+
+            <div class="p-5 sm:p-6">
+
+                <div
+                    id="preview-grid"
+                    class="
+                        grid
+                        grid-cols-2
+                        gap-4
+                        sm:grid-cols-3
+                        lg:grid-cols-4
+                        xl:grid-cols-5
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             UPLOAD INFORMATION
+        ====================================================== -->
+
+        <div
+            class="
+                grid
+                grid-cols-1
+                gap-4
+                md:grid-cols-3
+            "
+        >
+
+            <div
+                class="
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    bg-white
+                    p-5
+                "
+            >
+
+                <div
+                    class="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-slate-100
+                        text-slate-700
+                    "
+                >
+                    <i class="fa-solid fa-images"></i>
+                </div>
+
+                <h3 class="mt-4 font-black text-slate-900">
+                    Multiple Images
+                </h3>
+
+                <p class="mt-1 text-xs leading-5 text-slate-500">
+                    Select as many gallery images as you need and upload
+                    them together.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    bg-white
+                    p-5
+                "
+            >
+
+                <div
+                    class="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-slate-100
+                        text-slate-700
+                    "
+                >
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <h3 class="mt-4 font-black text-slate-900">
+                    Image Validation
+                </h3>
+
+                <p class="mt-1 text-xs leading-5 text-slate-500">
+                    Only JPG, PNG, WEBP and GIF images up to 5MB are
+                    accepted.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    bg-white
+                    p-5
+                "
+            >
+
+                <div
+                    class="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-slate-100
+                        text-slate-700
+                    "
+                >
+                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                </div>
+
+                <h3 class="mt-4 font-black text-slate-900">
+                    Arrange Later
+                </h3>
+
+                <p class="mt-1 text-xs leading-5 text-slate-500">
+                    After uploading, you can reorder images and choose
+                    the album cover.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ACTIONS
+        ====================================================== -->
+
+        <div
+            class="
+                flex
+                flex-col-reverse
+                gap-3
+                border-t
+                border-slate-200
+                pt-6
+                sm:flex-row
+                sm:items-center
+                sm:justify-between
+            "
+        >
+
+            <a
+                href="{% url 'dashboard:media_album_images' album.pk %}"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    border
+                    border-slate-200
+                    bg-white
+                    px-5
+                    py-3
+                    text-sm
+                    font-bold
+                    text-slate-700
+                    transition
+                    hover:bg-slate-50
+                "
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Images
+            </a>
+
+
+            <button
+                type="submit"
+                id="upload-button"
+                disabled
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    bg-slate-900
+                    px-6
+                    py-3
+                    text-sm
+                    font-bold
+                    text-white
+                    shadow-sm
+                    transition
+                    hover:bg-slate-800
+                    disabled:cursor-not-allowed
+                    disabled:opacity-40
+                "
+            >
+
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                <span id="upload-button-text">
+                    Upload Images
+                </span>
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =============================================================
+     JAVASCRIPT
+============================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const dropzone =
+            document.getElementById(
+                "upload-dropzone"
+            );
+
+        const browseButton =
+            document.getElementById(
+                "browse-button"
+            );
+
+        const fileInput =
+            document.getElementById(
+                "id_images"
+            );
+
+        const previewGrid =
+            document.getElementById(
+                "preview-grid"
+            );
+
+        const selectedSummary =
+            document.getElementById(
+                "selected-summary"
+            );
+
+        const selectedSummaryText =
+            document.getElementById(
+                "selected-summary-text"
+            );
+
+        const clearAllButton =
+            document.getElementById(
+                "clear-all-button"
+            );
+
+        const uploadButton =
+            document.getElementById(
+                "upload-button"
+            );
+
+        const uploadButtonText =
+            document.getElementById(
+                "upload-button-text"
+            );
+
+        const uploadForm =
+            document.getElementById(
+                "bulk-upload-form"
+            );
+
+
+        if (
+            !dropzone ||
+            !fileInput ||
+            !previewGrid
+        ) {
+            return;
+        }
+
+
+        /*
+         * We keep the selected files in memory.
+         */
+
+        let selectedFiles = [];
+
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif"
+        ];
+
+
+        const maxFileSize =
+            5 * 1024 * 1024;
+
+
+        /*
+         * Open file browser.
+         */
+
+        browseButton?.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+                fileInput.click();
+
+            }
+        );
+
+
+        dropzone.addEventListener(
+            "click",
+            function () {
+
+                fileInput.click();
+
+            }
+        );
+
+
+        /*
+         * File input change.
+         */
+
+        fileInput.addEventListener(
+            "change",
+            function () {
+
+                addFiles(
+                    Array.from(
+                        fileInput.files
+                    )
+                );
+
+            }
+        );
+
+
+        /*
+         * Drag events.
+         */
+
+        dropzone.addEventListener(
+            "dragover",
+            function (event) {
+
+                event.preventDefault();
+
+                dropzone.classList.add(
+                    "border-slate-700",
+                    "bg-white",
+                    "scale-[1.01]"
+                );
+
+            }
+        );
+
+
+        dropzone.addEventListener(
+            "dragleave",
+            function () {
+
+                dropzone.classList.remove(
+                    "border-slate-700",
+                    "bg-white",
+                    "scale-[1.01]"
+                );
+
+            }
+        );
+
+
+        dropzone.addEventListener(
+            "drop",
+            function (event) {
+
+                event.preventDefault();
+
+                dropzone.classList.remove(
+                    "border-slate-700",
+                    "bg-white",
+                    "scale-[1.01]"
+                );
+
+
+                const files =
+                    Array.from(
+                        event.dataTransfer.files
+                    );
+
+
+                addFiles(files);
+
+            }
+        );
+
+
+        /*
+         * Add files.
+         */
+
+        function addFiles(files) {
+
+            files.forEach(
+                function (file) {
+
+                    /*
+                     * Validate file type.
+                     */
+
+                    if (
+                        !allowedTypes.includes(
+                            file.type
+                        )
+                    ) {
+
+                        alert(
+                            `${file.name} is not a supported image format.`
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Validate size.
+                     */
+
+                    if (
+                        file.size > maxFileSize
+                    ) {
+
+                        alert(
+                            `${file.name} is larger than 5MB.`
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Prevent duplicates.
+                     */
+
+                    const duplicate =
+                        selectedFiles.some(
+                            function (existingFile) {
+
+                                return (
+                                    existingFile.name ===
+                                    file.name
+                                    &&
+                                    existingFile.size ===
+                                    file.size
+                                    &&
+                                    existingFile.lastModified ===
+                                    file.lastModified
+                                );
+
+                            }
+                        );
+
+
+                    if (duplicate) {
+
+                        return;
+
+                    }
+
+
+                    selectedFiles.push(file);
+
+                }
+            );
+
+
+            updateFileInput();
+
+            renderPreviews();
+
+        }
+
+
+        /*
+         * Rebuild the actual input's FileList.
+         */
+
+        function updateFileInput() {
+
+            const dataTransfer =
+                new DataTransfer();
+
+
+            selectedFiles.forEach(
+                function (file) {
+
+                    dataTransfer.items.add(
+                        file
+                    );
+
+                }
+            );
+
+
+            fileInput.files =
+                dataTransfer.files;
+
+        }
+
+
+        /*
+         * Render previews.
+         */
+
+        function renderPreviews() {
+
+            previewGrid.innerHTML = "";
+
+
+            if (
+                selectedFiles.length === 0
+            ) {
+
+                selectedSummary.classList.add(
+                    "hidden"
+                );
+
+                uploadButton.disabled = true;
+
+                uploadButtonText.textContent =
+                    "Upload Images";
+
+                return;
+
+            }
+
+
+            selectedSummary.classList.remove(
+                "hidden"
+            );
+
+
+            const count =
+                selectedFiles.length;
+
+
+            selectedSummaryText.textContent =
+                `${count} image${count === 1 ? "" : "s"} selected`;
+
+
+            uploadButton.disabled = false;
+
+
+            uploadButtonText.textContent =
+                `Upload ${count} Image${count === 1 ? "" : "s"}`;
+
+
+            selectedFiles.forEach(
+                function (file, index) {
+
+                    createPreview(
+                        file,
+                        index
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Create individual preview.
+         */
+
+        function createPreview(
+            file,
+            index
+        ) {
+
+            const wrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            wrapper.className =
+                `
+                group
+                relative
+                overflow-hidden
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+                `;
+
+
+            const imageWrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            imageWrapper.className =
+                `
+                relative
+                aspect-square
+                overflow-hidden
+                bg-slate-100
+                `;
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.className =
+                `
+                h-full
+                w-full
+                object-cover
+                `;
+
+
+            image.alt =
+                file.name;
+
+
+            const objectUrl =
+                URL.createObjectURL(
+                    file
+                );
+
+
+            image.src =
+                objectUrl;
+
+
+            image.onload =
+                function () {
+
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
+
+                };
+
+
+            imageWrapper.appendChild(
+                image
+            );
+
+
+            /*
+             * Remove button.
+             */
+
+            const removeButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            removeButton.type =
+                "button";
+
+
+            removeButton.className =
+                `
+                absolute
+                right-2
+                top-2
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-full
+                bg-black/70
+                text-white
+                shadow-lg
+                backdrop-blur
+                transition
+                hover:bg-red-600
+                `;
+
+
+            removeButton.title =
+                "Remove image";
+
+
+            removeButton.innerHTML =
+                '<i class="fa-solid fa-xmark"></i>';
+
+
+            removeButton.addEventListener(
+                "click",
+                function () {
+
+                    removeFile(index);
+
+                }
+            );
+
+
+            imageWrapper.appendChild(
+                removeButton
+            );
+
+
+            /*
+             * Image number.
+             */
+
+            const numberBadge =
+                document.createElement(
+                    "div"
+                );
+
+
+            numberBadge.className =
+                `
+                absolute
+                bottom-2
+                left-2
+                rounded-lg
+                bg-black/70
+                px-2
+                py-1
+                text-xs
+                font-black
+                text-white
+                `;
+
+
+            numberBadge.textContent =
+                `#${index + 1}`;
+
+
+            imageWrapper.appendChild(
+                numberBadge
+            );
+
+
+            /*
+             * File information.
+             */
+
+            const information =
+                document.createElement(
+                    "div"
+                );
+
+
+            information.className =
+                "p-3";
+
+
+            const filename =
+                document.createElement(
+                    "p"
+                );
+
+
+            filename.className =
+                `
+                truncate
+                text-xs
+                font-bold
+                text-slate-800
+                `;
+
+
+            filename.title =
+                file.name;
+
+
+            filename.textContent =
+                file.name;
+
+
+            const filesize =
+                document.createElement(
+                    "p"
+                );
+
+
+            filesize.className =
+                "mt-1 text-xs text-slate-400";
+
+
+            filesize.textContent =
+                formatFileSize(
+                    file.size
+                );
+
+
+            information.appendChild(
+                filename
+            );
+
+            information.appendChild(
+                filesize
+            );
+
+
+            wrapper.appendChild(
+                imageWrapper
+            );
+
+            wrapper.appendChild(
+                information
+            );
+
+
+            previewGrid.appendChild(
+                wrapper
+            );
+
+        }
+
+
+        /*
+         * Remove one selected file.
+         */
+
+        function removeFile(index) {
+
+            selectedFiles.splice(
+                index,
+                1
+            );
+
+
+            updateFileInput();
+
+            renderPreviews();
+
+        }
+
+
+        /*
+         * Clear everything.
+         */
+
+        clearAllButton?.addEventListener(
+            "click",
+            function () {
+
+                selectedFiles = [];
+
+                updateFileInput();
+
+                renderPreviews();
+
+            }
+        );
+
+
+        /*
+         * File size formatter.
+         */
+
+        function formatFileSize(bytes) {
+
+            if (bytes === 0) {
+
+                return "0 Bytes";
+
+            }
+
+
+            const units = [
+                "Bytes",
+                "KB",
+                "MB",
+                "GB"
+            ];
+
+
+            const index =
+                Math.floor(
+                    Math.log(bytes) /
+                    Math.log(1024)
+                );
+
+
+            return (
+                parseFloat(
+                    (
+                        bytes /
+                        Math.pow(
+                            1024,
+                            index
+                        )
+                    ).toFixed(2)
+                )
+                +
+                " " +
+                units[index]
+            );
+
+        }
+
+
+        /*
+         * Prevent accidental submission
+         * when no images are selected.
+         */
+
+        uploadForm?.addEventListener(
+            "submit",
+            function (event) {
+
+                if (
+                    selectedFiles.length === 0
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please select at least one image."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Final client-side validation.
+                 */
+
+                for (
+                    const file of selectedFiles
+                ) {
+
+                    if (
+                        !allowedTypes.includes(
+                            file.type
+                        )
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            `${file.name} is not a supported image format.`
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (
+                        file.size > maxFileSize
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            `${file.name} is larger than 5MB.`
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+
+                /*
+                 * Show uploading state.
+                 */
+
+                uploadButton.disabled = true;
+
+
+                uploadButtonText.textContent =
+                    `Uploading ${selectedFiles.length} Image${selectedFiles.length === 1 ? "" : "s"}...`;
+
+
+                uploadButton.innerHTML =
+                    `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>
+                        Uploading ${selectedFiles.length} Image${selectedFiles.length === 1 ? "" : "s"}...
+                    </span>
+                    `;
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

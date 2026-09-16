@@ -1,0 +1,404 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- HEADER -->
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+
+                <a
+                    href="{% url 'media:dashboard' %}"
+                    class="transition hover:text-slate-900"
+                >
+                    Media
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+                <a
+                    href="{% url 'media:video_manage' %}"
+                    class="transition hover:text-slate-900"
+                >
+                    Videos
+                </a>
+
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+                <span>View</span>
+
+            </div>
+
+
+            <h1 class="mt-2 text-2xl font-bold text-slate-900">
+                {{ object.title }}
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage this campaign video.
+            </p>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="flex flex-wrap gap-2">
+
+            <a
+                href="{% url 'media:video_edit' object.pk %}"
+                class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-pen"></i>
+                Edit Video
+            </a>
+
+            <a
+                href="{% url 'media:video_delete' object.pk %}"
+                class="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- VIDEO CONTENT -->
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+
+
+        <!-- VIDEO PREVIEW -->
+        <div class="xl:col-span-2">
+
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-sm">
+
+                {% if object.video_url %}
+
+                    <div class="aspect-video">
+
+                        {% if object.video_type == "youtube" %}
+
+                            <iframe
+                                src="https://www.youtube.com/embed/{{ object.video_url|cut:'https://www.youtube.com/watch?v='|cut:'https://youtu.be/' }}"
+                                title="{{ object.title }}"
+                                class="h-full w-full"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                            ></iframe>
+
+                        {% elif object.video_type == "vimeo" %}
+
+                            <iframe
+                                src="{{ object.video_url }}"
+                                title="{{ object.title }}"
+                                class="h-full w-full"
+                                frameborder="0"
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                allowfullscreen
+                            ></iframe>
+
+                        {% else %}
+
+                            <video
+                                controls
+                                class="h-full w-full"
+                                poster="{% if object.thumbnail %}{{ object.thumbnail.url }}{% endif %}"
+                            >
+                                <source src="{{ object.video_url }}">
+                                Your browser does not support video playback.
+                            </video>
+
+                        {% endif %}
+
+                    </div>
+
+                {% elif object.thumbnail %}
+
+                    <div class="aspect-video">
+
+                        <img
+                            src="{{ object.thumbnail.url }}"
+                            alt="{{ object.title }}"
+                            class="h-full w-full object-cover"
+                        >
+
+                    </div>
+
+                {% else %}
+
+                    <div class="flex aspect-video items-center justify-center">
+
+                        <div class="text-center text-white">
+
+                            <i class="fa-solid fa-video text-5xl text-slate-600"></i>
+
+                            <p class="mt-4 text-sm text-slate-400">
+                                No video source has been added.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            {% if object.description %}
+
+                <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+
+                    <h2 class="font-semibold text-slate-900">
+                        Description
+                    </h2>
+
+                    <div class="mt-3 text-sm leading-7 text-slate-600">
+                        {{ object.description|linebreaks }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+        <div class="space-y-6">
+
+
+            <!-- STATUS -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <h2 class="font-semibold text-slate-900">
+                    Video Status
+                </h2>
+
+
+                <div class="mt-4 space-y-3">
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-sm text-slate-500">
+                            Publication
+                        </span>
+
+                        {% if object.published %}
+
+                            <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                Published
+                            </span>
+
+                        {% else %}
+
+                            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                Draft
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-sm text-slate-500">
+                            Featured
+                        </span>
+
+                        {% if object.featured %}
+
+                            <span class="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">
+                                <i class="fa-solid fa-star mr-1"></i>
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-xs text-slate-400">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="text-sm text-slate-500">
+                            Video Type
+                        </span>
+
+                        <span class="text-sm font-medium text-slate-700">
+                            {{ object.video_type|title }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VIDEO DETAILS -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <h2 class="font-semibold text-slate-900">
+                    Video Details
+                </h2>
+
+
+                <div class="mt-4 space-y-4">
+
+                    <div>
+
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Views
+                        </p>
+
+                        <p class="mt-1 text-lg font-semibold text-slate-900">
+                            {{ object.views }}
+                        </p>
+
+                    </div>
+
+
+                    {% if object.duration %}
+
+                        <div>
+
+                            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                Duration
+                            </p>
+
+                            <p class="mt-1 text-sm font-medium text-slate-700">
+                                {{ object.duration }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if object.published_at %}
+
+                        <div>
+
+                            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                Published Date
+                            </p>
+
+                            <p class="mt-1 text-sm font-medium text-slate-700">
+                                {{ object.published_at|date:"F d, Y g:i A" }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div>
+
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Created
+                        </p>
+
+                        <p class="mt-1 text-sm font-medium text-slate-700">
+                            {{ object.created_at|date:"F d, Y g:i A" }}
+                        </p>
+
+                    </div>
+
+
+                    {% if object.updated_at %}
+
+                        <div>
+
+                            <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                                Last Updated
+                            </p>
+
+                            <p class="mt-1 text-sm font-medium text-slate-700">
+                                {{ object.updated_at|date:"F d, Y g:i A" }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- THUMBNAIL -->
+            {% if object.thumbnail %}
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <h2 class="font-semibold text-slate-900">
+                        Thumbnail
+                    </h2>
+
+                    <img
+                        src="{{ object.thumbnail.url }}"
+                        alt="{{ object.title }}"
+                        class="mt-4 aspect-video w-full rounded-xl object-cover"
+                    >
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- URL -->
+            {% if object.video_url %}
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <h2 class="font-semibold text-slate-900">
+                        Video Source
+                    </h2>
+
+                    <p class="mt-3 break-all text-xs leading-5 text-slate-500">
+                        {{ object.video_url }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+    <!-- BACK -->
+    <div>
+
+        <a
+            href="{% url 'media:video_manage' %}"
+            class="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Videos
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

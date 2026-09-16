@@ -1,0 +1,414 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {% if object %}
+        Edit Video
+    {% else %}
+        Add Video
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- PAGE HEADER -->
+    <div>
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+            <a href="{% url 'media:dashboard' %}" class="hover:text-slate-900">
+                Media
+            </a>
+
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+
+            <span>
+                {% if object %}
+                    Edit Video
+                {% else %}
+                    Add Video
+                {% endif %}
+            </span>
+        </div>
+
+        <h1 class="mt-2 text-2xl font-bold text-slate-900">
+            {% if object %}
+                Edit Video
+            {% else %}
+                Add Campaign Video
+            {% endif %}
+        </h1>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Add YouTube, Vimeo or external campaign videos to the website.
+        </p>
+    </div>
+
+
+    <!-- FORM -->
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+            class="p-6"
+        >
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            <!-- BASIC INFORMATION -->
+            <div>
+
+                <div class="mb-5">
+                    <h2 class="text-lg font-semibold text-slate-900">
+                        Video Information
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Enter the basic information about this campaign video.
+                    </p>
+                </div>
+
+
+                <div class="grid grid-cols-1 gap-5">
+
+                    <!-- TITLE -->
+                    <div>
+                        <label
+                            for="{{ form.title.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Video Title
+                        </label>
+
+                        {{ form.title }}
+
+                        {% if form.title.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.title.errors.0 }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div>
+                        <label
+                            for="{{ form.description.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.description.errors.0 }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VIDEO SOURCE -->
+            <div class="mt-8 border-t border-slate-200 pt-8">
+
+                <div class="mb-5">
+                    <h2 class="text-lg font-semibold text-slate-900">
+                        Video Source
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Add the URL of the video you want to display.
+                    </p>
+                </div>
+
+
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+                    <!-- VIDEO URL -->
+                    <div class="md:col-span-2">
+
+                        <label
+                            for="{{ form.video_url.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Video URL
+                        </label>
+
+                        {{ form.video_url }}
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Example:
+                            https://www.youtube.com/watch?v=XXXXXXXXXXX
+                        </p>
+
+                        {% if form.video_url.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.video_url.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- VIDEO TYPE -->
+                    <div>
+
+                        <label
+                            for="{{ form.video_type.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Video Type
+                        </label>
+
+                        {{ form.video_type }}
+
+                        {% if form.video_type.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.video_type.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DURATION -->
+                    <div>
+
+                        <label
+                            for="{{ form.duration.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Duration
+                        </label>
+
+                        {{ form.duration }}
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Example: 12:35
+                        </p>
+
+                        {% if form.duration.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.duration.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- THUMBNAIL -->
+            <div class="mt-8 border-t border-slate-200 pt-8">
+
+                <div class="mb-5">
+                    <h2 class="text-lg font-semibold text-slate-900">
+                        Video Thumbnail
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Upload an image that will represent the video.
+                    </p>
+                </div>
+
+
+                <div>
+
+                    {% if object.thumbnail %}
+
+                        <div class="mb-4">
+
+                            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+                                Current Thumbnail
+                            </p>
+
+                            <img
+                                src="{{ object.thumbnail.url }}"
+                                alt="{{ object.title }}"
+                                class="h-40 w-64 rounded-xl object-cover"
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <label
+                        for="{{ form.thumbnail.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                        {% if object %}
+                            Replace Thumbnail
+                        {% else %}
+                            Thumbnail
+                        {% endif %}
+                    </label>
+
+                    {{ form.thumbnail }}
+
+                    {% if form.thumbnail.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {{ form.thumbnail.errors.0 }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- PUBLISHING -->
+            <div class="mt-8 border-t border-slate-200 pt-8">
+
+                <div class="mb-5">
+                    <h2 class="text-lg font-semibold text-slate-900">
+                        Publishing Settings
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Control when and how this video appears on the public website.
+                    </p>
+                </div>
+
+
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+                    <!-- PUBLISHED AT -->
+                    <div>
+
+                        <label
+                            for="{{ form.published_at.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Published Date
+                        </label>
+
+                        {{ form.published_at }}
+
+                        {% if form.published_at.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.published_at.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DISPLAY ORDER -->
+                    <div>
+
+                        <label
+                            for="{{ form.display_order.id_for_label }}"
+                            class="mb-2 block text-sm font-medium text-slate-700"
+                        >
+                            Display Order
+                        </label>
+
+                        {{ form.display_order }}
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Lower numbers appear first.
+                        </p>
+
+                        {% if form.display_order.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.display_order.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHECKBOXES -->
+                <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50">
+
+                        {{ form.published }}
+
+                        <div>
+                            <span class="block text-sm font-medium text-slate-800">
+                                Published
+                            </span>
+
+                            <span class="block text-xs text-slate-500">
+                                Make this video visible on the website.
+                            </span>
+                        </div>
+
+                    </label>
+
+
+                    <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50">
+
+                        {{ form.featured }}
+
+                        <div>
+                            <span class="block text-sm font-medium text-slate-800">
+                                Featured Video
+                            </span>
+
+                            <span class="block text-xs text-slate-500">
+                                Highlight this video on featured media sections.
+                            </span>
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORM ACTIONS -->
+            <div class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+
+                <a
+                    href="{% url 'media:dashboard' %}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-save"></i>
+
+                    {% if object %}
+                        Update Video
+                    {% else %}
+                        Save Video
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,848 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Media Manager{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+
+                <span>Dashboard</span>
+
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+
+                <span>Media</span>
+
+            </div>
+
+            <h1 class="mt-2 text-2xl font-bold text-slate-900">
+                Media Manager
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage campaign albums, photos and videos from one place.
+            </p>
+
+        </div>
+
+
+        <!-- Quick Actions -->
+
+        <div class="flex flex-wrap gap-2">
+
+            <a
+                href="{% url 'media:album_create' %}"
+                class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            >
+                <i class="fa-solid fa-folder-plus"></i>
+                New Album
+            </a>
+
+
+            <a
+                href="{% url 'media:video_create' %}"
+                class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+                <i class="fa-solid fa-video"></i>
+                Add Video
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MEDIA STATISTICS
+    ====================================================== -->
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+
+
+        <!-- Albums -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Albums
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ total_albums }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+
+                    <i class="fa-solid fa-images text-xl"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="mt-3 flex items-center gap-3 text-xs">
+
+                <span class="font-medium text-emerald-600">
+                    {{ published_albums }} published
+                </span>
+
+                <span class="text-slate-300">
+                    |
+                </span>
+
+                <span class="text-slate-500">
+                    {{ draft_albums }} draft
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Photos -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Photos
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ total_images }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
+                    <i class="fa-solid fa-image text-xl"></i>
+
+                </div>
+
+            </div>
+
+
+            <p class="mt-3 text-xs text-slate-500">
+                Campaign photos across all albums
+            </p>
+
+        </div>
+
+
+        <!-- Videos -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Videos
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ total_videos }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+
+                    <i class="fa-solid fa-video text-xl"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="mt-3 flex items-center gap-3 text-xs">
+
+                <span class="font-medium text-emerald-600">
+                    {{ published_videos }} published
+                </span>
+
+                <span class="text-slate-300">
+                    |
+                </span>
+
+                <span class="text-slate-500">
+                    {{ draft_videos }} draft
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Featured Media -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Featured Media
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ featured_albums|add:featured_videos }}
+                    </p>
+
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+
+                    <i class="fa-solid fa-star text-xl"></i>
+
+                </div>
+
+            </div>
+
+
+            <p class="mt-3 text-xs text-slate-500">
+                Featured albums and videos
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MEDIA MANAGEMENT CARDS
+    ====================================================== -->
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+
+        <!-- Albums -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+
+                <i class="fa-solid fa-folder-open"></i>
+
+            </div>
+
+
+            <h2 class="mt-4 font-semibold text-slate-900">
+                Photo Albums
+            </h2>
+
+
+            <p class="mt-1 text-sm leading-6 text-slate-500">
+                Create and manage campaign photo albums, event galleries and featured collections.
+            </p>
+
+
+            <div class="mt-5 flex flex-wrap gap-2">
+
+                <!-- New Album -->
+
+                <a
+                    href="{% url 'media:album_create' %}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    New Album
+                </a>
+
+
+                <!-- Manage Albums -->
+
+                <a
+                    href="{% url 'media:album_list' %}"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-list"></i>
+                    Manage Albums
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Photos -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
+                <i class="fa-solid fa-photo-film"></i>
+
+            </div>
+
+
+            <h2 class="mt-4 font-semibold text-slate-900">
+                Campaign Photos
+            </h2>
+
+
+            <p class="mt-1 text-sm leading-6 text-slate-500">
+                Upload multiple campaign photos and organize them inside your media albums.
+            </p>
+
+
+            <div class="mt-4">
+
+                <span class="inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+
+                    <i class="fa-solid fa-images"></i>
+
+                    {{ total_images }} photos
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Videos -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+
+                <i class="fa-solid fa-circle-play"></i>
+
+            </div>
+
+
+            <h2 class="mt-4 font-semibold text-slate-900">
+                Campaign Videos
+            </h2>
+
+
+            <p class="mt-1 text-sm leading-6 text-slate-500">
+                Manage YouTube, Vimeo and external campaign videos published on the website.
+            </p>
+
+
+            <!-- Video Statistics -->
+
+            <div class="mt-4 flex flex-wrap gap-2">
+
+                <span class="inline-flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700">
+
+                    <i class="fa-solid fa-video"></i>
+
+                    {{ total_videos }} videos
+
+                </span>
+
+
+                <span class="inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+
+                    <i class="fa-solid fa-check"></i>
+
+                    {{ published_videos }} published
+
+                </span>
+
+            </div>
+
+
+            <!-- Video Actions -->
+
+            <div class="mt-5 flex flex-wrap gap-2">
+
+                <a
+                    href="{% url 'media:video_create' %}"
+                    class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Add Video
+                </a>
+
+
+                <a
+                    href="{% url 'media:video_manage' %}"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-list"></i>
+                    Manage Videos
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT ALBUMS
+    ====================================================== -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <h2 class="font-semibold text-slate-900">
+                    Recent Albums
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Recently created campaign photo albums
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'media:album_create' %}"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+                <i class="fa-solid fa-plus"></i>
+                New Album
+            </a>
+
+        </div>
+
+
+        {% if recent_albums %}
+
+            <div class="divide-y divide-slate-100">
+
+                {% for album in recent_albums %}
+
+                    <div class="flex items-center gap-4 px-5 py-4 transition hover:bg-slate-50">
+
+                        <!-- Album Cover -->
+
+                        <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+
+                            {% if album.cover_image %}
+
+                                <img
+                                    src="{{ album.cover_image.url }}"
+                                    alt="{{ album.title }}"
+                                    class="h-full w-full object-cover"
+                                >
+
+                            {% elif album.images.first %}
+
+                                <img
+                                    src="{{ album.images.first.image.url }}"
+                                    alt="{{ album.title }}"
+                                    class="h-full w-full object-cover"
+                                >
+
+                            {% else %}
+
+                                <div class="flex h-full w-full items-center justify-center text-slate-400">
+
+                                    <i class="fa-solid fa-images"></i>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Album Information -->
+
+                        <div class="min-w-0 flex-1">
+
+                            <h3 class="truncate font-medium text-slate-900">
+                                {{ album.title }}
+                            </h3>
+
+                            <p class="mt-1 text-xs text-slate-500">
+
+                                {{ album.image_count }}
+                                image{{ album.image_count|pluralize }}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="hidden text-right sm:block">
+
+                            {% if album.published %}
+
+                                <span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                    Published
+                                </span>
+
+                            {% else %}
+
+                                <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                    Draft
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Album Actions -->
+
+                        <div class="flex items-center gap-2">
+
+                            <a
+                                href="{% url 'media:album_edit' album.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-white hover:text-slate-900"
+                                title="Edit album"
+                            >
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </a>
+
+
+                            <a
+                                href="{% url 'media:album_manage' album.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-white hover:text-slate-900"
+                                title="Manage album"
+                            >
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="px-5 py-12 text-center">
+
+                <i class="fa-solid fa-images text-3xl text-slate-300"></i>
+
+                <p class="mt-3 text-sm text-slate-500">
+                    No albums have been created yet.
+                </p>
+
+
+                <a
+                    href="{% url 'media:album_create' %}"
+                    class="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Create Album
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT VIDEOS
+    ====================================================== -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <h2 class="font-semibold text-slate-900">
+                    Recent Videos
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Recently added campaign videos
+                </p>
+
+            </div>
+
+
+            <div class="flex flex-wrap items-center gap-2">
+
+                <span class="rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700">
+                    {{ published_videos }} published
+                </span>
+
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+                    {{ draft_videos }} draft
+                </span>
+
+
+                <a
+                    href="{% url 'media:video_manage' %}"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                >
+                    <i class="fa-solid fa-list"></i>
+                    Manage All
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% if recent_videos %}
+
+            <div class="divide-y divide-slate-100">
+
+                {% for video in recent_videos %}
+
+                    <div class="flex flex-col gap-4 px-5 py-4 transition hover:bg-slate-50 sm:flex-row sm:items-center">
+
+                        <!-- Thumbnail -->
+
+                        <div class="relative flex h-16 w-full flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-900 sm:h-14 sm:w-20">
+
+                            {% if video.thumbnail %}
+
+                                <img
+                                    src="{{ video.thumbnail.url }}"
+                                    alt="{{ video.title }}"
+                                    class="h-full w-full object-cover"
+                                >
+
+                            {% endif %}
+
+
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-sm">
+
+                                    <i class="fa-solid fa-play text-xs"></i>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Video Information -->
+
+                        <div class="min-w-0 flex-1">
+
+                            <h3 class="truncate font-medium text-slate-900">
+                                {{ video.title }}
+                            </h3>
+
+
+                            <p class="mt-1 text-xs text-slate-500">
+
+                                {{ video.views }}
+                                view{{ video.views|pluralize }}
+
+                                <span class="mx-1 text-slate-300">
+                                    ·
+                                </span>
+
+                                {{ video.video_type|title }}
+
+                                {% if video.duration %}
+
+                                    <span class="mx-1 text-slate-300">
+                                        ·
+                                    </span>
+
+                                    {{ video.duration }}
+
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="hidden sm:block">
+
+                            {% if video.published %}
+
+                                <span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                    Published
+                                </span>
+
+                            {% else %}
+
+                                <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                                    Draft
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Video Actions -->
+
+                        <div class="flex items-center gap-2">
+
+                            <!-- Edit -->
+
+                            <a
+                                href="{% url 'media:video_edit' video.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-white hover:text-slate-900"
+                                title="Edit video"
+                            >
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </a>
+
+
+                            <!-- Delete -->
+
+                            <a
+                                href="{% url 'media:video_delete' video.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-500 transition hover:bg-red-50 hover:text-red-600"
+                                title="Delete video"
+                            >
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </a>
+
+
+                            <!-- View -->
+
+                            <a
+                                href="{% url 'media:video_detail_manage' video.pk %}"
+                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-white hover:text-slate-900"
+                                title="View video details"
+                            >
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+
+
+                           
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="px-5 py-12 text-center">
+
+                <i class="fa-solid fa-video text-3xl text-slate-300"></i>
+
+                <p class="mt-3 text-sm text-slate-500">
+                    No videos have been added yet.
+                </p>
+
+
+                <a
+                    href="{% url 'media:video_create' %}"
+                    class="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Add First Video
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT PHOTOS
+    ====================================================== -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+
+                <h2 class="font-semibold text-slate-900">
+                    Recent Photos
+                </h2>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Recently uploaded campaign photos
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if recent_images %}
+
+            <div class="grid grid-cols-2 gap-4 p-5 sm:grid-cols-4 lg:grid-cols-8">
+
+                {% for image in recent_images %}
+
+                    <a
+                        href="{% url 'media:album_manage' image.album.pk %}"
+                        class="group block"
+                    >
+
+                        <div class="aspect-square overflow-hidden rounded-xl bg-slate-100">
+
+                            <img
+                                src="{{ image.image.url }}"
+                                alt="{{ image.alt_text|default:image.caption|default:image.album.title }}"
+                                class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            >
+
+                        </div>
+
+
+                        <p class="mt-2 truncate text-xs font-medium text-slate-700 transition group-hover:text-slate-900">
+                            {{ image.album.title }}
+                        </p>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="px-5 py-12 text-center">
+
+                <i class="fa-solid fa-images text-3xl text-slate-300"></i>
+
+                <p class="mt-3 text-sm text-slate-500">
+                    No photos have been uploaded yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

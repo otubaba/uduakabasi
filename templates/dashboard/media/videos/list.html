@@ -1,0 +1,1813 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Media Videos
+{% endblock %}
+
+{% block page_title %}
+Media Videos
+{% endblock %}
+
+{% block content %}
+
+<div class="space-y-6">
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================== -->
+
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+    <div>
+
+        <div class="flex items-center gap-3">
+
+            <div
+                class="flex h-11 w-11 items-center justify-center
+                       rounded-xl bg-slate-900 text-white shadow-sm"
+            >
+                <i class="fa-solid fa-video"></i>
+            </div>
+
+            <div>
+
+                <h1 class="text-2xl font-bold text-slate-900">
+                    Videos
+                </h1>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Manage campaign videos and video content.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="flex flex-wrap gap-3">
+
+        <a
+            href="{% url 'dashboard:media_album_list' %}"
+            class="inline-flex items-center justify-center
+                   rounded-lg border border-slate-300
+                   bg-white px-4 py-2.5
+                   text-sm font-semibold text-slate-700
+                   transition hover:bg-slate-50"
+        >
+            <i class="fa-solid fa-images mr-2"></i>
+            Albums
+        </a>
+
+        <a
+            href="{% url 'dashboard:media_video_create' %}"
+            class="inline-flex items-center justify-center
+                   rounded-lg bg-slate-900 px-4 py-2.5
+                   text-sm font-semibold text-white
+                   shadow-sm transition hover:bg-slate-800"
+        >
+            <i class="fa-solid fa-plus mr-2"></i>
+            Add Video
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     STATISTICS
+========================================================== -->
+
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+    <!-- TOTAL -->
+
+    <div class="campaign-card p-5">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-sm font-medium text-slate-500">
+                    Total Videos
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-slate-900">
+                    {{ total_videos }}
+                </p>
+
+            </div>
+
+            <div
+                class="flex h-11 w-11 items-center justify-center
+                       rounded-xl bg-slate-100 text-slate-600"
+            >
+                <i class="fa-solid fa-video"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PUBLISHED -->
+
+    <div class="campaign-card p-5">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-sm font-medium text-slate-500">
+                    Published
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-emerald-600">
+                    {{ published_videos }}
+                </p>
+
+            </div>
+
+            <div
+                class="flex h-11 w-11 items-center justify-center
+                       rounded-xl bg-emerald-50 text-emerald-600"
+            >
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FEATURED -->
+
+    <div class="campaign-card p-5">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-sm font-medium text-slate-500">
+                    Featured
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-amber-600">
+                    {{ featured_videos }}
+                </p>
+
+            </div>
+
+            <div
+                class="flex h-11 w-11 items-center justify-center
+                       rounded-xl bg-amber-50 text-amber-600"
+            >
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- VIEWS -->
+
+    <div class="campaign-card p-5">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-sm font-medium text-slate-500">
+                    Total Views
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-slate-900">
+                    {{ total_views }}
+                </p>
+
+            </div>
+
+            <div
+                class="flex h-11 w-11 items-center justify-center
+                       rounded-xl bg-blue-50 text-blue-600"
+            >
+                <i class="fa-solid fa-eye"></i>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FILTERS
+========================================================== -->
+
+<div class="campaign-card p-5">
+
+    <div
+        class="mb-4 flex flex-col gap-2
+               sm:flex-row sm:items-center
+               sm:justify-between"
+    >
+
+        <div>
+
+            <h2 class="font-semibold text-slate-900">
+                Filter Videos
+            </h2>
+
+            <p class="text-xs text-slate-500">
+                Search and filter your video library.
+            </p>
+
+        </div>
+
+
+        {% if search_query or published_filter or featured_filter %}
+
+            <a
+                href="{% url 'dashboard:media_video_list' %}"
+                class="text-sm font-medium text-slate-500
+                       hover:text-slate-900"
+            >
+                <i class="fa-solid fa-xmark mr-1"></i>
+                Clear filters
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <form
+        method="get"
+        class="grid grid-cols-1 gap-4 md:grid-cols-4"
+    >
+
+        <!-- SEARCH -->
+
+        <div>
+
+            <label class="form-label">
+                Search
+            </label>
+
+            <div class="relative">
+
+                <i
+                    class="fa-solid fa-magnifying-glass
+                           absolute left-3 top-1/2
+                           -translate-y-1/2
+                           text-slate-400"
+                ></i>
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ search_query }}"
+                    class="form-control pl-10"
+                    placeholder="Search videos..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- PUBLISHED -->
+
+        <div>
+
+            <label class="form-label">
+                Publication Status
+            </label>
+
+            <select
+                name="published"
+                class="form-control"
+            >
+
+                <option value="">
+                    All videos
+                </option>
+
+                <option
+                    value="yes"
+                    {% if published_filter == "yes" %}
+                        selected
+                    {% endif %}
+                >
+                    Published
+                </option>
+
+                <option
+                    value="no"
+                    {% if published_filter == "no" %}
+                        selected
+                    {% endif %}
+                >
+                    Unpublished
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- FEATURED -->
+
+        <div>
+
+            <label class="form-label">
+                Featured Status
+            </label>
+
+            <select
+                name="featured"
+                class="form-control"
+            >
+
+                <option value="">
+                    All videos
+                </option>
+
+                <option
+                    value="yes"
+                    {% if featured_filter == "yes" %}
+                        selected
+                    {% endif %}
+                >
+                    Featured
+                </option>
+
+                <option
+                    value="no"
+                    {% if featured_filter == "no" %}
+                        selected
+                    {% endif %}
+                >
+                    Not Featured
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- FILTER BUTTON -->
+
+        <div class="flex items-end">
+
+            <button
+                type="submit"
+                class="inline-flex w-full items-center
+                       justify-center rounded-lg
+                       bg-slate-900 px-4 py-2.5
+                       text-sm font-semibold text-white
+                       transition hover:bg-slate-800
+                       md:w-auto"
+            >
+                <i class="fa-solid fa-filter mr-2"></i>
+                Apply Filters
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =========================================================
+     VIDEO ORDERING HEADER
+========================================================== -->
+
+{% if videos %}
+
+    <div
+        class="flex flex-col gap-4
+               rounded-xl border border-slate-200
+               bg-white p-4 shadow-sm
+               sm:flex-row sm:items-center
+               sm:justify-between"
+    >
+
+        <div class="flex items-start gap-3">
+
+            <div
+                class="flex h-10 w-10 shrink-0
+                       items-center justify-center
+                       rounded-lg bg-slate-100
+                       text-slate-600"
+            >
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <div>
+
+                <h2 class="font-semibold text-slate-900">
+                    Video Order
+                </h2>
+
+                <p class="mt-0.5 text-xs text-slate-500">
+                    Drag and drop videos to change their display order.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="save-video-order"
+            class="inline-flex items-center
+                   justify-center rounded-lg
+                   bg-slate-900 px-4 py-2.5
+                   text-sm font-semibold text-white
+                   shadow-sm transition
+                   hover:bg-slate-800
+                   disabled:cursor-not-allowed
+                   disabled:opacity-50"
+        >
+
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+            <span id="save-video-order-text">
+                Save Order
+            </span>
+
+        </button>
+
+    </div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     VIDEO LIBRARY HEADER
+========================================================== -->
+
+{% if videos %}
+
+    <div
+        class="flex flex-col gap-2
+               sm:flex-row sm:items-center
+               sm:justify-between"
+    >
+
+        <div>
+
+            <h2 class="text-lg font-bold text-slate-900">
+                Video Library
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                Showing your campaign video content.
+            </p>
+
+        </div>
+
+
+        {% if search_query or published_filter or featured_filter %}
+
+            <span
+                class="inline-flex w-fit items-center
+                       rounded-full bg-slate-100
+                       px-3 py-1 text-xs font-semibold
+                       text-slate-600"
+            >
+                <i class="fa-solid fa-filter mr-1.5"></i>
+                Filtered results
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     VIDEO GRID
+========================================================== -->
+
+<div
+    id="video-grid"
+    class="grid grid-cols-1 gap-5
+           md:grid-cols-2 xl:grid-cols-3"
+>
+
+    {% for video in videos %}
+
+        <article
+            class="campaign-card video-sort-item
+                   group overflow-hidden
+                   transition duration-200
+                   hover:-translate-y-0.5
+                   hover:shadow-lg"
+            draggable="true"
+            data-video-id="{{ video.pk }}"
+        >
+
+            <!-- =================================================
+                 THUMBNAIL
+            ================================================== -->
+
+            <div
+                class="relative overflow-hidden
+                       bg-slate-100"
+            >
+
+                <!-- ORDER NUMBER -->
+
+                <div
+                    class="absolute left-3 top-3 z-30
+                           flex h-8 w-8
+                           items-center justify-center
+                           rounded-full bg-white
+                           text-xs font-bold
+                           text-slate-900 shadow-md"
+                    data-order-number
+                >
+                    {{ forloop.counter }}
+                </div>
+
+
+                <!-- DRAG HANDLE -->
+
+                <div
+                    class="absolute bottom-3 left-3 z-30
+                           flex cursor-grab
+                           items-center gap-2
+                           rounded-lg
+                           bg-slate-900/80
+                           px-3 py-2
+                           text-xs font-semibold
+                           text-white
+                           shadow-sm
+                           backdrop-blur-sm
+                           active:cursor-grabbing"
+                    title="Drag to reorder"
+                >
+                    <i class="fa-solid fa-grip-vertical"></i>
+                    <span>Drag</span>
+                </div>
+
+
+                <!-- THUMBNAIL -->
+
+                {% if video.thumbnail %}
+
+                    <img
+                        src="{{ video.thumbnail.url }}"
+                        alt="{{ video.title }}"
+                        class="h-52 w-full object-cover
+                               transition duration-300
+                               group-hover:scale-105"
+                    >
+
+                {% else %}
+
+                    <div
+                        class="flex h-52 items-center
+                               justify-center
+                               bg-slate-100
+                               text-slate-400"
+                    >
+
+                        <div class="text-center">
+
+                            <i class="fa-solid fa-video text-4xl"></i>
+
+                            <p class="mt-2 text-xs font-medium">
+                                No thumbnail
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- PLAY OVERLAY -->
+
+                <div
+                    class="pointer-events-none
+                           absolute inset-0
+                           flex items-center
+                           justify-center
+                           bg-slate-900/0
+                           transition
+                           group-hover:bg-slate-900/20"
+                >
+
+                    <div
+                        class="flex h-12 w-12
+                               scale-90
+                               items-center
+                               justify-center
+                               rounded-full
+                               bg-white/95
+                               text-slate-900
+                               opacity-0
+                               shadow-lg transition
+                               group-hover:scale-100
+                               group-hover:opacity-100"
+                    >
+                        <i class="fa-solid fa-play ml-0.5"></i>
+                    </div>
+
+                </div>
+
+
+                <!-- VIDEO TYPE -->
+
+                <span
+                    class="absolute left-14 top-3 z-20
+                           rounded-full
+                           bg-slate-900/85
+                           px-2.5 py-1
+                           text-[11px]
+                           font-bold uppercase
+                           tracking-wide
+                           text-white
+                           backdrop-blur-sm"
+                >
+                    {{ video.get_video_type_display }}
+                </span>
+
+
+                <!-- FEATURED -->
+
+                {% if video.featured %}
+
+                    <span
+                        class="absolute right-3 top-3 z-20
+                               inline-flex items-center
+                               rounded-full
+                               bg-amber-400
+                               px-2.5 py-1
+                               text-[11px]
+                               font-bold
+                               text-amber-950
+                               shadow-sm"
+                    >
+                        <i class="fa-solid fa-star mr-1"></i>
+                        Featured
+                    </span>
+
+                {% endif %}
+
+
+                <!-- DURATION -->
+
+                {% if video.duration %}
+
+                    <span
+                        class="absolute bottom-3 right-3
+                               z-20 rounded-md
+                               bg-black/75 px-2 py-1
+                               text-xs font-semibold
+                               text-white"
+                    >
+                        {{ video.duration }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+            <div class="p-5">
+
+                <!-- TITLE -->
+
+                <h2
+                    class="line-clamp-2 text-base
+                           font-bold leading-6
+                           text-slate-900
+                           group-hover:text-slate-700"
+                >
+                    {{ video.title }}
+                </h2>
+
+
+                <!-- META -->
+
+                <div
+                    class="mt-3 flex flex-wrap
+                           items-center
+                           gap-x-4 gap-y-2
+                           text-xs text-slate-500"
+                >
+
+                    <span class="inline-flex items-center">
+
+                        <i class="fa-solid fa-eye mr-1.5"></i>
+
+                        {{ video.views }} views
+
+                    </span>
+
+
+                    {% if video.published_at %}
+
+                        <span class="inline-flex items-center">
+
+                            <i
+                                class="fa-regular fa-calendar
+                                       mr-1.5"
+                            ></i>
+
+                            {{ video.published_at|date:"M d, Y" }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="mt-4">
+
+                    {% if video.published %}
+
+                        <span
+                            class="inline-flex items-center
+                                   rounded-full
+                                   bg-emerald-50
+                                   px-2.5 py-1
+                                   text-xs font-semibold
+                                   text-emerald-700"
+                        >
+
+                            <span
+                                class="mr-1.5 h-1.5 w-1.5
+                                       rounded-full
+                                       bg-emerald-500"
+                            ></span>
+
+                            Published
+
+                        </span>
+
+                    {% else %}
+
+                        <span
+                            class="inline-flex items-center
+                                   rounded-full
+                                   bg-slate-100
+                                   px-2.5 py-1
+                                   text-xs font-semibold
+                                   text-slate-600"
+                        >
+
+                            <span
+                                class="mr-1.5 h-1.5 w-1.5
+                                       rounded-full
+                                       bg-slate-400"
+                            ></span>
+
+                            Draft
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- DIVIDER -->
+
+                <div
+                    class="my-4 border-t
+                           border-slate-100"
+                ></div>
+
+
+                <!-- =================================================
+                     QUICK ACTIONS
+                ================================================== -->
+
+                <div class="space-y-2">
+
+                    <!-- PUBLISH / UNPUBLISH -->
+
+                    <form
+                        method="post"
+                        action="{% url 'dashboard:media_video_toggle_published' video.pk %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="inline-flex w-full
+                                   items-center
+                                   justify-center
+                                   rounded-lg border
+                                   px-3 py-2
+                                   text-sm font-semibold
+                                   transition
+                                   {% if video.published %}
+                                       border-amber-200
+                                       bg-amber-50
+                                       text-amber-700
+                                       hover:bg-amber-100
+                                   {% else %}
+                                       border-emerald-200
+                                       bg-emerald-50
+                                       text-emerald-700
+                                       hover:bg-emerald-100
+                                   {% endif %}"
+                        >
+
+                            {% if video.published %}
+
+                                <i
+                                    class="fa-solid
+                                           fa-eye-slash mr-2"
+                                ></i>
+
+                                Unpublish
+
+                            {% else %}
+
+                                <i
+                                    class="fa-solid
+                                           fa-eye mr-2"
+                                ></i>
+
+                                Publish
+
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- FEATURED / UNFEATURED -->
+
+                    <form
+                        method="post"
+                        action="{% url 'dashboard:media_video_toggle_featured' video.pk %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="inline-flex w-full
+                                   items-center
+                                   justify-center
+                                   rounded-lg border
+                                   px-3 py-2
+                                   text-sm font-semibold
+                                   transition
+                                   {% if video.featured %}
+                                       border-slate-200
+                                       bg-slate-50
+                                       text-slate-700
+                                       hover:bg-slate-100
+                                   {% else %}
+                                       border-amber-200
+                                       bg-amber-50
+                                       text-amber-700
+                                       hover:bg-amber-100
+                                   {% endif %}"
+                        >
+
+                            {% if video.featured %}
+
+                                <i
+                                    class="fa-solid
+                                           fa-star mr-2"
+                                ></i>
+
+                                Remove Featured
+
+                            {% else %}
+
+                                <i
+                                    class="fa-regular
+                                           fa-star mr-2"
+                                ></i>
+
+                                Make Featured
+
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- MAIN ACTIONS -->
+
+                    <div class="flex items-center gap-2">
+
+                        <!-- VIEW -->
+
+                        <a
+                            href="{% url 'media:video_detail' video.slug %}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="View video"
+                            class="inline-flex flex-1
+                                   items-center
+                                   justify-center
+                                   rounded-lg border
+                                   border-slate-200
+                                   px-3 py-2
+                                   text-sm font-semibold
+                                   text-slate-700
+                                   transition
+                                   hover:border-slate-300
+                                   hover:bg-slate-50"
+                        >
+
+                            <i
+                                class="fa-solid fa-eye mr-2"
+                            ></i>
+
+                            View
+
+                        </a>
+
+
+                        <!-- EDIT -->
+
+                        <a
+                            href="{% url 'dashboard:media_video_edit' video.pk %}"
+                            title="Edit video"
+                            class="inline-flex h-9 w-9
+                                   items-center
+                                   justify-center
+                                   rounded-lg border
+                                   border-slate-200
+                                   text-slate-600
+                                   transition
+                                   hover:border-slate-300
+                                   hover:bg-slate-50
+                                   hover:text-slate-900"
+                        >
+
+                            <i
+                                class="fa-solid fa-pen
+                                       text-xs"
+                            ></i>
+
+                        </a>
+
+
+                        <!-- DELETE -->
+
+                        <a
+                            href="{% url 'dashboard:media_video_delete' video.pk %}"
+                            title="Delete video"
+                            class="inline-flex h-9 w-9
+                                   items-center
+                                   justify-center
+                                   rounded-lg border
+                                   border-red-200
+                                   text-red-600
+                                   transition
+                                   hover:bg-red-50"
+                        >
+
+                            <i
+                                class="fa-solid fa-trash
+                                       text-xs"
+                            ></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+    {% empty %}
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <div
+            class="campaign-card col-span-full
+                   px-6 py-16 text-center"
+        >
+
+            <div
+                class="mx-auto flex h-16 w-16
+                       items-center justify-center
+                       rounded-2xl bg-slate-100
+                       text-slate-400"
+            >
+                <i class="fa-solid fa-video text-2xl"></i>
+            </div>
+
+
+            <h3
+                class="mt-5 text-lg font-bold
+                       text-slate-900"
+            >
+                No videos found
+            </h3>
+
+
+            <p
+                class="mx-auto mt-2 max-w-md
+                       text-sm leading-6
+                       text-slate-500"
+            >
+                There are no videos matching your
+                current filters. Try clearing the
+                filters or add a new campaign video.
+            </p>
+
+
+            <div
+                class="mt-6 flex flex-wrap
+                       justify-center gap-3"
+            >
+
+                {% if search_query or published_filter or featured_filter %}
+
+                    <a
+                        href="{% url 'dashboard:media_video_list' %}"
+                        class="rounded-lg border
+                               border-slate-300
+                               px-4 py-2.5
+                               text-sm font-semibold
+                               text-slate-700
+                               hover:bg-slate-50"
+                    >
+                        Clear Filters
+                    </a>
+
+                {% endif %}
+
+
+                <a
+                    href="{% url 'dashboard:media_video_create' %}"
+                    class="rounded-lg bg-slate-900
+                           px-4 py-2.5
+                           text-sm font-semibold
+                           text-white
+                           hover:bg-slate-800"
+                >
+
+                    <i class="fa-solid fa-plus mr-2"></i>
+
+                    Add Video
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+<!-- =========================================================
+     PAGINATION
+========================================================== -->
+
+{% if is_paginated %}
+
+    <div
+        class="flex flex-col gap-3
+               border-t border-slate-200
+               pt-5
+               sm:flex-row
+               sm:items-center
+               sm:justify-between"
+    >
+
+        <p class="text-sm text-slate-500">
+
+            Page
+
+            <span
+                class="font-semibold text-slate-700"
+            >
+                {{ page_obj.number }}
+            </span>
+
+            of
+
+            <span
+                class="font-semibold text-slate-700"
+            >
+                {{ page_obj.paginator.num_pages }}
+            </span>
+
+        </p>
+
+
+        <div class="flex items-center gap-2">
+
+            {% if page_obj.has_previous %}
+
+                <a
+                    href="?q={{ search_query|urlencode }}&published={{ published_filter }}&featured={{ featured_filter }}&page={{ page_obj.previous_page_number }}"
+                    class="inline-flex items-center
+                           rounded-lg border
+                           border-slate-200
+                           bg-white px-3 py-2
+                           text-sm font-medium
+                           text-slate-700
+                           hover:bg-slate-50"
+                >
+
+                    <i
+                        class="fa-solid
+                               fa-chevron-left
+                               mr-2 text-xs"
+                    ></i>
+
+                    Previous
+
+                </a>
+
+            {% endif %}
+
+
+            {% if page_obj.has_next %}
+
+                <a
+                    href="?q={{ search_query|urlencode }}&published={{ published_filter }}&featured={{ featured_filter }}&page={{ page_obj.next_page_number }}"
+                    class="inline-flex items-center
+                           rounded-lg border
+                           border-slate-200
+                           bg-white px-3 py-2
+                           text-sm font-medium
+                           text-slate-700
+                           hover:bg-slate-50"
+                >
+
+                    Next
+
+                    <i
+                        class="fa-solid
+                               fa-chevron-right
+                               ml-2 text-xs"
+                    ></i>
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     VIDEO ORDERING JAVASCRIPT
+========================================================== -->
+
+{% if videos %}
+
+    <script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const grid =
+                document.getElementById(
+                    "video-grid"
+                );
+
+            const saveButton =
+                document.getElementById(
+                    "save-video-order"
+                );
+
+            const saveButtonText =
+                document.getElementById(
+                    "save-video-order-text"
+                );
+
+
+            /*
+            ========================================================
+            CHECK REQUIRED ELEMENTS
+            ========================================================
+            */
+
+            if (
+                !grid ||
+                !saveButton ||
+                !saveButtonText
+            ) {
+                return;
+            }
+
+
+            let draggedCard = null;
+
+
+            /*
+            ========================================================
+            CSRF COOKIE
+            ========================================================
+            */
+
+            function getCookie(name) {
+
+                let cookieValue = null;
+
+
+                if (
+                    document.cookie &&
+                    document.cookie !== ""
+                ) {
+
+                    const cookies =
+                        document.cookie.split(";");
+
+
+                    for (
+                        let i = 0;
+                        i < cookies.length;
+                        i++
+                    ) {
+
+                        const cookie =
+                            cookies[i].trim();
+
+
+                        if (
+                            cookie.substring(
+                                0,
+                                name.length + 1
+                            ) ===
+                            name + "="
+                        ) {
+
+                            cookieValue =
+                                decodeURIComponent(
+                                    cookie.substring(
+                                        name.length + 1
+                                    )
+                                );
+
+                            break;
+
+                        }
+
+                    }
+
+                }
+
+
+                return cookieValue;
+
+            }
+
+
+            /*
+            ========================================================
+            UPDATE ORDER NUMBERS
+            ========================================================
+            */
+
+            function updateOrderNumbers() {
+
+                const cards =
+                    grid.querySelectorAll(
+                        ".video-sort-item"
+                    );
+
+
+                cards.forEach(
+                    function (
+                        card,
+                        index
+                    ) {
+
+                        const number =
+                            card.querySelector(
+                                "[data-order-number]"
+                            );
+
+
+                        if (number) {
+
+                            number.textContent =
+                                index + 1;
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /*
+            ========================================================
+            REMOVE DROP HIGHLIGHTS
+            ========================================================
+            */
+
+            function clearDropHighlights() {
+
+                grid.querySelectorAll(
+                    ".video-sort-item"
+                ).forEach(
+                    function (item) {
+
+                        item.classList.remove(
+                            "ring-2",
+                            "ring-slate-300"
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /*
+            ========================================================
+            DRAG & DROP
+            ========================================================
+            */
+
+            grid.querySelectorAll(
+                ".video-sort-item"
+            ).forEach(
+                function (card) {
+
+
+                    /*
+                    -----------------------------------------------
+                    DRAG START
+                    -----------------------------------------------
+                    */
+
+                    card.addEventListener(
+                        "dragstart",
+                        function (event) {
+
+                            draggedCard = card;
+
+
+                            card.classList.add(
+                                "opacity-50",
+                                "scale-[0.98]",
+                                "ring-2",
+                                "ring-slate-400"
+                            );
+
+
+                            event.dataTransfer.effectAllowed =
+                                "move";
+
+
+                            event.dataTransfer.setData(
+                                "text/plain",
+                                card.dataset.videoId
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                    -----------------------------------------------
+                    DRAG OVER
+                    -----------------------------------------------
+                    */
+
+                    card.addEventListener(
+                        "dragover",
+                        function (event) {
+
+                            event.preventDefault();
+
+
+                            if (
+                                !draggedCard ||
+                                draggedCard === card
+                            ) {
+                                return;
+                            }
+
+
+                            const rect =
+                                card.getBoundingClientRect();
+
+
+                            const midpoint =
+                                rect.top +
+                                rect.height / 2;
+
+
+                            if (
+                                event.clientY <
+                                midpoint
+                            ) {
+
+                                grid.insertBefore(
+                                    draggedCard,
+                                    card
+                                );
+
+                            } else {
+
+                                grid.insertBefore(
+                                    draggedCard,
+                                    card.nextSibling
+                                );
+
+                            }
+
+
+                            clearDropHighlights();
+
+
+                            card.classList.add(
+                                "ring-2",
+                                "ring-slate-300"
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                    -----------------------------------------------
+                    DRAG LEAVE
+                    -----------------------------------------------
+                    */
+
+                    card.addEventListener(
+                        "dragleave",
+                        function () {
+
+                            card.classList.remove(
+                                "ring-2",
+                                "ring-slate-300"
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                    -----------------------------------------------
+                    DROP
+                    -----------------------------------------------
+                    */
+
+                    card.addEventListener(
+                        "drop",
+                        function (event) {
+
+                            event.preventDefault();
+
+                            card.classList.remove(
+                                "ring-2",
+                                "ring-slate-300"
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                    -----------------------------------------------
+                    DRAG END
+                    -----------------------------------------------
+                    */
+
+                    card.addEventListener(
+                        "dragend",
+                        function () {
+
+                            card.classList.remove(
+                                "opacity-50",
+                                "scale-[0.98]",
+                                "ring-2",
+                                "ring-slate-400"
+                            );
+
+
+                            clearDropHighlights();
+
+
+                            draggedCard = null;
+
+
+                            updateOrderNumbers();
+
+                        }
+                    );
+
+                }
+            );
+
+
+            /*
+            ========================================================
+            SAVE VIDEO ORDER
+            ========================================================
+            */
+
+            saveButton.addEventListener(
+                "click",
+                async function () {
+
+                    const cards =
+                        grid.querySelectorAll(
+                            ".video-sort-item"
+                        );
+
+
+                    const videoIds =
+                        Array.from(
+                            cards
+                        ).map(
+                            function (card) {
+
+                                return card.dataset.videoId;
+
+                            }
+                        );
+
+
+                    /*
+                    ------------------------------------------------
+                    NO VIDEOS
+                    ------------------------------------------------
+                    */
+
+                    if (
+                        videoIds.length === 0
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    /*
+                    ------------------------------------------------
+                    DISABLE BUTTON
+                    ------------------------------------------------
+                    */
+
+                    saveButton.disabled = true;
+
+                    saveButton.classList.add(
+                        "opacity-70",
+                        "cursor-not-allowed"
+                    );
+
+
+                    saveButtonText.textContent =
+                        "Saving...";
+
+
+                    try {
+
+                        /*
+                        ------------------------------------------------
+                        SEND ORDER TO DJANGO
+                        ------------------------------------------------
+                        */
+
+                        const response =
+                            await fetch(
+                                "{% url 'dashboard:media_video_reorder' %}",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+
+                                        "X-CSRFToken":
+                                            getCookie(
+                                                "csrftoken"
+                                            ),
+
+                                        "X-Requested-With":
+                                            "XMLHttpRequest"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            {
+                                                video_ids:
+                                                    videoIds
+                                            }
+                                        )
+                                }
+                            );
+
+
+                        /*
+                        ------------------------------------------------
+                        READ RESPONSE
+                        ------------------------------------------------
+                        */
+
+                        const data =
+                            await response.json();
+
+
+                        /*
+                        ------------------------------------------------
+                        HANDLE ERROR
+                        ------------------------------------------------
+                        */
+
+                        if (
+                            !response.ok ||
+                            !data.success
+                        ) {
+
+                            throw new Error(
+                                data.message ||
+                                "Unable to save video order."
+                            );
+
+                        }
+
+
+                        /*
+                        ------------------------------------------------
+                        SUCCESS
+                        ------------------------------------------------
+                        */
+
+                        saveButtonText.textContent =
+                            "Order Saved";
+
+
+                        saveButton.classList.remove(
+                            "bg-slate-900",
+                            "hover:bg-slate-800"
+                        );
+
+
+                        saveButton.classList.add(
+                            "bg-emerald-600",
+                            "hover:bg-emerald-700"
+                        );
+
+
+                        /*
+                        ------------------------------------------------
+                        RESET BUTTON
+                        ------------------------------------------------
+                        */
+
+                        setTimeout(
+                            function () {
+
+                                saveButtonText.textContent =
+                                    "Save Order";
+
+
+                                saveButton.classList.remove(
+                                    "bg-emerald-600",
+                                    "hover:bg-emerald-700"
+                                );
+
+
+                                saveButton.classList.add(
+                                    "bg-slate-900",
+                                    "hover:bg-slate-800"
+                                );
+
+                            },
+                            2000
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Video reorder error:",
+                            error
+                        );
+
+
+                        saveButtonText.textContent =
+                            "Save Failed";
+
+
+                        saveButton.classList.remove(
+                            "bg-slate-900",
+                            "hover:bg-slate-800"
+                        );
+
+
+                        saveButton.classList.add(
+                            "bg-red-600",
+                            "hover:bg-red-700"
+                        );
+
+
+                        alert(
+                            error.message ||
+                            "Unable to save video order."
+                        );
+
+
+                        setTimeout(
+                            function () {
+
+                                saveButtonText.textContent =
+                                    "Save Order";
+
+
+                                saveButton.classList.remove(
+                                    "bg-red-600",
+                                    "hover:bg-red-700"
+                                );
+
+
+                                saveButton.classList.add(
+                                    "bg-slate-900",
+                                    "hover:bg-slate-800"
+                                );
+
+                            },
+                            2000
+                        );
+
+                    } finally {
+
+                        /*
+                        ------------------------------------------------
+                        ALWAYS RESTORE BUTTON
+                        ------------------------------------------------
+                        */
+
+                        saveButton.disabled = false;
+
+                        saveButton.classList.remove(
+                            "opacity-70",
+                            "cursor-not-allowed"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+            ========================================================
+            INITIAL ORDER NUMBERS
+            ========================================================
+            */
+
+            updateOrderNumbers();
+
+        }
+    );
+
+</script>
+
+{% endif %}
+
+
+</div>
+
+{% endblock %}

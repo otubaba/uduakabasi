@@ -1,0 +1,389 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+{% if is_edit %}
+Edit Image
+{% else %}
+Add Image
+{% endif %}
+{% endblock %}
+
+{% block page_title %}
+{% if is_edit %}
+Edit Image
+{% else %}
+Add Image
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-4xl space-y-6">
+
+
+<!-- =========================================================
+     BREADCRUMB
+========================================================== -->
+
+<div class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+
+    <a
+        href="{% url 'dashboard:home' %}"
+        class="hover:text-blue-700"
+    >
+        Dashboard
+    </a>
+
+    <i class="fa-solid fa-chevron-right text-xs"></i>
+
+    <a
+        href="{% url 'dashboard:media_album_list' %}"
+        class="hover:text-blue-700"
+    >
+        Gallery
+    </a>
+
+    <i class="fa-solid fa-chevron-right text-xs"></i>
+
+    <a
+        href="{% url 'dashboard:media_album_images' album.pk %}"
+        class="hover:text-blue-700"
+    >
+        {{ album.title }}
+    </a>
+
+    <i class="fa-solid fa-chevron-right text-xs"></i>
+
+    <span class="font-semibold text-slate-700">
+        Edit Image
+    </span>
+
+</div>
+
+
+<!-- =========================================================
+     FORM CARD
+========================================================== -->
+
+<div class="campaign-card overflow-hidden">
+
+    <div
+        class="
+            border-b
+            border-slate-100
+            px-5
+            py-5
+            sm:px-6
+        "
+    >
+
+        <h1
+            class="
+                flex
+                items-center
+                gap-2
+                text-xl
+                font-black
+                text-slate-900
+            "
+        >
+            <i class="fa-solid fa-image text-blue-700"></i>
+
+            {% if is_edit %}
+                Edit Image
+            {% else %}
+                Add Image
+            {% endif %}
+        </h1>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Update the image information for
+            <strong class="text-slate-700">
+                {{ album.title }}
+            </strong>.
+        </p>
+
+    </div>
+
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="space-y-6 p-5 sm:p-6"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =================================================
+             CURRENT IMAGE
+        ================================================== -->
+
+        {% if image and image.image %}
+
+            <div>
+
+                <label class="form-label">
+                    Current Image
+                </label>
+
+                <div
+                    class="
+                        mt-2
+                        overflow-hidden
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        bg-slate-100
+                    "
+                >
+
+                    <img
+                        src="{{ image.image.url }}"
+                        alt="{{ image.alt_text|default:album.title }}"
+                        class="
+                            max-h-[420px]
+                            w-full
+                            object-contain
+                        "
+                    >
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             REPLACE IMAGE
+        ================================================== -->
+
+        <div>
+
+            <label
+                for="{{ form.image.id_for_label }}"
+                class="form-label"
+            >
+                {% if is_edit %}
+                    Replace Image
+                {% else %}
+                    Image
+                {% endif %}
+            </label>
+
+            {{ form.image }}
+
+            {% if form.image.errors %}
+
+                <div class="form-error">
+
+                    {% for error in form.image.errors %}
+
+                        <p>{{ error }}</p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {% if form.image.help_text %}
+
+                <p class="form-help">
+                    {{ form.image.help_text }}
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             CAPTION
+        ================================================== -->
+
+        <div>
+
+            <label
+                for="{{ form.caption.id_for_label }}"
+                class="form-label"
+            >
+                Caption
+            </label>
+
+            {{ form.caption }}
+
+            {% if form.caption.errors %}
+
+                <div class="form-error">
+
+                    {% for error in form.caption.errors %}
+
+                        <p>{{ error }}</p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            <p class="form-help">
+                Optional text describing what the image shows.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ALT TEXT
+        ================================================== -->
+
+        <div>
+
+            <label
+                for="{{ form.alt_text.id_for_label }}"
+                class="form-label"
+            >
+                Alt Text
+            </label>
+
+            {{ form.alt_text }}
+
+            {% if form.alt_text.errors %}
+
+                <div class="form-error">
+
+                    {% for error in form.alt_text.errors %}
+
+                        <p>{{ error }}</p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            <p class="form-help">
+                Useful for accessibility and search engines.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             DISPLAY ORDER
+        ================================================== -->
+
+        <div>
+
+            <label
+                for="{{ form.display_order.id_for_label }}"
+                class="form-label"
+            >
+                Display Order
+            </label>
+
+            {{ form.display_order }}
+
+            {% if form.display_order.errors %}
+
+                <div class="form-error">
+
+                    {% for error in form.display_order.errors %}
+
+                        <p>{{ error }}</p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            <p class="form-help">
+                Lower numbers appear first. You can also drag
+                images directly on the album page.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div
+            class="
+                flex
+                flex-col-reverse
+                gap-3
+                border-t
+                border-slate-100
+                pt-6
+                sm:flex-row
+                sm:justify-end
+            "
+        >
+
+            <a
+                href="{% url 'dashboard:media_album_images' album.pk %}"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-slate-200
+                    bg-white
+                    px-5
+                    py-3
+                    text-sm
+                    font-bold
+                    text-slate-700
+                    hover:bg-slate-50
+                "
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    bg-blue-700
+                    px-5
+                    py-3
+                    text-sm
+                    font-bold
+                    text-white
+                    shadow-sm
+                    transition
+                    hover:bg-blue-800
+                "
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                {% if is_edit %}
+                    Save Changes
+                {% else %}
+                    Add Image
+                {% endif %}
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}
