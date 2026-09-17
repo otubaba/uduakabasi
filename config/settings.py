@@ -26,9 +26,11 @@ SECRET_KEY = 'django-insecure-batl_1613kc7sa+$%v65y=4o_d3-@oe9u7u_gycx5y*y^5%d4*
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
     "uduakabasi.onrender.com",
+    "uduakabasi2027.com",
+    "www.uduakabasi2027.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 
