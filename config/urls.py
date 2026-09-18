@@ -25,11 +25,17 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     path("", include("apps.core.urls")),
+
     path(
         "accounts/",
         include("apps.accounts.urls")
     ),
-    path("news/", include("apps.news.urls", namespace="news")),
+
+    path(
+        "news/",
+        include("apps.news.urls", namespace="news")
+    ),
+
     path(
         "media/",
         include(
@@ -37,14 +43,17 @@ urlpatterns = [
             namespace="media"
         )
     ),
+
     path(
         "events/",
         include("apps.events.urls"),
     ),
+
     path(
         "join/",
         include("apps.supporters.urls")
     ),
+
     path(
         "empowerment/",
         include(
@@ -52,6 +61,7 @@ urlpatterns = [
             namespace="empowerment",
         ),
     ),
+
     path(
         "dashboard/",
         include("apps.dashboard.urls"),
@@ -59,8 +69,9 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )
+# Serve uploaded media files
+# This works with your current FileSystemStorage configuration.
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)
