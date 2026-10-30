@@ -232,9 +232,9 @@ class Command(BaseCommand):
 
                     polling_unit, pu_created = (
                         PollingUnit.objects.update_or_create(
+                            ward=ward,
                             code=code,
                             defaults={
-                                "ward": ward,
                                 "name": name,
                                 "polling_unit_type": pu_type,
                                 "active": True,
